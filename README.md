@@ -1,2 +1,2 @@
 # ExcelExporter
- A tool for exprot excle data.
+ 一个用于导出Excel数据的工具。

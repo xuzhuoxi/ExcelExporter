@@ -1,0 +1,58 @@
+# 要求输出的Sheet的名称前缀，只有带这个前缀的Sheet才参与处理
+prefix:
+  # 定义及数据处理
+  data: Data_
+  # 常量表处理
+  const: Const_
+
+# 导出定义
+# 值为Excel对应单元格号，用'_'分隔
+output:
+  # 客户端定义
+  client:
+    #数据结构定义名(类名)
+    class_name: B_1
+    #数据文件名
+    data_name: C_1
+  # 服务端定义
+  server:
+    # 数据结构定义名(类名)
+    class_name: B_1
+    # 数据文件名
+    data_name: D_1
+  # 数据库定义
+  database:
+    # 数据结构定义名(类名)
+    class_name: B_1
+    # 数据文件名
+    data_name: E_1
+  # 其它定义
+  data_key: F_1
+
+# 表头定义
+title:
+  # 数据名称所在行号，与Excel行号一致
+  name: 2
+  # 数据注释所在行号，与Excel行号一致
+  remark: 3
+  # 输出选择，格式: 'c,s,d'，c、s、d的格式只能是0或1，c指前端，s指后端，d指数据库，顺序不能颠倒。从1开始。
+  valid_mark: 4
+  # 数据格式,单元格格式目前支持{uint8,uint16,uint32,int8,int16,int32,float32,boolean,string,string(*)}
+  data_type: 5
+  # 各语言或数据格式使用的字段名称
+  field_name:
+    as3: 6
+    c++: 6
+    'c#': 6
+    go: 6
+    java: 6
+    ts: 6
+    json: 6
+    db: 6
+
+# 数据定义
+data:
+  # 数据的开始行号
+  start: 7
+  # 数据忽略
+  pass: gray
