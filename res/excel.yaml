@@ -40,7 +40,7 @@ title:
   # 数据格式,单元格格式目前支持{uint8,uint16,uint32,int8,int16,int32,float32,boolean,string,string(*)}
   data_type: 5
   # 各语言或数据格式使用的字段名称
-  field_name:
+  field_names:
     as3: 6
     c++: 6
     'c#': 6

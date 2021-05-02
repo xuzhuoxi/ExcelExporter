@@ -1,11 +1,11 @@
 # 数据结构定义所支持的编程语言
 languages:
-  - as3: ./langs/as3.yaml
-  - c++: ./langs/c++.yaml
-  - 'c#': './langs/c#.yaml'
-  - go: ./langs/go.yaml
-  - java: ./langs/java.yaml
-  - ts: ./langs/ts.yaml
+  as3: ./langs/as3.yaml
+  c++: ./langs/c++.yaml
+  'c#': './langs/c#.yaml'
+  go: ./langs/go.yaml
+  java: ./langs/java.yaml
+  ts: ./langs/ts.yaml
 
 # 支持的数据文件格式
 files:

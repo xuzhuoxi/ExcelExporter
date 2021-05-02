@@ -15,7 +15,7 @@ target:
 # 缓冲区定义
 buff:
   # 数据导出是否使用高位在前
-  BigEndian: true
+  big_endian: true
   # 每个token的最大缓冲区
   token: 512
   # 每个item的最大缓冲区
