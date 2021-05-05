@@ -4,16 +4,18 @@ import (
 	"errors"
 	"fmt"
 	"github.com/xuzhuoxi/infra-go/filex"
-	"github.com/xuzhuoxi/infra-go/osxu"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 )
 
 var (
-	RootPath    = osxu.GetRunningDir()
+	RootPath = `D:\workspaces\GoPath\src\github.com\xuzhuoxi\ExcelExporter\res`
+	//RootPath    = osxu.GetRunningDir()
+
 	SystemPath  = filex.Combine(RootPath, "system.yaml")
 	ProjectPath = filex.Combine(RootPath, "prject.yaml")
 	ExcelPath   = filex.Combine(RootPath, "excel.yaml")
+	LangGoPath  = filex.Combine(RootPath, "./langs/go.yaml")
 )
 
 type Settings struct {

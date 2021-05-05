@@ -1,2 +1,14 @@
 # Auto detect text files and perform LF normalization
+
 * text=auto
+
+*.go    text    eol=lf
+*.sh    text    eol=lf
+*.bat   text    eol=crlf
+
+*.yaml  text    eol=lf
+*.yal   text    eol=lf
+*.md    text    eol=lf
+
+*.xls   -text
+*.xlsx  -text

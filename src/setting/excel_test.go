@@ -7,10 +7,8 @@ import (
 	"testing"
 )
 
-var excelPath = `D:\workspaces\GoPath\src\github.com\xuzhuoxi\ExcelExporter\res\excel.yaml`
-
 func TestExcelSetting(t *testing.T) {
-	str, err := ioutil.ReadFile(excelPath)
+	str, err := ioutil.ReadFile(ExcelPath)
 	if nil != err {
 		t.Fatal(err)
 		return

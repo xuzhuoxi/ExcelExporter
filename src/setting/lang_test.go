@@ -7,10 +7,8 @@ import (
 	"testing"
 )
 
-var langGoPath = `D:\workspaces\GoPath\src\github.com\xuzhuoxi\ExcelExporter\res\langs\go.yaml`
-
 func TestLangSetting(t *testing.T) {
-	str, err := ioutil.ReadFile(langGoPath)
+	str, err := ioutil.ReadFile(LangGoPath)
 	if nil != err {
 		t.Fatal(err)
 		return

@@ -1,6 +1,9 @@
 package setting
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type ProjectIO struct {
 	// 目录路径或文件路径
@@ -42,4 +45,19 @@ type ProjectSetting struct {
 func (ps *ProjectSetting) String() string {
 	return fmt.Sprintf("Project{Source=%s, Target=%s, Buff=%v}",
 		ps.Source, ps.Target, ps.Buff)
+}
+
+func (ps *ProjectSetting) UpdateSource(source string) {
+	if len(source) == 0 || len(strings.TrimSpace(source)) == 0 {
+		return
+	}
+	ps.Source.Value = strings.TrimSpace(source)
+}
+
+func (ps *ProjectSetting) UpdateTarget(target string) {
+	if len(target) == 0 || len(strings.TrimSpace(target)) == 0 {
+		return
+	}
+	ps.Target.Value = strings.TrimSpace(target)
+
 }

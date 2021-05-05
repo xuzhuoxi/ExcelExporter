@@ -7,10 +7,8 @@ import (
 	"testing"
 )
 
-var proPath = `D:\workspaces\GoPath\src\github.com\xuzhuoxi\ExcelExporter\res\project.yaml`
-
 func TestProjectSetting(t *testing.T) {
-	str, err := ioutil.ReadFile(proPath)
+	str, err := ioutil.ReadFile(ProjectPath)
 	if nil != err {
 		t.Fatal(err)
 		return

@@ -7,10 +7,8 @@ import (
 	"testing"
 )
 
-var sysPath = `D:\workspaces\GoPath\src\github.com\xuzhuoxi\ExcelExporter\res\system.yaml`
-
 func TestSystemSetting(t *testing.T) {
-	str, err := ioutil.ReadFile(sysPath)
+	str, err := ioutil.ReadFile(SystemPath)
 	if nil != err {
 		t.Fatal(err)
 		return
