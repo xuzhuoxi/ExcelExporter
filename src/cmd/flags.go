@@ -21,23 +21,23 @@ type FlagParams struct {
 }
 
 func (fp *FlagParams) GetCommandParams() *CommandParams {
+	titleOn := (fp.Mode & uint(core.TitleMark)) > 0
 	dataOn := (fp.Mode & uint(core.DataMark)) > 0
-	definitionOn := (fp.Mode & uint(core.DefinitionMark)) > 0
 	constOn := (fp.Mode & uint(core.ConstMark)) > 0
 	fields := strings.Split(fp.Field, ParamsSep)
 	langs := strings.Split(fp.File, ParamsSep)
 	files := strings.Split(fp.Field, ParamsSep)
-	return &CommandParams{HandleData: dataOn, HandleDefinition: definitionOn, HandleConst: constOn,
+	return &CommandParams{HandleData: dataOn, HandleTitle: titleOn, HandleConst: constOn,
 		Fields: fields, Lands: langs, Files: files}
 }
 
 type CommandParams struct {
-	HandleData       bool
-	HandleDefinition bool
-	HandleConst      bool
-	Fields           []string
-	Lands            []string
-	Files            []string
+	HandleTitle bool
+	HandleData  bool
+	HandleConst bool
+	Fields      []string
+	Lands       []string
+	Files       []string
 }
 
 func (o *CommandParams) GenDataContexts() (contexts []*core.DataContext) {
@@ -57,17 +57,17 @@ func (o *CommandParams) GenDataContexts() (contexts []*core.DataContext) {
 	return
 }
 
-func (o *CommandParams) GenDefinitionContexts() (contexts []*core.DefinitionContext) {
+func (o *CommandParams) GenTitleContexts() (contexts []*core.TitleContext) {
 	fieldLen := len(o.Fields)
 	langLen := len(o.Lands)
-	if !o.HandleDefinition || fieldLen == 0 || langLen == 0 {
+	if !o.HandleTitle || fieldLen == 0 || langLen == 0 {
 		return nil
 	}
 	len := fieldLen * langLen
-	contexts = make([]*core.DefinitionContext, len)
+	contexts = make([]*core.TitleContext, len)
 	for i := 0; i < fieldLen; i += 1 {
 		for j := 0; j < langLen; j += 1 {
-			context := &core.DefinitionContext{DefinedField: o.Fields[i], DefinedLang: o.Lands[j]}
+			context := &core.TitleContext{TitleField: o.Fields[i], TitleLang: o.Lands[j]}
 			contexts[i*j] = context
 		}
 	}

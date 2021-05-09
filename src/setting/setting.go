@@ -31,6 +31,18 @@ func (s *Settings) Init() {
 	s.loadExcelSetting()
 }
 
+func (s *Settings) InitLangSetting(lang string) error {
+	ok, ref := s.System.FindLangRef(lang)
+	if !ok {
+		return errors.New(fmt.Sprintf("Lang(%s) is not supported!", lang))
+	}
+	path := filex.Combine(RootPath, ref.Ref)
+	langSetting := &LangSetting{}
+	s.initSetting(path, langSetting)
+	s.LangMap[lang] = langSetting
+	return nil
+}
+
 func (s *Settings) loadSystemSetting() error {
 	system := &SystemSetting{}
 	err := s.initSetting(SystemPath, system)
@@ -58,18 +70,6 @@ func (s *Settings) loadExcelSetting() error {
 		return err
 	}
 	s.Excel = excel
-	return nil
-}
-
-func (s *Settings) InitLangSetting(lang string) error {
-	ok, ref := s.System.FindLangRef(lang)
-	if !ok {
-		return errors.New(fmt.Sprintf("Lang(%s) is not supported!", lang))
-	}
-	path := filex.Combine(RootPath, ref.Ref)
-	langSetting := &LangSetting{}
-	s.initSetting(path, langSetting)
-	s.LangMap[lang] = langSetting
 	return nil
 }
 

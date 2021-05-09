@@ -2,18 +2,62 @@ package setting
 
 import (
 	"fmt"
+	"github.com/xuzhuoxi/infra-go/filex"
 	"strings"
 )
 
-type ProjectIO struct {
+type SourceCfg struct {
 	// 目录路径或文件路径
-	Value string `yaml:"value"`
-	// 编码格式
+	Value []string `yaml:"value"`
+	// 编码格式(如果需要)
 	Encoding string `yaml:"encoding"`
+	// 文件扩展名
+	ExtName []string `yaml:"ext_name"`
 }
 
-func (o ProjectIO) String() string {
+func (o *SourceCfg) UpgradePath(basePath string) {
+	if len(o.Value) == 0 {
+		return
+	}
+	for index, _ := range o.Value {
+		if filex.IsExist(o.Value[index]) {
+			continue
+		}
+		o.Value[index] = filex.Combine(basePath, o.Value[index])
+	}
+}
+
+func (o SourceCfg) CheckFileMatching(filePath string) bool {
+	if len(o.ExtName) == 0 {
+		return false
+	}
+	_, _, ext := filex.SplitFileName(filePath)
+	for _, e := range o.ExtName {
+		if e == strings.ToLower(strings.TrimSpace(ext)) {
+			return true
+		}
+	}
+	return false
+}
+
+func (o SourceCfg) String() string {
 	return fmt.Sprintf("IO{Path=%s, Encoding=%s}", o.Value, o.Encoding)
+}
+
+type TargetCfg struct {
+	// 目录路径或文件路径
+	Value string `yaml:"value"`
+}
+
+func (o *TargetCfg) UpgradePath(basePath string) {
+	if filex.IsFolder(o.Value) {
+		return
+	}
+	o.Value = filex.Combine(basePath, o.Value)
+}
+
+func (o TargetCfg) String() string {
+	return fmt.Sprintf("IO{Path=%s, Encoding=%s}", o.Value)
 }
 
 // 缓冲区定义
@@ -36,12 +80,17 @@ func (b ProjectBuff) String() string {
 // 项目配置
 type ProjectSetting struct {
 	// 默认处理的文件或目录,以'':''开关，或路径中包含'':''的，视为绝对路径
-	Source ProjectIO `yaml:"source"`
+	Source SourceCfg `yaml:"source"`
 	// 输出目录,以'':''开关，或路径中包含'':''的，视为绝对路径,encoding属性作用于字符文件的输出,和字节文件中字符串的编码
-	Target ProjectIO   `yaml:"target"`
-	Buff   ProjectBuff `yaml:"buff"`
+	Target TargetCfg `yaml:"target"`
+	// 处理时缓存设置
+	Buff ProjectBuff `yaml:"buff"`
 }
 
+func (o *ProjectSetting) UpgradePath(basePath string) {
+	o.Source.UpgradePath(basePath)
+	o.Target.UpgradePath(basePath)
+}
 func (ps *ProjectSetting) String() string {
 	return fmt.Sprintf("Project{Source=%s, Target=%s, Buff=%v}",
 		ps.Source, ps.Target, ps.Buff)
@@ -51,7 +100,9 @@ func (ps *ProjectSetting) UpdateSource(source string) {
 	if len(source) == 0 || len(strings.TrimSpace(source)) == 0 {
 		return
 	}
-	ps.Source.Value = strings.TrimSpace(source)
+	source = strings.TrimSpace(source)
+	ss := strings.Split(source, ",")
+	ps.Source.Value = ss
 }
 
 func (ps *ProjectSetting) UpdateTarget(target string) {
