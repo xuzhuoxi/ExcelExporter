@@ -62,6 +62,8 @@ func (o ExcelLangFieldNameRow) String() string {
 
 // 表头定义
 type ExcelTitle struct {
+	// 字段别名，用于查找指定列，值为0时使用列号作为别名
+	ColNameRow int `yaml:"col_name"`
 	// 数据名称所在行号，与Excel行号一致
 	NameRow int `yaml:"name"`
 	// 数据注释所在行号，与Excel行号一致
@@ -99,6 +101,5 @@ type ExcelSetting struct {
 }
 
 func (o *ExcelSetting) String() string {
-	return fmt.Sprintf("Excel{\n%s, \n%s, \n%v, \nData=%v\n}",
-		o.Prefix, o.Output, o.Title, o.Data)
+	return fmt.Sprintf("Excel{%s, %s, %v, Data=%v}", o.Prefix, o.Output, o.Title, o.Data)
 }

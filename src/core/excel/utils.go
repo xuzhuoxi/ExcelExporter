@@ -10,6 +10,11 @@ import (
 	"strings"
 )
 
+const (
+	ExtXls  = "xls"
+	ExtXlsx = "xlsx"
+)
+
 // 3 => [A, B, C]
 func GenAxis(length int) []string {
 	rs := make([]string, length, length)
@@ -56,7 +61,7 @@ func LoadExcels(path string) (excels []*excelize.File, err error) {
 				return nil
 			}
 			name := info.Name()
-			if filex.CheckExt(name, "xls") || filex.CheckExt(name, "xlsx") {
+			if filex.CheckExt(name, ExtXls) || filex.CheckExt(name, ExtXlsx) {
 				filePaths = append(filePaths, path)
 			}
 			return nil
@@ -76,8 +81,8 @@ func LoadExcels(path string) (excels []*excelize.File, err error) {
 }
 
 // 加载Excel文件，过滤无Sheet情况
-func LoadExcel(FileName string) (excel *excelize.File, err error) {
-	excelFile, err := excelize.OpenFile(FileName)
+func LoadExcel(filePath string) (excel *excelize.File, err error) {
+	excelFile, err := excelize.OpenFile(filePath)
 	if nil != err {
 		return nil, err
 	}
@@ -87,13 +92,13 @@ func LoadExcel(FileName string) (excel *excelize.File, err error) {
 	return excelFile, nil
 }
 
-// 通过SheetPrefix作为限制加载Sheet
+// 通过SheetPrefix作为限制加载Sheet, 使用""代表不限制
 // 指定NickRow所在行为别名,NickRow=0时，使用列号作为别名
-func LoadSheets(excelFile *excelize.File, SheetPrefix string, NickRow int) (sheets []*ExcelSheet, err error) {
+func LoadSheets(excelFile *excelize.File, sheetPrefix string, nickRow int) (sheets []*ExcelSheet, err error) {
 	var names []string
 	var indexs []int
 	for index, name := range excelFile.GetSheetMap() {
-		if strings.Index(name, SheetPrefix) == 0 {
+		if strings.Index(name, sheetPrefix) == 0 {
 			names = append(names, name)
 			indexs = append(indexs, index)
 		}
@@ -116,8 +121,8 @@ func LoadSheets(excelFile *excelize.File, SheetPrefix string, NickRow int) (shee
 				es.Rows = append(es.Rows, er)
 			}
 		}
-		if NickRow > 0 {
-			es.SetNick(rows[NickRow-1])
+		if nickRow > 0 {
+			es.SetNick(rows[nickRow-1])
 		} else {
 			es.SetNick(es.Axis)
 		}

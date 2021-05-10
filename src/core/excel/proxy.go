@@ -1,8 +1,12 @@
 package excel
 
-import "errors"
+import (
+	"errors"
+	"github.com/360EntSecGroup-Skylar/excelize"
+)
 
 type ExcelProxy struct {
+	Excels   []*excelize.File
 	Sheets   []*ExcelSheet
 	DataRows []*ExcelRow
 }
@@ -29,10 +33,10 @@ func (ep *ExcelProxy) ValueAtAxis(sheet string, axis string) (value string, err 
 // 合并全部sheet的行数据。
 // 从StartRow开始。
 // 清除空数据
-func (ep *ExcelProxy) MergedRows(StartRow int) (err error) {
+func (ep *ExcelProxy) MergedRows(startRow int) (err error) {
 	var rows []*ExcelRow
 	for _, sheet := range ep.Sheets {
-		rows = append(rows, sheet.GetDataRows(StartRow-1)...)
+		rows = append(rows, sheet.GetDataRows(startRow-1)...)
 	}
 	if len(rows) == 0 {
 		return errors.New("Rows is empty! ")
@@ -45,10 +49,10 @@ func (ep *ExcelProxy) MergedRows(StartRow int) (err error) {
 // 合并全部sheet的行数据。
 // 从StartRow开始。
 // 清除空数据
-func (ep *ExcelProxy) MergedRowsByFilter(StartRow int, filter func(row *ExcelRow) bool) (err error) {
+func (ep *ExcelProxy) MergedRowsByFilter(startRow int, filter func(row *ExcelRow) bool) (err error) {
 	var rows []*ExcelRow
 	for _, sheet := range ep.Sheets {
-		rows = append(rows, sheet.GetDataRowsByFilter(StartRow-1, filter)...)
+		rows = append(rows, sheet.GetDataRowsByFilter(startRow-1, filter)...)
 	}
 	if len(rows) == 0 {
 		return errors.New("Rows is empty! ")
@@ -58,16 +62,54 @@ func (ep *ExcelProxy) MergedRowsByFilter(StartRow int, filter func(row *ExcelRow
 	}
 }
 
-// 加载SourcePath指定的一个或多个Excel文件。
-// SourcePath支持多路径模式，用","分隔。
-// SourcePath支持文件夹，不支持递归。
-func (ep *ExcelProxy) LoadSheets(SourcePath string, SheetPrefix string, NickRow int) error {
-	excels, err := LoadExcels(SourcePath)
+// 加载excelPath指定的一个Excel文件。
+func (ep *ExcelProxy) LoadExcels(excelPath string, overwrite bool) error {
+	excels, err := LoadExcels(excelPath)
 	if nil != err {
 		return err
 	}
-	for _, excel := range excels {
-		sheets, err := LoadSheets(excel, SheetPrefix, NickRow)
+	if overwrite {
+		ep.Excels = excels
+	} else {
+		ep.Excels = append(ep.Excels, excels...)
+	}
+	return nil
+}
+
+// 加载excelPath指定的一个或多个Excel文件。
+// excelPath支持多路径模式，用","分隔。
+// excelPath支持文件夹，不支持递归。
+func (ep *ExcelProxy) LoadExcel(excelPath string, overwrite bool) error {
+	excel, err := LoadExcel(excelPath)
+	if nil != err {
+		return err
+	}
+	if overwrite {
+		if nil == ep.Excels {
+			ep.Excels = []*excelize.File{excel}
+		} else {
+			ep.Excels = ep.Excels[:1]
+			ep.Excels[0] = excel
+		}
+	} else {
+		ep.Excels = append(ep.Excels, excel)
+	}
+	return nil
+}
+
+// 从已经加载好的Excel中加载Sheets
+// sheetPrefix用于限制
+func (ep *ExcelProxy) LoadSheets(sheetPrefix string, colNickRow int, overwrite bool) error {
+	if overwrite {
+		if nil != ep.Sheets {
+			ep.Sheets = ep.Sheets[:0]
+		}
+	}
+	if 0 == len(ep.Excels) {
+		return nil
+	}
+	for _, excel := range ep.Excels {
+		sheets, err := LoadSheets(excel, sheetPrefix, colNickRow)
 		if nil != err {
 			return err
 		}

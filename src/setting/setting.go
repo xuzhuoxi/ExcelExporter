@@ -6,14 +6,15 @@ import (
 	"github.com/xuzhuoxi/infra-go/filex"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"github.com/xuzhuoxi/infra-go/osxu"
 )
 
 var (
-	RootPath = `D:\workspaces\GoPath\src\github.com\xuzhuoxi\ExcelExporter\res`
-	//RootPath    = osxu.GetRunningDir()
+	//RootPath = `D:\workspaces\GoPath\src\github.com\xuzhuoxi\ExcelExporter\res`
+	RootPath    = osxu.GetRunningDir()
 
 	SystemPath  = filex.Combine(RootPath, "system.yaml")
-	ProjectPath = filex.Combine(RootPath, "prject.yaml")
+	ProjectPath = filex.Combine(RootPath, "project.yaml")
 	ExcelPath   = filex.Combine(RootPath, "excel.yaml")
 	LangGoPath  = filex.Combine(RootPath, "./langs/go.yaml")
 )
