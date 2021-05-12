@@ -83,10 +83,10 @@ func executeDataFile(dataFilePath string) (err error) {
 	err = ExcelProxy.LoadExcel(dataFilePath, true)
 
 	if nil != err {
-		Logger.Errorln(err.Error())
-		panic(err)
+		Logger.Warnln(fmt.Sprintf("Load excel error(%s) at :%s", err.Error(), dataFilePath))
 		return
 	}
+	Logger.Infoln(fmt.Sprintf("Load excel success at :%s", dataFilePath))
 
 	prefix := Setting.Excel.Prefix.Data
 	colNameRow := Setting.Excel.Title.ColNameRow

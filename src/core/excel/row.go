@@ -8,22 +8,54 @@ import (
 )
 
 type ExcelRow struct {
-	Index  int
-	Length int
+	Index int
+	Cell  []string
 
-	Axis []string
-	Nick []string
-	Row  []string
+	Sheet *ExcelSheet
+}
+
+func (er *ExcelRow) CellLength() int {
+	return len(er.Cell)
+}
+
+func (er *ExcelRow) NickLength() int {
+	if nil == er.Sheet {
+		return 0
+	}
+	return er.Sheet.NickLength()
+}
+
+func (er *ExcelRow) AxisLength() int {
+	if nil == er.Sheet {
+		return 0
+	}
+	return er.Sheet.AxisLength()
+}
+
+func (er *ExcelRow) Nick() []string {
+	if nil == er.Sheet {
+		return nil
+	}
+	return er.Sheet.Nick
+}
+
+func (er *ExcelRow) Axis() []string {
+	if nil == er.Sheet {
+		return nil
+	}
+	return er.Sheet.Axis
 }
 
 func (er *ExcelRow) String() string {
-	return fmt.Sprintf("ExcelRow{Index=%d, Length=%d, Axis=%s, Nick=%s, Row=%s}", er.Index, er.Length,
-		fmt.Sprint(er.Axis), fmt.Sprint(er.Nick), fmt.Sprint(er.Row))
+	return fmt.Sprintf("ExcelRow{Index=%d,Cell(%d)=%s}", er.Index, len(er.Cell), fmt.Sprint(er.Cell))
 }
 
 func (er *ExcelRow) Empty() bool {
-	for _, value := range er.Row {
-		if value != "" && strings.TrimSpace(value) != "" {
+	if er.CellLength() == 0 {
+		return true
+	}
+	for _, cell := range er.Cell {
+		if cell != "" && strings.TrimSpace(cell) != "" {
 			return false
 		}
 	}
@@ -33,28 +65,28 @@ func (er *ExcelRow) Empty() bool {
 // Open to templates
 // 通过索引号取值，索引号从0开始
 func (er *ExcelRow) ValueAtIndex(index int) (value string, err error) {
-	if index < 0 || index >= er.Length {
+	if index < 0 || index >= er.CellLength() {
 		return "", errors.New(fmt.Sprintf("Index(%d) out of range! ", index))
 	}
-	return er.Row[index], nil
+	return er.Cell[index], nil
 }
 
 // Open to templates
 // 通过别名取值
 func (er *ExcelRow) ValueAtNick(nick string) (value string, err error) {
-	index, ok := slicex.IndexString(er.Nick, nick)
+	index, ok := slicex.IndexString(er.Nick(), nick)
 	if !ok {
 		return "", errors.New(fmt.Sprintf("Nick(%s) is not exist! ", nick))
 	}
-	return er.Row[index], nil
+	return er.Cell[index], nil
 }
 
 // Open to templates
 // 通过列名取值
 func (er *ExcelRow) ValueAtAxis(axis string) (value string, err error) {
-	index, ok := slicex.IndexString(er.Axis, axis)
+	index, ok := slicex.IndexString(er.Axis(), strings.ToUpper(axis))
 	if !ok {
 		return "", errors.New(fmt.Sprintf("Axis(%s) is not exist! ", axis))
 	}
-	return er.Row[index], nil
+	return er.Cell[index], nil
 }

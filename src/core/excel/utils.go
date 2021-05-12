@@ -25,7 +25,7 @@ func GenAxis(length int) []string {
 }
 
 // "A1" => 0, 0, nil
-func ParseAxis(axis string) (colIndex int, rowIndex int, err error) {
+func ParseAxis(axis string) (cellIndex int, rowIndex int, err error) {
 	Axis := strings.ToUpper(strings.TrimSpace(axis))
 	bs := []byte(Axis)
 	var c, r []byte
@@ -96,11 +96,11 @@ func LoadExcel(filePath string) (excel *excelize.File, err error) {
 // 指定NickRow所在行为别名,NickRow=0时，使用列号作为别名
 func LoadSheets(excelFile *excelize.File, sheetPrefix string, nickRow int) (sheets []*ExcelSheet, err error) {
 	var names []string
-	var indexs []int
+	var indexes []int
 	for index, name := range excelFile.GetSheetMap() {
 		if strings.Index(name, sheetPrefix) == 0 {
 			names = append(names, name)
-			indexs = append(indexs, index)
+			indexes = append(indexes, index)
 		}
 	}
 	if len(names) == 0 {
@@ -111,20 +111,29 @@ func LoadSheets(excelFile *excelize.File, sheetPrefix string, nickRow int) (shee
 		if nil != err {
 			return nil, err
 		}
-		es := &ExcelSheet{SheetIndex: indexs[i], SheetName: n}
-		es.RowLength = len(rows)
-		if es.RowLength > 0 {
-			es.ColLength = len(rows[0])
-			es.Axis = GenAxis(es.ColLength)
-			for rowIndex, row := range rows {
-				er := &ExcelRow{Index: rowIndex, Length: es.ColLength, Axis: es.Axis, Row: row}
-				es.Rows = append(es.Rows, er)
-			}
+
+		rowLen := len(rows)
+		if rowLen == 0 { // 空Sheet过滤
+			continue
 		}
+
+		es := &ExcelSheet{SheetIndex: indexes[i], SheetName: n, RowLength: rowLen}
+
+		maxCellLen := 0
+		for _, cells := range rows {
+			cellLen := len(cells)
+			maxCellLen = mathx.MaxInt(maxCellLen, cellLen)
+		}
+		es.Axis = GenAxis(maxCellLen)
 		if nickRow > 0 {
 			es.SetNick(rows[nickRow-1])
 		} else {
 			es.SetNick(es.Axis)
+		}
+
+		for rowIndex, cells := range rows {
+			er := &ExcelRow{Index: rowIndex, Cell: cells, Sheet: es}
+			es.Rows = append(es.Rows, er)
 		}
 		sheets = append(sheets, es)
 	}
