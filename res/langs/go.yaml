@@ -1,6 +1,4 @@
 name: go
-temp:
-  path: 'template/go/MainTemp.go.temp'
 
 boolean:
   name: 'bool'

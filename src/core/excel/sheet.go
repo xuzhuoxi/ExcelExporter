@@ -1,6 +1,9 @@
 package excel
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/xuzhuoxi/infra-go/mathx"
+)
 
 type ExcelSheet struct {
 	SheetIndex int    // Sheet的索引
@@ -10,14 +13,14 @@ type ExcelSheet struct {
 	Nick []string // 列别名
 
 	RowLength int         // 行数
-	Rows      []*ExcelRow // 行内容
+	Rows      []*ExcelRow // 全部行内容
 }
 
-func (es *ExcelSheet) AxisLength() int{
+func (es *ExcelSheet) AxisLength() int {
 	return len(es.Axis)
 }
 
-func (es *ExcelSheet) NickLength() int{
+func (es *ExcelSheet) NickLength() int {
 	return len(es.Axis)
 }
 
@@ -34,11 +37,36 @@ func (es *ExcelSheet) SetNick(nick []string) {
 	es.Nick = nick
 }
 
-func (es *ExcelSheet) GetDataRows(startIndex int) (rows []*ExcelRow) {
+func (es *ExcelSheet) GetRowAt(rowIndex int) (row *ExcelRow) {
+	if rowIndex < 0 || rowIndex >= es.RowLength {
+		return nil
+	}
+	return es.Rows[rowIndex]
+}
+
+func (es *ExcelSheet) GetRowsFrom(startIndex int) (rows []*ExcelRow) {
+	if startIndex < 0 || startIndex >= es.RowLength {
+		return nil
+	}
 	return es.Rows[startIndex:]
 }
 
-func (es *ExcelSheet) GetDataRowsByFilter(startIndex int, filter func(row *ExcelRow) bool) (rows []*ExcelRow) {
+func (es *ExcelSheet) GetRowsBetween(startIndex int, endIndex int) (rows []*ExcelRow) {
+	if startIndex == endIndex {
+		return nil
+	}
+	min := mathx.MinInt(startIndex, endIndex)
+	if min < 0 {
+		return nil
+	}
+	max := mathx.MaxInt(startIndex, endIndex)
+	if max >= es.RowLength {
+		return nil
+	}
+	return es.Rows[min:max]
+}
+
+func (es *ExcelSheet) GetRowsByFilter(startIndex int, filter func(row *ExcelRow) bool) (rows []*ExcelRow) {
 	for _, row := range es.Rows[startIndex:] {
 		if filter(row) {
 			rows = append(rows, row)

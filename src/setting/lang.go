@@ -26,8 +26,7 @@ func (o LangTemp) String() string {
 }
 
 type LangSetting struct {
-	Name     string   `yaml:"name"`
-	TempPath LangTemp `yaml:"temp"`
+	Name string `yaml:"name"`
 
 	Boolean    LangDataType `yaml:"boolean,omitempty"`
 	Int8       LangDataType `yaml:"int8,omitempty"`

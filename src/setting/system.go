@@ -2,16 +2,36 @@ package setting
 
 import (
 	"fmt"
+	"github.com/xuzhuoxi/infra-go/filex"
 )
 
 // 数据结构定义所支持的编程语言定义
 type ProgramLanguage struct {
-	Name string `yaml:"name"`
-	Ref  string `yaml:"ref"`
+	Name string   `yaml:"name"`
+	Ref  string   `yaml:"ref"`
+	Temp []string `yaml:"temp"`
 }
 
 func (o ProgramLanguage) String() string {
-	return fmt.Sprintf("Lang{Name=%s, Ref=%s}", o.Name, o.Ref)
+	return fmt.Sprintf("Lang{Name=%s, Ref=%s, Temp=%s}", o.Name, o.Ref, o.Temp)
+}
+
+func (o *ProgramLanguage) UpgradePath(basePath string) {
+	o.Ref = filex.Combine(basePath, o.Ref)
+	for index, _ := range o.Temp {
+		o.Temp[index] = filex.Combine(basePath, o.Temp[index])
+	}
+}
+
+func (o *ProgramLanguage) TempPaths() string {
+	if len(o.Temp) == 0 {
+		return ""
+	}
+	rs := o.Temp[0]
+	for i := 1; i < len(o.Temp); i += 1 {
+		rs = rs + "," + o.Temp[i]
+	}
+	return rs
 }
 
 type SystemSetting struct {
@@ -29,6 +49,12 @@ type SystemSetting struct {
 func (s *SystemSetting) String() string {
 	return fmt.Sprintf("System{Languages=%v, Fields=%v, Files=%v}",
 		s.Languages, s.DataFieldFormats, s.DataFileFormats)
+}
+
+func (s *SystemSetting) UpgradePath(basePath string) {
+	for index, _ := range s.Languages {
+		s.Languages[index].UpgradePath(basePath)
+	}
 }
 
 func (s *SystemSetting) FindProgramLanguage(lang string) (ok bool, define *ProgramLanguage) {

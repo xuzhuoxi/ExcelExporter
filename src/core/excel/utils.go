@@ -117,25 +117,28 @@ func LoadSheets(excelFile *excelize.File, sheetPrefix string, nickRow int) (shee
 			continue
 		}
 
-		es := &ExcelSheet{SheetIndex: indexes[i], SheetName: n, RowLength: rowLen}
+		sheet := &ExcelSheet{SheetIndex: indexes[i], SheetName: n, RowLength: rowLen}
 
 		maxCellLen := 0
 		for _, cells := range rows {
 			cellLen := len(cells)
 			maxCellLen = mathx.MaxInt(maxCellLen, cellLen)
 		}
-		es.Axis = GenAxis(maxCellLen)
+		sheet.Axis = GenAxis(maxCellLen)
 		if nickRow > 0 {
-			es.SetNick(rows[nickRow-1])
+			sheet.SetNick(rows[nickRow-1])
 		} else {
-			es.SetNick(es.Axis)
+			sheet.SetNick(sheet.Axis)
 		}
 
+		sheetRows := make([]*ExcelRow, rowLen)
 		for rowIndex, cells := range rows {
-			er := &ExcelRow{Index: rowIndex, Cell: cells, Sheet: es}
-			es.Rows = append(es.Rows, er)
+			er := &ExcelRow{Index: rowIndex, Cell: cells, Sheet: sheet}
+			sheetRows[rowIndex] = er
 		}
-		sheets = append(sheets, es)
+		sheet.Rows = sheetRows
+
+		sheets = append(sheets, sheet)
 	}
 	return sheets, nil
 }

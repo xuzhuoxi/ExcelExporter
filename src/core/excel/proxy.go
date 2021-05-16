@@ -36,7 +36,7 @@ func (ep *ExcelProxy) ValueAtAxis(sheet string, axis string) (value string, err 
 func (ep *ExcelProxy) MergedRows(startRow int) (err error) {
 	var rows []*ExcelRow
 	for _, sheet := range ep.Sheets {
-		rows = append(rows, sheet.GetDataRows(startRow-1)...)
+		rows = append(rows, sheet.GetRowsFrom(startRow-1)...)
 	}
 	if len(rows) == 0 {
 		return errors.New("Rows is empty! ")
@@ -52,7 +52,7 @@ func (ep *ExcelProxy) MergedRows(startRow int) (err error) {
 func (ep *ExcelProxy) MergedRowsByFilter(startRow int, filter func(row *ExcelRow) bool) (err error) {
 	var rows []*ExcelRow
 	for _, sheet := range ep.Sheets {
-		rows = append(rows, sheet.GetDataRowsByFilter(startRow-1, filter)...)
+		rows = append(rows, sheet.GetRowsByFilter(startRow-1, filter)...)
 	}
 	if len(rows) == 0 {
 		return errors.New("Rows is empty! ")

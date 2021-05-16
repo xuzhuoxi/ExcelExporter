@@ -27,7 +27,7 @@ func (o *SourceCfg) UpgradePath(basePath string) {
 	}
 }
 
-func (o SourceCfg) CheckFileMatching(filePath string) bool {
+func (o SourceCfg) CheckFileFormat(filePath string) bool {
 	if len(o.ExtName) == 0 {
 		return false
 	}
