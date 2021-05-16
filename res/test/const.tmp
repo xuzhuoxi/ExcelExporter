@@ -1,0 +1,5 @@
+开始啦
+{{$abArr := .}}
+内容：{{range $index, $ab := $abArr}}
+    {{$index}}={{$ab.A}},{{$ab.B}},{{$ab.C}} {{end}}
+结束啦

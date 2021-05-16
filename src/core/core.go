@@ -31,7 +31,7 @@ var (
 )
 
 var (
-	ProgramLanguageTemps map[string]*Template = make(map[string]*Template)
+	ProgramLanguageTemps map[string]*TemplateProxy = make(map[string]*TemplateProxy)
 )
 
 func SetLogger(logger logx.ILogger) {
@@ -166,7 +166,7 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 	return nil
 }
 
-func getProgramLanguageTemp(lang string) (temp *Template, err error) {
+func getProgramLanguageTemp(lang string) (temp *TemplateProxy, err error) {
 	if _, ok := ProgramLanguageTemps[lang]; ok {
 		return ProgramLanguageTemps[lang], nil
 	}

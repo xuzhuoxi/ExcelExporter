@@ -1,0 +1,7 @@
+开始啦
+{{$proxy := .}}
+{{$rows := $proxy.DataRows}}
+内容：
+{{range $k, $row := $rows}}
+    {{$k}} = {{$row.ValueAtIndex 0}}, {{$row.ValueAtIndex 1}}{{end}}
+结束啦
