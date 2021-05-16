@@ -14,7 +14,6 @@ type ExcelPrefix struct {
 
 func (o ExcelPrefix) String() string {
 	return fmt.Sprintf("Prefix{Data=%s, Const=%s}", o.Data, o.Const)
-
 }
 
 // 值为Excel对应单元格号，用'_'分隔
@@ -44,7 +43,7 @@ func (o ExcelOutput) String() string {
 }
 
 // 不同编程语言对应的字段名称，
-type ExcelLangFieldNameRow struct {
+type ExcelFieldNameRow struct {
 	As3Row        int `yaml:"as3"`
 	CPlusRow      int `yaml:"c++"`
 	CSharpRow     int `yaml:"c#"`
@@ -55,7 +54,7 @@ type ExcelLangFieldNameRow struct {
 	DbRow         int `yaml:"db"`
 }
 
-func (o ExcelLangFieldNameRow) String() string {
+func (o ExcelFieldNameRow) String() string {
 	return fmt.Sprintf("FieldRow{as3=%d, c++=%d, c#=%d, go=%d, java=%d, ts=%d, json=%d, db=%d}",
 		o.As3Row, o.CPlusRow, o.CSharpRow, o.GoRow, o.JsonRow, o.TypeScriptRow, o.JsonRow, o.DbRow)
 }
@@ -73,12 +72,12 @@ type ExcelTitle struct {
 	// 数据格式,单元格格式目前支持{uint8,uint16,uint32,int8,int16,int32,float32,boolean,string,string(*)}
 	DataTypeRow int `yaml:"data_type"`
 	// 语言或数据格式使用的字段名称
-	FieldNames ExcelLangFieldNameRow `yaml:"field_names"`
+	FieldNameRows ExcelFieldNameRow `yaml:"field_names"`
 }
 
 func (o ExcelTitle) String() string {
 	return fmt.Sprintf("TitleRow{name=%d, remark=%d, valid_mark=%d, data_type=%d, fields=%v}",
-		o.NameRow, o.RemarkRow, o.ValidMarkRow, o.DataTypeRow, o.FieldNames)
+		o.NameRow, o.RemarkRow, o.ValidMarkRow, o.DataTypeRow, o.FieldNameRows)
 }
 
 // 数据定义

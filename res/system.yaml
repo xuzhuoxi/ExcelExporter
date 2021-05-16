@@ -1,5 +1,5 @@
 # 数据结构定义所支持的编程语言
-languages:
+program_languages:
   - name: 'as3'
     ref: './langs/as3.yaml'
   - name: 'c++'
@@ -13,17 +13,11 @@ languages:
   - name: 'ts'
     ref: './langs/ts.yaml'
 
-# 支持的数据文件格式
-out_files:
-  - json
-  - binary
-  - sql
-
 # 支持的数据字段格式
 # 其中string中的*代表字符数，范围[1,1024]。
 # 浮点数最多支持6位小数，而且当数值越大，精度就越低，反之亦然
 # 使用浮点数时，如果是负数，序列化为二进制后再读取，部分编程语言会出现抖动现象，如AS3: -2.3 => [-64,19,51,51] => -2.299999952316284
-fields:
+datafield_formats:
   - uint8
   - uint16
   - uint32
@@ -44,3 +38,9 @@ fields:
   - 'boolean[]'
   - 'string[]'
   - 'string(*)[]'
+
+# 支持的数据文件格式
+datafile_formats:
+  - json
+  - binary
+  - sql

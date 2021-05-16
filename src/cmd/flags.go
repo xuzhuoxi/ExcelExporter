@@ -12,37 +12,37 @@ const (
 )
 
 type FlagParams struct {
-	Mode   uint
-	Field  string
-	Lang   string
-	File   string
-	Source string
-	Target string
+	Mode            uint
+	LangRefs        string
+	FieldTypes      string
+	DataFileFormats string
+	Source          string
+	Target          string
 }
 
 func (fp *FlagParams) GetCommandParams() *CommandParams {
 	titleOn := (fp.Mode & uint(core.TitleMark)) > 0
 	dataOn := (fp.Mode & uint(core.DataMark)) > 0
 	constOn := (fp.Mode & uint(core.ConstMark)) > 0
-	fields := strings.Split(fp.Field, ParamsSep)
-	langs := strings.Split(fp.File, ParamsSep)
-	files := strings.Split(fp.Field, ParamsSep)
+	langRefs := strings.Split(fp.LangRefs, ParamsSep)
+	fieldTypes := strings.Split(fp.FieldTypes, ParamsSep)
+	dataFileFormats := strings.Split(fp.DataFileFormats, ParamsSep)
 	return &CommandParams{HandleData: dataOn, HandleTitle: titleOn, HandleConst: constOn,
-		Fields: fields, Lands: langs, Files: files}
+		FieldTypes: fieldTypes, LangRefs: langRefs, DataFileFormats: dataFileFormats}
 }
 
 type CommandParams struct {
-	HandleTitle bool
-	HandleData  bool
-	HandleConst bool
-	Fields      []string
-	Lands       []string
-	Files       []string
+	HandleTitle     bool
+	HandleData      bool
+	HandleConst     bool
+	LangRefs        []string
+	FieldTypes      []string
+	DataFileFormats []string
 }
 
 func (o *CommandParams) GenDataContexts() (contexts []*core.DataContext) {
-	fieldLen := len(o.Fields)
-	fileLen := len(o.Files)
+	fieldLen := len(o.FieldTypes)
+	fileLen := len(o.DataFileFormats)
 	if !o.HandleData || fieldLen == 0 || fileLen == 0 {
 		return nil
 	}
@@ -50,7 +50,7 @@ func (o *CommandParams) GenDataContexts() (contexts []*core.DataContext) {
 	contexts = make([]*core.DataContext, len)
 	for i := 0; i < fieldLen; i += 1 {
 		for j := 0; j < fileLen; j += 1 {
-			context := &core.DataContext{DataField: o.Fields[i], DataFile: o.Files[j]}
+			context := &core.DataContext{DataField: o.FieldTypes[i], DataFile: o.DataFileFormats[j]}
 			contexts[i*j] = context
 		}
 	}
@@ -58,8 +58,8 @@ func (o *CommandParams) GenDataContexts() (contexts []*core.DataContext) {
 }
 
 func (o *CommandParams) GenTitleContexts() (contexts []*core.TitleContext) {
-	fieldLen := len(o.Fields)
-	langLen := len(o.Lands)
+	fieldLen := len(o.FieldTypes)
+	langLen := len(o.LangRefs)
 	if !o.HandleTitle || fieldLen == 0 || langLen == 0 {
 		return nil
 	}
@@ -67,7 +67,7 @@ func (o *CommandParams) GenTitleContexts() (contexts []*core.TitleContext) {
 	contexts = make([]*core.TitleContext, len)
 	for i := 0; i < fieldLen; i += 1 {
 		for j := 0; j < langLen; j += 1 {
-			context := &core.TitleContext{TitleField: o.Fields[i], TitleLang: o.Lands[j]}
+			context := &core.TitleContext{TitleField: o.FieldTypes[i], TitleLang: o.LangRefs[j]}
 			contexts[i*j] = context
 		}
 	}
@@ -76,9 +76,9 @@ func (o *CommandParams) GenTitleContexts() (contexts []*core.TitleContext) {
 
 func ParseFlag() (cfg *FlagParams, err error) {
 	mode := flag.Uint("mode", 0, "Running Mode! ")
-	field := flag.String("field", "", "Use Fields! ")
-	lang := flag.String("lang", "", "Use Languages! ")
-	file := flag.String("file", "", "Output Files! ")
+	langRefs := flag.String("lang", "", "Use Languages! ")
+	fieldTypes := flag.String("field", "", "Use Fields! ")
+	dataFileFormats := flag.String("file", "", "Output Files! ")
 	source := flag.String("source", "", "Source Redefine! ")
 	target := flag.String("target", "", "Target Redefine! ")
 	flag.Parse()
@@ -86,8 +86,8 @@ func ParseFlag() (cfg *FlagParams, err error) {
 	if *mode == 0 {
 		return nil, errors.New("Mode Error! ")
 	}
-	if len(*field) == 0 {
-		return nil, errors.New("Field Error! ")
+	if len(*fieldTypes) == 0 {
+		return nil, errors.New("Field Type Error! ")
 	}
-	return &FlagParams{Mode: *mode, Field: *field, Lang: *lang, File: *file, Source: *source, Target: *target}, nil
+	return &FlagParams{Mode: *mode, FieldTypes: *fieldTypes, LangRefs: *langRefs, DataFileFormats: *dataFileFormats, Source: *source, Target: *target}, nil
 }

@@ -4,14 +4,14 @@ import (
 	"errors"
 	"fmt"
 	"github.com/xuzhuoxi/infra-go/filex"
+	"github.com/xuzhuoxi/infra-go/osxu"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	"github.com/xuzhuoxi/infra-go/osxu"
 )
 
 var (
 	//RootPath = `D:\workspaces\GoPath\src\github.com\xuzhuoxi\ExcelExporter\res`
-	RootPath    = osxu.GetRunningDir()
+	RootPath = osxu.GetRunningDir()
 
 	SystemPath  = filex.Combine(RootPath, "system.yaml")
 	ProjectPath = filex.Combine(RootPath, "project.yaml")
@@ -33,7 +33,7 @@ func (s *Settings) Init() {
 }
 
 func (s *Settings) InitLangSetting(lang string) error {
-	ok, ref := s.System.FindLangRef(lang)
+	ok, ref := s.System.FindProgramLanguage(lang)
 	if !ok {
 		return errors.New(fmt.Sprintf("Lang(%s) is not supported!", lang))
 	}
