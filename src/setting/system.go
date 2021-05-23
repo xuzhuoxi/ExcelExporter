@@ -7,28 +7,35 @@ import (
 
 // 数据结构定义所支持的编程语言定义
 type ProgramLanguage struct {
-	Name string   `yaml:"name"`
-	Ref  string   `yaml:"ref"`
-	Temp []string `yaml:"temp"`
+	Name       string   `yaml:"name"`
+	ExtendName string   `yaml:"ext"`
+	RefPath    string   `yaml:"ref"`
+	Temp       []string `yaml:"temp"`
+
+	Setting *LangSetting
 }
 
 func (o ProgramLanguage) String() string {
-	return fmt.Sprintf("Lang{Name=%s, Ref=%s, Temp=%s}", o.Name, o.Ref, o.Temp)
+	return fmt.Sprintf("Lang{Name=%s, RefPath=%s, Temp=%s}", o.Name, o.RefPath, o.Temp)
 }
 
 func (o *ProgramLanguage) UpgradePath(basePath string) {
-	o.Ref = filex.Combine(basePath, o.Ref)
+	o.RefPath = filex.Combine(basePath, o.RefPath)
 	for index, _ := range o.Temp {
 		o.Temp[index] = filex.Combine(basePath, o.Temp[index])
 	}
 }
 
 func (o *ProgramLanguage) TempPaths() string {
-	if len(o.Temp) == 0 {
+	ln := len(o.Temp)
+	if ln == 0 {
 		return ""
 	}
+	if ln == 1 {
+		return o.Temp[0]
+	}
 	rs := o.Temp[0]
-	for i := 1; i < len(o.Temp); i += 1 {
+	for i := 1; i < ln; i += 1 {
 		rs = rs + "," + o.Temp[i]
 	}
 	return rs
@@ -36,7 +43,7 @@ func (o *ProgramLanguage) TempPaths() string {
 
 type SystemSetting struct {
 	// 数据结构定义所支持的编程语言
-	Languages []ProgramLanguage `yaml:"program_languages"`
+	Languages []*ProgramLanguage `yaml:"program_languages"`
 	// 支持的数据字段格式
 	// 其中string中的*代表字符数，范围[1,1024]。
 	// 浮点数最多支持6位小数，而且当数值越大，精度就越低，反之亦然
@@ -57,16 +64,16 @@ func (s *SystemSetting) UpgradePath(basePath string) {
 	}
 }
 
-func (s *SystemSetting) FindProgramLanguage(lang string) (ok bool, define *ProgramLanguage) {
+func (s *SystemSetting) FindProgramLanguage(lang string) (define *ProgramLanguage, ok bool) {
 	if len(lang) == 0 {
-		return false, nil
+		return nil, false
 	}
 	for _, ld := range s.Languages {
 		if ld.Name == lang {
-			return true, &ld
+			return ld, true
 		}
 	}
-	return false, nil
+	return nil, false
 }
 
 func (s *SystemSetting) CheckDataFieldFormat(dataFieldFormat string) bool {

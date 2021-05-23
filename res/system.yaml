@@ -3,26 +3,32 @@
 # temp:模板路径，只支持相对路径，多个路径用","分隔，第一个模板为主模板
 program_languages:
   - name: 'as3'
+    ext: 'as3'
     ref: './langs/as3.yaml'
     temp:
       - './langs/templates/as3.temp'
   - name: 'c++'
+    ext: 'cpp'
     ref: './langs/c++.yaml'
     temp:
       - './langs/templates/c++.temp'
   - name: 'c#'
+    ext: 'cs'
     ref: './langs/c#.yaml'
     temp:
       - './langs/templates/c#.temp'
   - name: 'go'
+    ext: 'go'
     ref: './langs/go.yaml'
     temp:
       - './langs/templates/go.temp'
   - name: 'java'
+    ext: 'java'
     ref: './langs/java.yaml'
     temp:
       - './langs/templates/java.temp'
   - name: 'ts'
+    ext: 'ts'
     ref: './langs/ts.yaml'
     temp:
       - './langs/templates/ts.temp'

@@ -1,4 +1,4 @@
-package core
+package temps
 
 import (
 	"os"
@@ -26,7 +26,7 @@ func TestNewTemplate(t *testing.T) {
 	if nil != err {
 		t.Fatal(err)
 	}
-	temp.Execute(os.Stdout, datas)
+	temp.Execute(os.Stdout, datas, true)
 }
 
 //func TestLoadTemplate(t *testing.T) {

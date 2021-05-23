@@ -6,6 +6,28 @@ import (
 	"strings"
 )
 
+type FieldOutputCfg struct {
+	// 前端定义输出目录
+	Client string `yaml:"client"`
+	// 后端定义输出目录
+	Server string `yaml:"server"`
+	// 数据库定义输出目录
+	Database string `yaml:"database"`
+}
+
+func (o FieldOutputCfg) GetValue(fieldType FieldType) string {
+	switch fieldType {
+	case FieldTypeClient:
+		return o.Client
+	case FieldTypeServer:
+		return o.Server
+	case FieldTypeDatabase:
+		return o.Database
+	default:
+		return ""
+	}
+}
+
 type SourceCfg struct {
 	// 目录路径或文件路径
 	Value []string `yaml:"value"`
@@ -45,19 +67,36 @@ func (o SourceCfg) String() string {
 }
 
 type TargetCfg struct {
-	// 目录路径或文件路径
-	Value string `yaml:"value"`
+	// 根目录
+	RootDir string `yaml:"root"`
+	// 定义目录
+	Title FieldOutputCfg `yaml:"title"`
+	// 数据目录
+	Data FieldOutputCfg `yaml:"data"`
+	// 常量目录
+	Const string `yaml:"const"`
 }
 
 func (o *TargetCfg) UpgradePath(basePath string) {
-	if filex.IsFolder(o.Value) {
-		return
+	if !filex.IsFolder(o.RootDir) {
+		o.RootDir = filex.Combine(basePath, o.RootDir)
 	}
-	o.Value = filex.Combine(basePath, o.Value)
+}
+
+func (o *TargetCfg) GetTitleDir(fieldType FieldType) string {
+	return filex.Combine(o.RootDir, o.Title.GetValue(fieldType))
+}
+
+func (o *TargetCfg) GetDataDir(fieldType FieldType) string {
+	return filex.Combine(o.RootDir, o.Data.GetValue(fieldType))
+}
+
+func (o *TargetCfg) ConstDir() string {
+	return filex.Combine(o.RootDir, o.Const)
 }
 
 func (o TargetCfg) String() string {
-	return fmt.Sprintf("IO{Path=%s, Encoding=%s}", o.Value)
+	return fmt.Sprintf("IO{Path=%s, Encoding=%s}", o.RootDir, o.Title, o.Data, o.Const)
 }
 
 // 缓冲区定义
@@ -109,6 +148,6 @@ func (ps *ProjectSetting) UpdateTarget(target string) {
 	if len(target) == 0 || len(strings.TrimSpace(target)) == 0 {
 		return
 	}
-	ps.Target.Value = strings.TrimSpace(target)
+	ps.Target.RootDir = strings.TrimSpace(target)
 
 }

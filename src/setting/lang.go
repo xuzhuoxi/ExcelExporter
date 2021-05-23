@@ -1,6 +1,9 @@
 package setting
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+)
 
 type LangDataType struct {
 	Name      string `yaml:"name"`
@@ -54,6 +57,77 @@ type LangSetting struct {
 	Float64Arr LangDataType `yaml:"float64[],omitempty"`
 	StrArr     LangDataType `yaml:"string[],omitempty"`
 	JsonArr    LangDataType `yaml:"json[],omitempty"`
+}
+
+func (o *LangSetting) GetFormat(name string) (format LangDataType, ok bool) {
+	switch name {
+	case FieldBoolean:
+		return o.Boolean, true
+	case FieldBooleanArr:
+		return o.BooleanArr, true
+	case FieldInt8:
+		return o.Int8, true
+	case FieldInt8Arr:
+		return o.Int8Arr, true
+	case FieldInt16:
+		return o.Int16, true
+	case FieldInt16Arr:
+		return o.Int16Arr, true
+	case FieldInt32:
+		return o.Int32, true
+	case FieldInt32Arr:
+		return o.Int32Arr, true
+	case FieldInt64:
+		return o.Int64, true
+	case FieldInt64Arr:
+		return o.Int64Arr, true
+	case FieldUInt8:
+		return o.UInt8, true
+	case FieldUInt8Arr:
+		return o.UInt8Arr, true
+	case FieldUInt16:
+		return o.UInt16, true
+	case FieldUInt16Arr:
+		return o.UInt16Arr, true
+	case FieldUInt32:
+		return o.UInt32, true
+	case FieldUInt32Arr:
+		return o.UInt32Arr, true
+	case FieldUInt64:
+		return o.UInt64, true
+	case FieldUInt64Arr:
+		return o.UInt64Arr, true
+	case FieldFloat32:
+		return o.Float32, true
+	case FieldFloat32Arr:
+		return o.Float32Arr, true
+	case FieldFloat64:
+		return o.Float64, true
+	case FieldFloat64Arr:
+		return o.Float64Arr, true
+	case FieldString:
+		return o.Str, true
+	case FieldStringArr:
+		return o.StrArr, true
+	case FieldJson:
+		return o.Json, true
+	case FieldJsonArr:
+		return o.JsonArr, true
+	default:
+		return LangDataType{}, false
+	}
+}
+
+func (o *LangSetting) getFormat(name string) (format LangDataType, ok bool) {
+	t := reflect.TypeOf(o)
+	elem := t.Elem()
+	ln := elem.NumField()
+	for index := 0; index < ln; index += 1 {
+		f := elem.Field(index)
+		tag := f.Tag.Get("yaml")
+		fmt.Println(tag)
+	}
+	return o.Boolean, ok
 }
 
 func (o *LangSetting) String() string {

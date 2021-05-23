@@ -23,7 +23,6 @@ type Settings struct {
 	System  *SystemSetting
 	Project *ProjectSetting
 	Excel   *ExcelSetting
-	LangMap map[string]*LangSetting
 }
 
 func (s *Settings) Init() {
@@ -33,20 +32,19 @@ func (s *Settings) Init() {
 }
 
 func (s *Settings) InitLangSetting(lang string) error {
-	ok, ref := s.System.FindProgramLanguage(lang)
+	ref, ok := s.System.FindProgramLanguage(lang)
 	if !ok {
 		return errors.New(fmt.Sprintf("Lang(%s) is not supported!", lang))
 	}
-	path := filex.Combine(RootPath, ref.Ref)
 	langSetting := &LangSetting{}
-	s.initSetting(path, langSetting)
-	s.LangMap[lang] = langSetting
+	UnmarshalData(ref.RefPath, langSetting)
+	ref.Setting = langSetting
 	return nil
 }
 
 func (s *Settings) loadSystemSetting() error {
 	system := &SystemSetting{}
-	err := s.initSetting(SystemPath, system)
+	err := UnmarshalData(SystemPath, system)
 	if nil != err {
 		return err
 	}
@@ -56,7 +54,7 @@ func (s *Settings) loadSystemSetting() error {
 
 func (s *Settings) loadProjectSetting() error {
 	project := &ProjectSetting{}
-	err := s.initSetting(ProjectPath, project)
+	err := UnmarshalData(ProjectPath, project)
 	if nil != err {
 		return err
 	}
@@ -66,7 +64,7 @@ func (s *Settings) loadProjectSetting() error {
 
 func (s *Settings) loadExcelSetting() error {
 	excel := &ExcelSetting{}
-	err := s.initSetting(ExcelPath, excel)
+	err := UnmarshalData(ExcelPath, excel)
 	if nil != err {
 		return err
 	}
@@ -74,12 +72,14 @@ func (s *Settings) loadExcelSetting() error {
 	return nil
 }
 
-func (s *Settings) initSetting(path string, settingRef interface{}) error {
-	bs, err := ioutil.ReadFile(path)
+//------------------------
+
+func UnmarshalData(dataPath string, dataRef interface{}) error {
+	bs, err := ioutil.ReadFile(dataPath)
 	if nil != err {
 		return err
 	}
-	err = yaml.Unmarshal(bs, settingRef)
+	err = yaml.Unmarshal(bs, dataRef)
 	if nil != err {
 		return err
 	}

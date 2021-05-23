@@ -1,24 +1,19 @@
 package core
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
+	"github.com/xuzhuoxi/ExcelExporter/src/core/temps"
 	"github.com/xuzhuoxi/ExcelExporter/src/setting"
 	"github.com/xuzhuoxi/infra-go/filex"
 	"github.com/xuzhuoxi/infra-go/logx"
+	"io/ioutil"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
-)
-
-type HandleMark uint
-
-const (
-	TitleMark HandleMark = 1 << iota
-	DataMark
-	ConstMark
 )
 
 var (
@@ -31,7 +26,7 @@ var (
 )
 
 var (
-	ProgramLanguageTemps map[string]*TemplateProxy = make(map[string]*TemplateProxy)
+	ProgramLanguageTemps = make(map[string]*temps.TemplateProxy)
 )
 
 func SetLogger(logger logx.ILogger) {
@@ -114,7 +109,7 @@ func executeExcelFile(dataFilePath string) (err error) {
 		return
 	}
 
-	Logger.Infoln(fmt.Sprintf("[core.executeExcelFile] Load excel success at :%s", dataFilePath))
+	Logger.Infoln(fmt.Sprintf("[core.executeExcelFile] Load excel success at \"%s\"", dataFilePath))
 
 	for _, titleCtx := range TitleCtx {
 		et := executeTitleContext(Excel, titleCtx)
@@ -139,26 +134,66 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 		return err
 	}
 
-	Logger.Infoln(temp)
+	langDefine, ok := Setting.System.FindProgramLanguage(titleCtx.ProgramLanguage)
+	if !ok {
+		err = errors.New(fmt.Sprintf("-lang error at %d", titleCtx.ProgramLanguage))
+		Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] %s ", err))
+		return err
+	}
 
 	prefix := Setting.Excel.Prefix.Data
-	Logger.Infoln(fmt.Sprintf("[core.executeExcelFile] Start execute: %s", titleCtx))
+	fieldType := setting.FieldType(titleCtx.FieldType)
+	Logger.Infoln(fmt.Sprintf("[core.executeTitleContext] Start execute: %s", titleCtx))
 	for _, sheet := range excel.Sheets {
 		// 过滤Sheet的命名
 		if strings.Index(sheet.SheetName, prefix) != 0 {
 			continue
 		}
-		fieldTypeRow := sheet.GetRowAt(Setting.Excel.Title.FieldTypeRow - 1)
-		if nil == fieldTypeRow || fieldTypeRow.Empty() {
-			Logger.Warnln(fmt.Sprintf("[core.executeExcelFile] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
-			continue
-		}
-		selects, err := parseFileTypeRow(sheet, fieldTypeRow, titleCtx.FieldTypeIndex)
-		if nil != err {
+		outEle, ok := Setting.Excel.Output.GetElement(fieldType)
+		if !ok {
+			err = errors.New(fmt.Sprintf("-field error at %d", titleCtx.FieldType))
+			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] %s ", err))
 			return err
 		}
-		Logger.Infoln(fmt.Sprintf("[core.executeExcelFile] %v", selects))
+
+		fieldTypeRow := sheet.GetRowAt(Setting.Excel.Title.FieldTypeRow - 1)
+		if nil == fieldTypeRow || fieldTypeRow.Empty() {
+			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
+			continue
+		}
+		selects, err := parseFileTypeRow(sheet, fieldTypeRow, uint(fieldType)-1)
+		if nil != err {
+			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Parse file type error: %s ", err))
+			return err
+		}
+		Logger.Infoln("Selects:", selects)
+		titleName, _ := sheet.ValueAtAxis(outEle.TitleName)
+		// 创建模板数据代理
+		tempDataProxy := &TempDataProxy{Sheet: sheet, Excel: excel, Index: selects,
+			TitleName: titleName, Language: titleCtx.ProgramLanguage}
+
+		targetDir := Setting.Project.Target.GetTitleDir(fieldType)
+		if !filex.IsExist(targetDir) {
+			os.MkdirAll(targetDir, os.ModePerm)
+		}
+
+		fileName, err := sheet.ValueAtAxis(outEle.TitleName)
+		extendName := langDefine.ExtendName
+		if nil != err {
+			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] GetTitleFileName error: %s ", err))
+			return err
+		}
+		filePath := filex.Combine(targetDir, fileName+"."+extendName)
+		buff := bytes.NewBuffer(nil)
+		err = temp.Execute(buff, tempDataProxy, false)
+		if nil != err {
+			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Execute Template error: %s ", err))
+			return err
+		}
+		ioutil.WriteFile(filePath, buff.Bytes(), os.ModePerm)
+		Logger.Infoln(fmt.Sprintf("[core.executeTitleContext] Generate file : %s", filePath))
 	}
+	Logger.Infoln(fmt.Sprintf("[core.executeTitleContext] Finish execute: %s", titleCtx))
 	return nil
 }
 
@@ -166,13 +201,13 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 	return nil
 }
 
-func getProgramLanguageTemp(lang string) (temp *TemplateProxy, err error) {
+func getProgramLanguageTemp(lang string) (t *temps.TemplateProxy, err error) {
 	if _, ok := ProgramLanguageTemps[lang]; ok {
 		return ProgramLanguageTemps[lang], nil
 	}
-	if ok, l := Setting.System.FindProgramLanguage(lang); ok {
-		temp, err := LoadTemplates(l.TempPaths())
-		if nil == err {
+	if l, ok := Setting.System.FindProgramLanguage(lang); ok {
+		temp, err := temps.LoadTemplates(l.TempPaths())
+		if nil != err {
 			return nil, err
 		}
 		ProgramLanguageTemps[lang] = temp
@@ -181,7 +216,7 @@ func getProgramLanguageTemp(lang string) (temp *TemplateProxy, err error) {
 	return nil, errors.New(fmt.Sprintf("Undefined Program Lanaguage: %s", lang))
 }
 
-func parseFileTypeRow(sheet *excel.ExcelSheet, row *excel.ExcelRow, selectIndex int) (selects []int, err error) {
+func parseFileTypeRow(sheet *excel.ExcelSheet, row *excel.ExcelRow, selectIndex uint) (selects []int, err error) {
 	for index, cell := range row.Cell {
 		m, _ := regexp.MatchString(`[01],[01],[01]`, cell)
 		if !m {

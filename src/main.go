@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/xuzhuoxi/ExcelExporter/src/cmd"
 	"github.com/xuzhuoxi/ExcelExporter/src/core"
+	"github.com/xuzhuoxi/ExcelExporter/src/core/cmd"
 	"github.com/xuzhuoxi/ExcelExporter/src/setting"
 	"github.com/xuzhuoxi/infra-go/logx"
 	"github.com/xuzhuoxi/infra-go/mathx"
@@ -27,20 +27,27 @@ func main() {
 		return
 	}
 	logger.Infoln(fmt.Sprintf("[main] Flag=%s", flags))
-
 	s := &setting.Settings{}
 	s.Init()
-
 	runningPath := osxu.GetRunningDir()
-
 	s.System.UpgradePath(runningPath)
-
 	s.Project.UpdateSource(flags.Source)
 	s.Project.UpdateTarget(flags.Target)
 	s.Project.UpgradePath(runningPath)
+	logger.Infoln(fmt.Sprintf("[main] %s", s.System))
+	logger.Infoln(fmt.Sprintf("[main] %s", s.Excel))
+	logger.Infoln(fmt.Sprintf("[main] %s", s.Project))
 
 	cmdParams := flags.GetCommandParams()
 	logger.Infoln(fmt.Sprintf("[main] Command=%s", cmdParams))
+
+	for _, lang := range cmdParams.LangRefs {
+		err = s.InitLangSetting(lang)
+		if nil != err {
+			logger.Infoln(fmt.Sprintf("[main] Error: %s", err))
+			return
+		}
+	}
 
 	titleContexts := cmdParams.GenTitleContexts()
 	dataContexts := cmdParams.GenDataContexts()

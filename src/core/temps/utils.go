@@ -1,39 +1,13 @@
-package core
+package temps
 
 import (
 	"errors"
 	"fmt"
 	"github.com/xuzhuoxi/infra-go/filex"
-	"io"
 	"io/ioutil"
 	"strings"
 	"text/template"
 )
-
-type TemplateProxy struct {
-	Name     string
-	Template *template.Template
-}
-
-func (temp *TemplateProxy) CloneTemplate() *template.Template {
-	if nil != temp.Template {
-		return nil
-	}
-	clone, _ := temp.Template.Clone()
-	return clone
-}
-
-func (temp *TemplateProxy) Execute(wr io.Writer, data interface{}) error {
-	return temp.Template.Execute(wr, data)
-}
-
-func (temp *TemplateProxy) ExecuteTemplate(wr io.Writer, data interface{}) error {
-	return temp.Template.ExecuteTemplate(wr, temp.Name, data)
-}
-
-func (temp *TemplateProxy) ExecuteTemplateByName(wr io.Writer, name string, data interface{}) error {
-	return temp.Template.ExecuteTemplate(wr, name, data)
-}
 
 func NewTemplate(name string, text string) (*TemplateProxy, error) {
 	temp, err := template.New(name).Parse(text)

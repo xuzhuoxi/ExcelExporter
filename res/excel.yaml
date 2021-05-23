@@ -11,21 +11,21 @@ output:
   # 客户端定义
   client:
     #数据结构定义名(类名)
-    class_name: B_1
+    title_name: B1
     #数据文件名
-    data_name: C_1
+    data_name: C1
   # 服务端定义
   server:
     # 数据结构定义名(类名)
-    class_name: B_1
+    title_name: B1
     # 数据文件名
-    data_name: D_1
+    data_name: D1
   # 数据库定义
   database:
     # 数据结构定义名(类名)
-    class_name: B_1
+    title_name: B1
     # 数据文件名
-    data_name: E_1
+    data_name: E1
   # 其它定义
   data_key: F_1
 
@@ -50,7 +50,7 @@ title:
     java: 6
     ts: 6
     json: 6
-    db: 6
+    sql: 6
 
 # 数据定义
 data:
