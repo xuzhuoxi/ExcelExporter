@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
+	"github.com/xuzhuoxi/ExcelExporter/src/core/naming"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/temps"
 	"github.com/xuzhuoxi/ExcelExporter/src/setting"
 	"github.com/xuzhuoxi/infra-go/filex"
@@ -28,6 +29,11 @@ var (
 var (
 	ProgramLanguageTemps = make(map[string]*temps.TemplateProxy)
 )
+
+func init() {
+	temps.RegisterFunc("ToLowerCamelCase", naming.ToLowerCamelCase)
+	temps.RegisterFunc("ToUpperCamelCase", naming.ToUpperCamelCase)
+}
 
 func SetLogger(logger logx.ILogger) {
 	if nil == logger {
@@ -211,6 +217,7 @@ func getProgramLanguageTemp(lang string) (t *temps.TemplateProxy, err error) {
 			return nil, err
 		}
 		ProgramLanguageTemps[lang] = temp
+
 		return temp, nil
 	}
 	return nil, errors.New(fmt.Sprintf("Undefined Program Lanaguage: %s", lang))

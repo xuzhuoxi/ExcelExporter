@@ -1,18 +1,18 @@
-package ${MODULE}
-{{$proxy := .}}
+package client
+{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$clsName := $proxy.TitleName}}
 /**
  * @author ${AUTHOR}
  * Created on ${DATE}.
  */
-type I{{$proxy.TitleName}} interface {
-{{range $index, $value := $proxy.Index}}
+type I{{$clsName}} interface {
+{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
     /**
      * {{$proxy.GetTitleName $value}}
      *
      * @remark {{$proxy.GetTitleRemark $value}}
-     * @return {{$proxy.GetTitleValueFormat $value}}
+     * @return {{$langDefine.Name}}
      */
-    Get{{$proxy.GetFieldName $value}}() {{$proxy.GetTitleValueFormat $value}}
+    Get{{ToUpperCamelCase $fieldName}}() {{$langDefine.Name}}
 {{end}}
 }
 
@@ -20,38 +20,38 @@ type I{{$proxy.TitleName}} interface {
  * @author ${AUTHOR}
  * Created on ${DATE}.
  */
-type {{$proxy.TitleName}} struct {
-	//以下为字段定义------------
-{{range $index, $value := $proxy.Index}}
+type {{$clsName}} struct {
+{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
     /**
      * {{$proxy.GetTitleName $value}}
-     *
-     * @remark {{$proxy.GetTitleRemark $value}}
-     * @return {{$proxy.GetTitleValueFormat $value}}
      */
-    _{{$proxy.GetFieldName $value}}() {{$proxy.GetTitleValueFormat $value}}
+    {{ToLowerCamelCase $fieldName}} {{$langDefine.Name}}
 {{end}}
 }
 
-    //属性接口实现-----------------------
-{{range $index, $value := $proxy.Index}}
-    /**
-     * {{$proxy.GetTitleName $value}}
-     *
-     * @remark {{$proxy.GetTitleRemark $value}}
-     * @return {{$proxy.GetTitleValueFormat $value}}
-     */
-    _{{$proxy.GetFieldName $value}}() {{$proxy.GetTitleValueFormat $value}}
+//属性接口实现-----------------------
+{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+/**
+ * {{$proxy.GetTitleName $value}}
+*/
+func (o *{{$clsName}}) Get{{ToUpperCamelCase $fieldName}}() {{$langDefine.Name}} {
+	return o.{{ToLowerCamelCase $fieldName}}
+}
 {{end}}
 
 //解释接口实现-----------------------
 
-func (o *${CLASS}) parseJson(proxy IJsonReaderProxy) {
-	//以下为从Json数据中解释出字段数据
-${PARSE_JSON_CONTENT}
+func (o *{{$clsName}}) parseJson(proxy IJsonReaderProxy) {
+	//以下为从Json数据中解释出字段数据{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+    o.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.JsonGet}}("{{$fieldName}}"){{end}}
 }
 
-func (o *${CLASS}) parseBinary(proxy IBinaryReaderProxy) {
-	//以下为从二进制数据中解释出字段数据
-${PARSE_BINARY_CONTENT}
+func (o *{{$clsName}}) parseYaml(proxy IYamlReaderProxy) {
+	//以下为从Yaml数据中解释出字段数据{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+    o.{{ToLowerCamelCase $fieldName}} = proxy.Get{{$langDefine.YamlGet}}("{{$fieldName}}"){{end}}
+}
+
+func (o *{{$clsName}}) parseBinary(proxy IBinaryReaderProxy) {
+	//以下为从二进制数据中解释出字段数据{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+    o.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.BinaryGet}}(){{end}}
 }

@@ -1,5 +1,7 @@
 package setting
 
+import "regexp"
+
 type FieldType uint
 
 const (
@@ -48,3 +50,14 @@ const (
 	FileJson = "json"
 	FileSql  = "sql"
 )
+
+var (
+	reg = regexp.MustCompile(`string\(\d+\)`)
+)
+
+func FormatStringField(fieldValue string) string {
+	if !reg.MatchString(fieldValue) {
+		return fieldValue
+	}
+	return reg.ReplaceAllString(fieldValue, "string")
+}

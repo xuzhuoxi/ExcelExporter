@@ -5,17 +5,17 @@ import (
 	"reflect"
 )
 
-type LangDataType struct {
+type LangDefine struct {
 	Name      string `yaml:"name"`
 	JsonGet   string `yaml:"json_get,omitempty"`
 	JsonSet   string `yaml:"json_set,omitempty"`
 	YamlGet   string `yaml:"yaml_get,omitempty"`
 	YamlSet   string `yaml:"yaml_set,omitempty"`
-	BinaryGet string `yaml:"binary_get,omitempty"`
-	BinarySet string `yaml:"binary_set,omitempty"`
+	BinaryGet string `yaml:"bin_get,omitempty"`
+	BinarySet string `yaml:"bin_set,omitempty"`
 }
 
-func (o LangDataType) String() string {
+func (o LangDefine) String() string {
 	return fmt.Sprintf("{Name=%s, JsonGet=%s, JsonSet=%s, YamlGet=%s, YamlSet=%s, BinaryGet=%s, BinarySet=%s}",
 		o.Name, o.JsonGet, o.JsonSet, o.YamlGet, o.YamlSet, o.BinaryGet, o.BinarySet)
 }
@@ -31,35 +31,35 @@ func (o LangTemp) String() string {
 type LangSetting struct {
 	Name string `yaml:"name"`
 
-	Boolean    LangDataType `yaml:"boolean,omitempty"`
-	Int8       LangDataType `yaml:"int8,omitempty"`
-	Int16      LangDataType `yaml:"int16,omitempty"`
-	Int32      LangDataType `yaml:"int32,omitempty"`
-	Int64      LangDataType `yaml:"int64,omitempty"`
-	UInt8      LangDataType `yaml:"uint8,omitempty"`
-	UInt16     LangDataType `yaml:"uint16,omitempty"`
-	UInt32     LangDataType `yaml:"uint32,omitempty"`
-	UInt64     LangDataType `yaml:"uint64,omitempty"`
-	Float32    LangDataType `yaml:"float32,omitempty"`
-	Float64    LangDataType `yaml:"float64,omitempty"`
-	Str        LangDataType `yaml:"string,omitempty"`
-	Json       LangDataType `yaml:"json,omitempty"`
-	BooleanArr LangDataType `yaml:"boolean[],omitempty"`
-	Int8Arr    LangDataType `yaml:"int8[],omitempty"`
-	Int16Arr   LangDataType `yaml:"int16[],omitempty"`
-	Int32Arr   LangDataType `yaml:"int32[],omitempty"`
-	Int64Arr   LangDataType `yaml:"int64[],omitempty"`
-	UInt8Arr   LangDataType `yaml:"uint8[],omitempty"`
-	UInt16Arr  LangDataType `yaml:"uint16[],omitempty"`
-	UInt32Arr  LangDataType `yaml:"uint32[],omitempty"`
-	UInt64Arr  LangDataType `yaml:"uint64[],omitempty"`
-	Float32Arr LangDataType `yaml:"float32[],omitempty"`
-	Float64Arr LangDataType `yaml:"float64[],omitempty"`
-	StrArr     LangDataType `yaml:"string[],omitempty"`
-	JsonArr    LangDataType `yaml:"json[],omitempty"`
+	Boolean    LangDefine `yaml:"boolean,omitempty"`
+	Int8       LangDefine `yaml:"int8,omitempty"`
+	Int16      LangDefine `yaml:"int16,omitempty"`
+	Int32      LangDefine `yaml:"int32,omitempty"`
+	Int64      LangDefine `yaml:"int64,omitempty"`
+	UInt8      LangDefine `yaml:"uint8,omitempty"`
+	UInt16     LangDefine `yaml:"uint16,omitempty"`
+	UInt32     LangDefine `yaml:"uint32,omitempty"`
+	UInt64     LangDefine `yaml:"uint64,omitempty"`
+	Float32    LangDefine `yaml:"float32,omitempty"`
+	Float64    LangDefine `yaml:"float64,omitempty"`
+	Str        LangDefine `yaml:"string,omitempty"`
+	Json       LangDefine `yaml:"json,omitempty"`
+	BooleanArr LangDefine `yaml:"boolean[],omitempty"`
+	Int8Arr    LangDefine `yaml:"int8[],omitempty"`
+	Int16Arr   LangDefine `yaml:"int16[],omitempty"`
+	Int32Arr   LangDefine `yaml:"int32[],omitempty"`
+	Int64Arr   LangDefine `yaml:"int64[],omitempty"`
+	UInt8Arr   LangDefine `yaml:"uint8[],omitempty"`
+	UInt16Arr  LangDefine `yaml:"uint16[],omitempty"`
+	UInt32Arr  LangDefine `yaml:"uint32[],omitempty"`
+	UInt64Arr  LangDefine `yaml:"uint64[],omitempty"`
+	Float32Arr LangDefine `yaml:"float32[],omitempty"`
+	Float64Arr LangDefine `yaml:"float64[],omitempty"`
+	StrArr     LangDefine `yaml:"string[],omitempty"`
+	JsonArr    LangDefine `yaml:"json[],omitempty"`
 }
 
-func (o *LangSetting) GetFormat(name string) (format LangDataType, ok bool) {
+func (o *LangSetting) GetLangDefine(name string) (format LangDefine, ok bool) {
 	switch name {
 	case FieldBoolean:
 		return o.Boolean, true
@@ -114,11 +114,11 @@ func (o *LangSetting) GetFormat(name string) (format LangDataType, ok bool) {
 	case FieldJsonArr:
 		return o.JsonArr, true
 	default:
-		return LangDataType{}, false
+		return LangDefine{}, false
 	}
 }
 
-func (o *LangSetting) getFormat(name string) (format LangDataType, ok bool) {
+func (o *LangSetting) getFormat(name string) (format LangDefine, ok bool) {
 	t := reflect.TypeOf(o)
 	elem := t.Elem()
 	ln := elem.NumField()

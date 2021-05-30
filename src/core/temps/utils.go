@@ -9,8 +9,16 @@ import (
 	"text/template"
 )
 
+var (
+	tempFuncMap = template.FuncMap{}
+)
+
+func RegisterFunc(funcName string, funcBody interface{}) {
+	tempFuncMap[funcName] = funcBody
+}
+
 func NewTemplate(name string, text string) (*TemplateProxy, error) {
-	temp, err := template.New(name).Parse(text)
+	temp, err := template.New(name).Funcs(tempFuncMap).Parse(text)
 	if nil != err {
 		return nil, err
 	}
@@ -30,7 +38,7 @@ func LoadTemplate(tempFile string) (*TemplateProxy, error) {
 		return nil, err
 	}
 	text := string(body)
-	temp, err := template.New(tempFile).Parse(text)
+	temp, err := template.New(tempFile).Funcs(tempFuncMap).Parse(text)
 	if nil != err {
 		return nil, err
 	}
@@ -42,11 +50,13 @@ func LoadTemplate(tempFile string) (*TemplateProxy, error) {
 
 func LoadTemplates(tempFiles string) (*TemplateProxy, error) {
 	files := strings.Split(tempFiles, ",")
-	temp, err := template.ParseFiles(files...)
+	_, name := filex.Split(files[0])
+	temp := template.New(name)
+	temp.Funcs(tempFuncMap)
+	temp, err := temp.ParseFiles(files...)
 	if nil != err {
 		return nil, err
 	}
-	_, name := filex.Split(files[0])
 	rs := &TemplateProxy{Name: name, Template: temp}
 	return rs, nil
 }

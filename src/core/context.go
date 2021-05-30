@@ -1,8 +1,10 @@
 package core
 
 import (
+	"errors"
 	"fmt"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
+	"github.com/xuzhuoxi/ExcelExporter/src/setting"
 )
 
 type TitleContext struct {
@@ -60,28 +62,31 @@ func (o *TempDataProxy) GetTitleRemark(index int) string {
 	return value
 }
 
-func (o *TempDataProxy) GetTitleValueFormat(index int) string {
+func (o *TempDataProxy) GetTitleLangDefine(index int) setting.LangDefine {
 	formatRowIndex := Setting.Excel.Title.FieldFormatRow - 1
 	value, err := o.Sheet.GetRowAt(formatRowIndex).ValueAtIndex(index)
 	if err != nil {
-		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error At %d", index))
-		return ""
+		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error At %d: %v", index, err))
+		return setting.LangDefine{}
 	}
 	ls, ok := Setting.System.FindProgramLanguage(o.Language)
 	if !ok {
-		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error At %d", index))
-		return ""
+		err = errors.New(fmt.Sprintf("Find Program Language Fail At %d ", index))
+		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error At %d: %v", index, err))
+		return setting.LangDefine{}
 	}
-	format, ok := ls.Setting.GetFormat(value)
+	value = setting.FormatStringField(value)
+	format, ok := ls.Setting.GetLangDefine(value)
 	if !ok {
-		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error At %d", index))
-		return ""
+		err = errors.New(fmt.Sprintf("Get Lang Define Fail At %d, %s ", index, value))
+		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error At %d: %v", index, err))
+		return setting.LangDefine{}
 	}
-	return format.Name
+	return format
 }
 
 func (o *TempDataProxy) GetFieldName(index int) string {
-	fmt.Println("TempDataProxy.GetFieldName:", index)
+	//fmt.Println("TempDataProxy.GetFieldName:", index)
 	langFormatRowIndex := Setting.Excel.Title.FieldNameRows.GetRowNum(o.Language) - 1
 	value, err := o.Sheet.GetRowAt(langFormatRowIndex).ValueAtIndex(index)
 	if err != nil {
