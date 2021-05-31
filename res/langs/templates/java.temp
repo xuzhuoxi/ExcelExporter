@@ -1,0 +1,36 @@
+package {module};
+{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$clsName := $proxy.TitleName}}
+import org.json.JSONObject;
+import xu.BinaryReaderProxy;
+import xu.JsonReaderProxy;
+
+/**
+ * @author ${AUTHOR}
+ * Created on ${DATE}.
+ */
+ public class {{$clsName}} {
+{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+    // {{$proxy.GetTitleName $value}}
+     private {{$langDefine.Name}} {{ToLowerCamelCase $fieldName}};
+{{end}}
+{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+    /**
+     * {{$proxy.GetTitleName $value}}
+     *
+     * @remark {{$proxy.GetTitleRemark $value}}
+     * @return {{$langDefine.Name}}
+     */
+    public{{$langDefine.Name}} get{{ToUpperCamelCase $fieldName}}() {
+        return this.{{ToLowerCamelCase $fieldName}};
+    }
+{{end}}
+
+	//以下为解释数据方法------------
+    public void parseJson(JsonReaderProxy proxy) {{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+        o.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.JsonGet}}("{{$fieldName}}"){{end}}
+    }
+
+    public void parseBinary(BinaryReaderProxy proxy) {{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+        o.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.BinaryGet}}(){{end}}
+    }
+ }

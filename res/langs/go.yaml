@@ -39,6 +39,7 @@ int64:
   yaml_get: ''
   yaml_set: ''
   bin_get: 'ReadInt64'
+  bin_set: ''
 uint8:
   name: 'uint8'
   json_get: 'GetUInt8'
@@ -142,6 +143,7 @@ json:
   yaml_get: ''
   yaml_set: ''
   bin_get: 'ReadInt64Array'
+  bin_set: ''
 'uint8[]':
   name: '[]uint8'
   json_get: 'GetUInt8Array'

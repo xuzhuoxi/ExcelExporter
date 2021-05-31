@@ -1,4 +1,4 @@
-package client
+package {module}
 {{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$clsName := $proxy.TitleName}}
 /**
  * @author ${AUTHOR}
