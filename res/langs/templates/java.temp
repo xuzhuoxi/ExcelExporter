@@ -5,8 +5,8 @@ import xu.BinaryReaderProxy;
 import xu.JsonReaderProxy;
 
 /**
- * @author ${AUTHOR}
- * Created on ${DATE}.
+ * @author {AUTHOR}
+ * Created on {DATE}.
  */
  public class {{$clsName}} {
 {{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}

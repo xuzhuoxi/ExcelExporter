@@ -1,8 +1,8 @@
 package {module}
 {{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$clsName := $proxy.TitleName}}
 /**
- * @author ${AUTHOR}
- * Created on ${DATE}.
+ * @author {AUTHOR}
+ * Created on {DATE}.
  */
 type I{{$clsName}} interface {
 {{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}

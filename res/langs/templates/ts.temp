@@ -1,0 +1,37 @@
+namespace {modle} { {{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$clsName := $proxy.TitleName}}
+    /**
+	 * @author {AUTHOR}
+	 * Created on {DATE}.
+	 */
+	export class {{$clsName}} {
+        //以下为属性声明----------------
+{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+        // {{$proxy.GetTitleName $value}}
+         private _{{ToLowerCamelCase $fieldName}}: {{$langDefine.Name}};
+{{end}}
+        //以下为Get方法-----------------
+{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+        /**
+         * {{$proxy.GetTitleName $value}}
+         *
+         * @remark {{$proxy.GetTitleRemark $value}}
+         * @return {{$langDefine.Name}}
+         */
+        get {{ToLowerCamelCase $fieldName}}(): {{$langDefine.Name}} {
+            return this._{{ToLowerCamelCase $fieldName}};
+        }
+{{end}}
+        //以下为解释数据方法------------
+        public parseJson(data: any): void {
+{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+            this._{{ToLowerCamelCase $fieldName}} = data.{{$langDefine.JsonGet}};
+{{end}}
+        }
+
+        public parseBinary(proxy: xu.BinaryReaderProxy): void {
+{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+            this._{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.BinaryGet}}();
+{{end}}
+        }
+	}
+}
