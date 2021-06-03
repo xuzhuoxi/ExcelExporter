@@ -46,7 +46,9 @@ const (
 	LangGo         = "go"
 	LangJava       = "java"
 	LangTypeScript = "ts"
+)
 
+const (
 	FileJson = "json"
 	FileSql  = "sql"
 )

@@ -1,8 +1,8 @@
-package client
+package {module}
 
 /**
- * @author ${AUTHOR}
- * Created on ${DATE}.
+ * @author {AUTHOR}
+ * Created on {DATE}.
  */
 type ICfgBuildingNew interface {
 
@@ -187,115 +187,53 @@ json
  * Created on ${DATE}.
  */
 type CfgBuildingNew struct {
+    //以下为属性声明
 
-    /**
-     * ID
-     */
+    // ID
     buildingType uint16
-
-    /**
-     * 建筑
-     */
+    // 建筑
     name string
-
-    /**
-     * 规格
-     */
+    // 规格
     layoutX uint16
-
-    /**
-     * 门X坐标
-     */
+    // 门X坐标
     gateX float32
-
-    /**
-     * 门Y坐标
-     */
+    // 门Y坐标
     gateY float32
-
-    /**
-     * 地形
-     */
+    // 地形
     terrainFlags int32
-
-    /**
-     * 供需人口类型
-     */
+    // 供需人口类型
     supplyPopulationType int16
-
-    /**
-     * 有没有门
-     */
+    // 有没有门
     isDoor int8
-
-    /**
-     * 建筑描述
-     */
+    // 建筑描述
     desc1 string
-
-    /**
-     * 建筑描述
-     */
+    // 建筑描述
     desc2 string
-
-    /**
-     * 建筑描述
-     */
+    // 建筑描述
     desc3 string
-
-    /**
-     * 测试1
-     */
+    // 测试1
     f1 []bool
-
-    /**
-     * 测试2
-     */
+    // 测试2
     f2 []uint8
-
-    /**
-     * 测试3
-     */
+    // 测试3
     f3 []uint16
-
-    /**
-     * 测试4
-     */
+    // 测试4
     f4 []uint32
-
-    /**
-     * 测试5
-     */
+    // 测试5
     f5 []int8
-
-    /**
-     * 测试6
-     */
+    // 测试6
     f6 []int16
-
-    /**
-     * 测试7
-     */
+    // 测试7
     f7 []int32
-
-    /**
-     * 测试8
-     */
+    // 测试8
     f8 []float32
-
-    /**
-     * 测试9
-     */
+    // 测试9
     f9 []string
-
-    /**
-     * 测试10
-     */
+    // 测试10
     f10 []string
-
 }
 
-//属性接口实现-----------------------
+// 接口实现
 
 /**
  * ID
@@ -445,35 +383,37 @@ func (o *CfgBuildingNew) GetF10() []string {
 }
 
 
-//解释接口实现-----------------------
+//解释接口实现
 
-func (o *CfgBuildingNew) parseJson(proxy IJsonReaderProxy) {
-	//以下为从Json数据中解释出字段数据
-    o.buildingType = proxy.GetUInt16("building_type")
-    o.name = proxy.GetString("name")
-    o.layoutX = proxy.GetUInt16("layoutX")
-    o.gateX = proxy.GetFloat32("gateX")
-    o.gateY = proxy.GetFloat32("gateY")
-    o.terrainFlags = proxy.GetInt32("terrain_flags")
-    o.supplyPopulationType = proxy.GetInt16("supply_population_type")
-    o.isDoor = proxy.GetInt8("isDoor")
-    o.desc1 = proxy.GetString("desc1")
-    o.desc2 = proxy.GetString("desc2")
-    o.desc3 = proxy.GetString("desc3")
-    o.f1 = proxy.GetBooleanArray("f1")
-    o.f2 = proxy.GetUInt8Array("f2")
-    o.f3 = proxy.GetUInt16Array("f3")
-    o.f4 = proxy.GetUInt32Array("f4")
-    o.f5 = proxy.GetInt8Array("f5")
-    o.f6 = proxy.GetInt16Array("f6")
-    o.f7 = proxy.GetInt32Array("f7")
-    o.f8 = proxy.GetFloat32Array("f8")
-    o.f9 = proxy.GetStringArray("f9")
-    o.f10 = proxy.GetStringArray("f10")
+// Json数据解释
+func (o *CfgBuildingNew) ParseJson(proxy IJsonReaderProxy) {
+	//以下为从 Json数据代理 中解释出字段数据
+    o.buildingType = proxy.GetUInt16("building_type_j")
+    o.name = proxy.GetString("name_j")
+    o.layoutX = proxy.GetUInt16("layoutX_j")
+    o.gateX = proxy.GetFloat32("gateX_j")
+    o.gateY = proxy.GetFloat32("gateY_j")
+    o.terrainFlags = proxy.GetInt32("terrain_flags_j")
+    o.supplyPopulationType = proxy.GetInt16("supply_population_type_j")
+    o.isDoor = proxy.GetInt8("isDoor_j")
+    o.desc1 = proxy.GetString("desc1_j")
+    o.desc2 = proxy.GetString("desc2_j")
+    o.desc3 = proxy.GetString("desc3_j")
+    o.f1 = proxy.GetBooleanArray("f1_j")
+    o.f2 = proxy.GetUInt8Array("f2_j")
+    o.f3 = proxy.GetUInt16Array("f3_j")
+    o.f4 = proxy.GetUInt32Array("f4_j")
+    o.f5 = proxy.GetInt8Array("f5_j")
+    o.f6 = proxy.GetInt16Array("f6_j")
+    o.f7 = proxy.GetInt32Array("f7_j")
+    o.f8 = proxy.GetFloat32Array("f8_j")
+    o.f9 = proxy.GetStringArray("f9_j")
+    o.f10 = proxy.GetStringArray("f10_j")
 }
 
-func (o *CfgBuildingNew) parseYaml(proxy IYamlReaderProxy) {
-	//以下为从Yaml数据中解释出字段数据
+// Yaml数据解释
+func (o *CfgBuildingNew) ParseYaml(proxy IYamlReaderProxy) {
+	//以下为从 Yaml数据代理 中解释出字段数据
     o.buildingType = proxy.Get("building_type")
     o.name = proxy.Get("name")
     o.layoutX = proxy.Get("layoutX")
@@ -497,8 +437,9 @@ func (o *CfgBuildingNew) parseYaml(proxy IYamlReaderProxy) {
     o.f10 = proxy.Get("f10")
 }
 
-func (o *CfgBuildingNew) parseBinary(proxy IBinaryReaderProxy) {
-	//以下为从二进制数据中解释出字段数据
+// 二进制数据解释
+func (o *CfgBuildingNew) ParseBinary(proxy IBinaryReaderProxy) {
+	//以下为从 二进制数据代理 中解释出字段数据
     o.buildingType = proxy.ReadUInt16()
     o.name = proxy.ReadString()
     o.layoutX = proxy.ReadUInt16()

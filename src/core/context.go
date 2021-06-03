@@ -86,11 +86,26 @@ func (o *TempDataProxy) GetTitleLangDefine(index int) setting.LangDefine {
 }
 
 func (o *TempDataProxy) GetFieldName(index int) string {
+	return o.GetTitleLangKey(index, o.Language)
+}
+
+func (o *TempDataProxy) GetTitleLangKey(index int, langName string) string {
 	//fmt.Println("TempDataProxy.GetFieldName:", index)
-	langFormatRowIndex := Setting.Excel.Title.FieldNameRows.GetRowNum(o.Language) - 1
+	langFormatRowIndex := Setting.Excel.Title.LangKeyRows.GetRowNum(langName) - 1
 	value, err := o.Sheet.GetRowAt(langFormatRowIndex).ValueAtIndex(index)
 	if err != nil {
-		Logger.Error(fmt.Sprintf("GetFieldName Error At %d", index))
+		Logger.Error(fmt.Sprintf("GetTitleLangKey Error At [%s,%d]", langName, index))
+		return ""
+	}
+	return value
+}
+
+func (o *TempDataProxy) GetTitleFileKey(index int, fileType string) string {
+	//fmt.Println("TempDataProxy.GetTitleFileKey:", fileType, index)
+	langFormatRowIndex := Setting.Excel.Title.FileKeyRows.GetRowNum(fileType) - 1
+	value, err := o.Sheet.GetRowAt(langFormatRowIndex).ValueAtIndex(index)
+	if err != nil {
+		Logger.Error(fmt.Sprintf("GetTitleFileKey Error At [%s,%d]", fileType, index))
 		return ""
 	}
 	return value

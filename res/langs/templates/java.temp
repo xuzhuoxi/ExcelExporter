@@ -25,12 +25,15 @@ import xu.JsonReaderProxy;
     }
 {{end}}
 
-	//以下为解释数据方法------------
-    public void parseJson(JsonReaderProxy proxy) {{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
-        o.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.JsonGet}}("{{$fieldName}}"){{end}}
+    // Json数据解释
+    public void parseJson(JsonReaderProxy proxy) {
+        // 以下为从 Json数据代理 中解释出字段数据{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}{{$jsonName := $proxy.GetTitleFileKey $value "json"}}
+        o.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.JsonGet}}("{{$jsonName}}"){{end}}
     }
 
-    public void parseBinary(BinaryReaderProxy proxy) {{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+    // 二进制数据解释
+    public void parseBinary(BinaryReaderProxy proxy) {
+        // 以下为从 二进制数据代理 中解释出字段数据{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
         o.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.BinaryGet}}(){{end}}
     }
  }

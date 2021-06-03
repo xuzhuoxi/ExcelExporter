@@ -38,23 +38,25 @@ title:
   # 数据注释所在行号，与Excel行号一致
   remark_row: 3
   # 输出选择，格式: 'c,s,d'，c、s、d的格式只能是0或1，c指前端，s指后端，d指数据库，顺序不能颠倒。从1开始。
-  field_type_row: 4
+  field_switch_row: 4
   # 数据格式,单元格格式目前支持{uint8,uint16,uint32,int8,int16,int32,float32,boolean,string,string(*)}
   field_format_row: 5
-  # 各语言或数据格式使用的字段名称
-  field_name_rows:
+  # 各语言使用的字段名称
+  lang_key_rows:
     as3: 6
     c++: 6
     'c#': 6
     go: 6
     java: 6
     ts: 6
-    json: 6
-    sql: 6
+  # 数据文件使用的字段名称
+  file_key_rows:
+    json: 7
+    sql: 7
 
 # 数据定义
 data:
   # 数据的开始行号
-  start: 7
+  start: 8
   # 数据忽略
   pass: gray

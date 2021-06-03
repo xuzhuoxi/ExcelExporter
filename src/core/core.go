@@ -162,7 +162,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 			return err
 		}
 
-		fieldTypeRow := sheet.GetRowAt(Setting.Excel.Title.FieldTypeRow - 1)
+		fieldTypeRow := sheet.GetRowAt(Setting.Excel.Title.FieldSwitchRow - 1)
 		if nil == fieldTypeRow || fieldTypeRow.Empty() {
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
 			continue

@@ -13,12 +13,12 @@ namespace {MODULE}
     [Serializable]
     public class {{$clsName}}
     {
-        //以下为属性声明----------------
+        // 以下为属性声明
 {{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
         // {{$proxy.GetTitleName $value}}
-         [SerializeField] private {{$langDefine.Name}} m_{{ToLowerCamelCase $fieldName}};
-{{end}}
-        //以下为Get方法-----------------
+        [SerializeField] private {{$langDefine.Name}} {{ToLowerCamelCase $fieldName}};{{end}}
+
+        // 以下为Get方法
 {{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
         /**
          * {{$proxy.GetTitleName $value}}
@@ -26,18 +26,20 @@ namespace {MODULE}
          * @remark {{$proxy.GetTitleRemark $value}}
          * @return {{$langDefine.Name}}
          */
-        public{{$langDefine.Name}} {{ToLowerCamelCase $fieldName}} => m_{{ToLowerCamelCase $fieldName}};
+        public{{$langDefine.Name}} {{ToUpperCamelCase $fieldName}} => {{ToLowerCamelCase $fieldName}};
 {{end}}
-        //以下为解释数据方法------------
+        // 以下为解释数据方法
 
+        // Json数据解释
         public void ParseJson(string data)
         {
             JsonUtility.FromJsonOverwrite(data, this);
         }
 
+        // 二进制数据解释
 //		public void ParseBinary(proxy: xu.BinaryReaderProxy)
 //		{   {{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
-            //this._{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.BinaryGet}}();{{end}}
+            //this.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.BinaryGet}}();{{end}}
 //		}
 
         // 静态实例化
