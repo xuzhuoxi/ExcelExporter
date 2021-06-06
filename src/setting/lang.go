@@ -61,9 +61,9 @@ type LangSetting struct {
 
 func (o *LangSetting) GetLangDefine(name string) (format LangDefine, ok bool) {
 	switch name {
-	case FieldBoolean:
+	case FieldBool:
 		return o.Boolean, true
-	case FieldBooleanArr:
+	case FieldBoolArr:
 		return o.BooleanArr, true
 	case FieldInt8:
 		return o.Int8, true

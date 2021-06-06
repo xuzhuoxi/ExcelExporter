@@ -11,7 +11,7 @@ const (
 )
 
 const (
-	FieldBoolean    = "boolean"
+	FieldBool       = "boolean"
 	FieldInt8       = "int8"
 	FieldInt16      = "int16"
 	FieldInt32      = "int32"
@@ -24,7 +24,7 @@ const (
 	FieldFloat64    = "float64"
 	FieldString     = "string"
 	FieldJson       = "json"
-	FieldBooleanArr = "boolean[]"
+	FieldBoolArr    = "boolean[]"
 	FieldInt8Arr    = "int8[]"
 	FieldInt16Arr   = "int16[]"
 	FieldInt32Arr   = "int32[]"
