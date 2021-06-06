@@ -32,7 +32,7 @@ package {MODULE}{
         // 二进制数据解释
         public function parseBinary(proxy: BinaryReaderProxy): void {
             // 以下为从 二进制数据代理 中解释出字段数据{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
-            this._{{ToLowerCamelCase $fieldName}} = {{$langDefine.Name}}(data.{{$langDefine.BinaryGet}}()); {{end}}
+            this._{{ToLowerCamelCase $fieldName}} = {{$langDefine.Name}}(proxy.{{$langDefine.BinaryGet}}()); {{end}}
         }
      }
 }

@@ -115,8 +115,6 @@ func executeExcelFile(dataFilePath string) (err error) {
 		return
 	}
 
-	Logger.Infoln(fmt.Sprintf("[core.executeExcelFile] Load excel success at \"%s\"", dataFilePath))
-
 	for _, titleCtx := range TitleCtx {
 		et := executeTitleContext(Excel, titleCtx)
 		if nil != et {
@@ -149,7 +147,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 
 	prefix := Setting.Excel.Prefix.Data
 	fieldType := setting.FieldType(titleCtx.FieldType)
-	Logger.Infoln(fmt.Sprintf("[core.executeTitleContext] Start execute: %s", titleCtx))
+	Logger.Infoln(fmt.Sprintf("[core.executeTitleContext] Start Execute Content: %s", titleCtx))
 	for _, sheet := range excel.Sheets {
 		// 过滤Sheet的命名
 		if strings.Index(sheet.SheetName, prefix) != 0 {
@@ -158,7 +156,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 		outEle, ok := Setting.Excel.Output.GetElement(fieldType)
 		if !ok {
 			err = errors.New(fmt.Sprintf("-field error at %d", titleCtx.FieldType))
-			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] %s ", err))
+			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Error A %s ", err))
 			return err
 		}
 
@@ -172,7 +170,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Parse file type error: %s ", err))
 			return err
 		}
-		Logger.Infoln("Selects:", selects)
+		//Logger.Infoln("Selects:", selects)
 		titleName, _ := sheet.ValueAtAxis(outEle.TitleName)
 		// 创建模板数据代理
 		tempDataProxy := &TempDataProxy{Sheet: sheet, Excel: excel, Index: selects,

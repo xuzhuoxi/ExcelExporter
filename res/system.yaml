@@ -3,7 +3,7 @@
 # temp:模板路径，只支持相对路径，多个路径用","分隔，第一个模板为主模板
 program_languages:
   - name: 'as3'
-    ext: 'as3'
+    ext: 'as'
     ref: './langs/as3.yaml'
     temp:
       - './langs/templates/as3.temp'
