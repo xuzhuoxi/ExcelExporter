@@ -21,7 +21,7 @@ func (o ProgramLanguage) String() string {
 
 func (o *ProgramLanguage) UpgradePath(basePath string) {
 	o.RefPath = filex.Combine(basePath, o.RefPath)
-	for index, _ := range o.Temp {
+	for index := range o.Temp {
 		o.Temp[index] = filex.Combine(basePath, o.Temp[index])
 	}
 }
@@ -59,7 +59,7 @@ func (s *SystemSetting) String() string {
 }
 
 func (s *SystemSetting) UpgradePath(basePath string) {
-	for index, _ := range s.Languages {
+	for index := range s.Languages {
 		s.Languages[index].UpgradePath(basePath)
 	}
 }

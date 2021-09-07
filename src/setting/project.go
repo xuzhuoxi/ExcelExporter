@@ -41,7 +41,7 @@ func (o *SourceCfg) UpgradePath(basePath string) {
 	if len(o.Value) == 0 {
 		return
 	}
-	for index, _ := range o.Value {
+	for index := range o.Value {
 		if filex.IsExist(o.Value[index]) {
 			continue
 		}

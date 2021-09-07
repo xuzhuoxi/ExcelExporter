@@ -6,17 +6,17 @@ import (
 )
 
 const (
-	SIZE_OF_BOOLEAN int = 1
-	SIZE_OF_INT8    int = 1
-	SIZE_OF_INT16   int = 2
-	SIZE_OF_INT32   int = 4
-	SIZE_OF_INT64   int = 8
-	SIZE_OF_UINT8   int = 1
-	SIZE_OF_UINT16  int = 2
-	SIZE_OF_UINT32  int = 4
-	SIZE_OF_UINT64  int = 8
-	SIZE_OF_FLOAT32 int = 4
-	SIZE_OF_FLOAT64 int = 8
+	SIZE_OF_BOOLEAN = 1
+	SIZE_OF_INT8    = 1
+	SIZE_OF_INT16   = 2
+	SIZE_OF_INT32   = 4
+	SIZE_OF_INT64   = 8
+	SIZE_OF_UINT8   = 1
+	SIZE_OF_UINT16  = 2
+	SIZE_OF_UINT32  = 4
+	SIZE_OF_UINT64  = 8
+	SIZE_OF_FLOAT32 = 4
+	SIZE_OF_FLOAT64 = 8
 )
 
 type IBinaryReaderProxy interface {
