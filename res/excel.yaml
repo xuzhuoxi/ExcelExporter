@@ -31,17 +31,19 @@ output:
 
 # 表头定义
 title:
-  # 字段别名，用于查找指定列，值为0时使用列号作为别名
+  # 字段别名行号，用于查找指定列，值为0时使用列号作为别名
   col_nick_row: 0
   # 数据名称所在行号，与Excel行号一致
   name_row: 2
   # 数据注释所在行号，与Excel行号一致
   remark_row: 3
-  # 输出选择，格式: 'c,s,d'，c、s、d的格式只能是0或1，c指前端，s指后端，d指数据库，顺序不能颠倒。从1开始。
+  # 输出选择行号，内容格式: 'c,s,d'，c、s、d的格式只能是0或1，c指前端，s指后端，d指数据库，顺序不能颠倒。从1开始。
   field_switch_row: 4
-  # 数据格式,单元格格式目前支持{uint8,uint16,uint32,int8,int16,int32,float32,boolean,string,string(*)}
+  # 数据格式行号，内容格式支持:
+  # uint8,uint16,uint32,int8,int16,int32,float32,boolean,string,string(*),
+  # uint8[],uint16[],uint32[],int8[],int16[],int32[],float32[],boolean[],string[],string(*)[]
   field_format_row: 5
-  # 各语言使用的字段名称
+  # 各语言使用的字段名称对应行号
   lang_key_rows:
     as3: 6
     c++: 6
@@ -49,7 +51,7 @@ title:
     go: 6
     java: 6
     ts: 6
-  # 数据文件使用的字段名称
+  # 数据文件使用的字段名称行号
   file_key_rows:
     json: 7
     sql: 7

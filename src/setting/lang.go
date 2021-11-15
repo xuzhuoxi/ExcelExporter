@@ -81,21 +81,21 @@ func (o *LangSetting) GetLangDefine(name string) (format LangDefine, ok bool) {
 		return o.Int64, true
 	case FieldInt64Arr:
 		return o.Int64Arr, true
-	case FieldUInt8:
+	case FieldUint8:
 		return o.UInt8, true
-	case FieldUInt8Arr:
+	case FieldUint8Arr:
 		return o.UInt8Arr, true
-	case FieldUInt16:
+	case FieldUint16:
 		return o.UInt16, true
-	case FieldUInt16Arr:
+	case FieldUint16Arr:
 		return o.UInt16Arr, true
-	case FieldUInt32:
+	case FieldUint32:
 		return o.UInt32, true
-	case FieldUInt32Arr:
+	case FieldUint32Arr:
 		return o.UInt32Arr, true
-	case FieldUInt64:
+	case FieldUint64:
 		return o.UInt64, true
-	case FieldUInt64Arr:
+	case FieldUint64Arr:
 		return o.UInt64Arr, true
 	case FieldFloat32:
 		return o.Float32, true

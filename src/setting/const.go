@@ -16,10 +16,10 @@ const (
 	FieldInt16      = "int16"
 	FieldInt32      = "int32"
 	FieldInt64      = "int64"
-	FieldUInt8      = "uint8"
-	FieldUInt16     = "uint16"
-	FieldUInt32     = "uint32"
-	FieldUInt64     = "uint64"
+	FieldUint8      = "uint8"
+	FieldUint16     = "uint16"
+	FieldUint32     = "uint32"
+	FieldUint64     = "uint64"
 	FieldFloat32    = "float32"
 	FieldFloat64    = "float64"
 	FieldString     = "string"
@@ -29,10 +29,10 @@ const (
 	FieldInt16Arr   = "int16[]"
 	FieldInt32Arr   = "int32[]"
 	FieldInt64Arr   = "int64[]"
-	FieldUInt8Arr   = "uint8[]"
-	FieldUInt16Arr  = "uint16[]"
-	FieldUInt32Arr  = "uint32[]"
-	FieldUInt64Arr  = "uint64[]"
+	FieldUint8Arr   = "uint8[]"
+	FieldUint16Arr  = "uint16[]"
+	FieldUint32Arr  = "uint32[]"
+	FieldUint64Arr  = "uint64[]"
 	FieldFloat32Arr = "float32[]"
 	FieldFloat64Arr = "float64[]"
 	FieldStringArr  = "string[]"
@@ -49,8 +49,10 @@ const (
 )
 
 const (
-	FileJson = "json"
-	FileSql  = "sql"
+	FileJson   = "json"
+	FileSql    = "sql"
+	FileBinary = "binary"
+	FileYaml   = "yaml"
 )
 
 var (
