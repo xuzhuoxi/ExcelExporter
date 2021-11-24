@@ -5,8 +5,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-func newCharDataBuilder() IDataBuilder {
-	return &charDataBuilder{dataViper: viper.New()}
+func newCharDataBuilder(format string) IDataBuilder {
+	dataViper := viper.New()
+	dataViper.SetConfigType(format)
+	return &charDataBuilder{dataViper: dataViper}
 }
 
 type charDataBuilder struct {
@@ -16,6 +18,7 @@ type charDataBuilder struct {
 
 func (b *charDataBuilder) StartWriteData() {
 	b.rowIndex = 0
+	b.dataViper.Set("data2", make([]int64, 2))
 }
 
 func (b *charDataBuilder) StartNewRow() {
@@ -33,6 +36,7 @@ func (b *charDataBuilder) WriteCell(ktv *KTValue) error {
 	}
 	path := fmt.Sprintf("data.%d.%s", b.rowIndex, ktv.Key)
 	b.dataViper.Set(path, v)
+	//fmt.Println("WriteCell:", path, v)
 	return nil
 }
 
@@ -45,4 +49,8 @@ func (b *charDataBuilder) WriteRow(ktvArr []*KTValue) error {
 	}
 	b.StartNewRow()
 	return nil
+}
+
+func (b *charDataBuilder) WriteDataToFile(filePath string) error {
+	return b.dataViper.WriteConfigAs(filePath)
 }

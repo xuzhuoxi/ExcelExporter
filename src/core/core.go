@@ -54,16 +54,16 @@ func Execute(setting *setting.Settings, titleCtx []*TitleContext, dataCtx []*Dat
 	Logger.Infof("[core.Execute] TitleContext=%v", titleCtx)
 	Logger.Infof("[core.Execute] DataContext=%v", dataCtx)
 	Logger.Infof("[core.Execute] ConstCtx=%v", constCtx)
-	execute()
+	execExcelFiles()
 }
 
-func execute() {
+func execExcelFiles() {
 	if nil == Setting {
-		Logger.Infoln("[core.execute] Execution stop with error settings. ")
+		Logger.Infoln("[core.execExcelFiles] Execution stop with error settings. ")
 		return
 	}
 	if len(TitleCtx) == 0 && len(DataCtx) == 0 {
-		Logger.Infoln("[core.execute] Execution finish with doing nothing. ")
+		Logger.Infoln("[core.execExcelFiles] Execution finish with doing nothing. ")
 		return
 	}
 	Excel = &excel.ExcelProxy{}
@@ -71,39 +71,39 @@ func execute() {
 	sourcePath := Setting.Project.Source.Value
 	for _, path := range sourcePath {
 		if !filex.IsExist(path) {
-			Logger.Warnln(fmt.Sprintf("[core.execute] Source(%s) is not exist. ", path))
+			Logger.Warnln(fmt.Sprintf("[core.execExcelFiles] Source(%s) is not exist. ", path))
 			continue
 		}
 		if filex.IsFolder(path) {
-			executeFolder(path)
+			loadExcelFilesFromFolder(path)
 		} else {
-			executeFile(path, nil)
+			loadExcelFile(path, nil)
 		}
 	}
 }
 
-func executeFolder(folderPath string) {
+func loadExcelFilesFromFolder(folderPath string) {
 	filex.WaldAllFiles(folderPath, func(filePath string, fileInfo os.FileInfo, err error) error {
-		executeFile(filePath, fileInfo)
+		loadExcelFile(filePath, fileInfo)
 		return nil
 	})
 }
 
-func executeFile(filePath string, fileInfo os.FileInfo) {
+func loadExcelFile(filePath string, fileInfo os.FileInfo) {
 	isFileMatching := Setting.Project.Source.CheckFileFormat(filePath)
 	isFileEmpty := nil != fileInfo && fileInfo.Size() == 0
 	if !isFileMatching || isFileEmpty {
-		Logger.Infoln(fmt.Sprintf("[core.executeFile] Ignore file: %s", filePath))
+		Logger.Infoln(fmt.Sprintf("[core.loadExcelFile] Ignore file: %s", filePath))
 		return
 	}
 
 	Logger.Println()
-	Logger.Infoln(fmt.Sprintf("[core.executeFile] Start At %s", filePath))
+	Logger.Infoln(fmt.Sprintf("[core.loadExcelFile] Start At %s", filePath))
 	err := executeExcelFile(filePath)
 	if nil != err {
-		Logger.Warnln(fmt.Sprintf("[core.executeFile] Error At %s", err))
+		Logger.Warnln(fmt.Sprintf("[core.loadExcelFile] Error At %s", err))
 	} else {
-		Logger.Infoln(fmt.Sprintf("[core.executeFile] Finish At %s", filePath))
+		Logger.Infoln(fmt.Sprintf("[core.loadExcelFile] Finish At %s", filePath))
 	}
 }
 
@@ -125,7 +125,6 @@ func executeExcelFile(dataFilePath string) (err error) {
 			if nil != et {
 				Logger.Warnln(fmt.Sprintf("[core.executeExcelFile] %s", et))
 			}
-
 		}
 	}
 
@@ -149,7 +148,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 
 	langDefine, ok := Setting.System.FindProgramLanguage(titleCtx.ProgramLanguage)
 	if !ok {
-		err = errors.New(fmt.Sprintf("-lang error at %d", titleCtx.ProgramLanguage))
+		err = errors.New(fmt.Sprintf("-lang error at %s", titleCtx.ProgramLanguage))
 		Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] %s ", err))
 		return err
 	}
@@ -168,12 +167,12 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 			return err
 		}
 
-		fieldTypeRow := sheet.GetRowAt(Setting.Excel.Title.FieldSwitchRow - 1)
-		if nil == fieldTypeRow || fieldTypeRow.Empty() {
+		fieldRangeRow := sheet.GetRowAt(Setting.Excel.Title.FieldRangeRow - 1)
+		if nil == fieldRangeRow || fieldRangeRow.Empty() {
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
 			continue
 		}
-		selects, err := parseFileTypeRow(sheet, fieldTypeRow, uint(titleCtx.RangeType)-1)
+		selects, err := parseFileTypeRow(sheet, fieldRangeRow, uint(titleCtx.RangeType)-1)
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Parse file type error: %s ", err))
 			return err
@@ -219,18 +218,19 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 		if strings.Index(sheet.SheetName, prefix) != 0 {
 			continue
 		}
-		_, ok := Setting.Excel.Output.GetElement(dataCtx.RangeName)
+		Logger.Infoln(fmt.Sprintf("[core.executeDataContext] Sheet[%s]", sheet.SheetName))
+		outEle, ok := Setting.Excel.Output.GetElement(dataCtx.RangeName)
 		if !ok {
 			err := errors.New(fmt.Sprintf("-field error at \"%s\"", dataCtx.RangeName))
 			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Error A %s ", err))
 			return err
 		}
-		fieldTypeRow := sheet.GetRowAt(Setting.Excel.Title.FieldSwitchRow - 1)
-		if nil == fieldTypeRow || fieldTypeRow.Empty() {
+		fieldRangeRow := sheet.GetRowAt(Setting.Excel.Title.FieldRangeRow - 1)
+		if nil == fieldRangeRow || fieldRangeRow.Empty() {
 			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
 			continue
 		}
-		selects, err := parseFileTypeRow(sheet, fieldTypeRow, uint(dataCtx.RangeType)-1)
+		selects, err := parseFileTypeRow(sheet, fieldRangeRow, uint(dataCtx.RangeType)-1)
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Parse file type error: %s ", err))
 			return err
@@ -239,16 +239,43 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 			continue
 		}
 
-		keyRow := sheet.GetRowAt(Setting.Excel.Title.FileKeyRows.GetRowNum(dataCtx.DataFileFormat))
-		typeRow := sheet.GetRowAt(Setting.Excel.Title.FieldFormatRow)
+		fileName, err := sheet.ValueAtAxis(outEle.DataName)
+		if nil != err {
+			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] GetDataFileName error: %s ", err))
+			return err
+		}
+		keyRowNum := Setting.Excel.Title.FileKeyRows.GetRowNum(dataCtx.DataFileFormat)
+		if -1 == keyRowNum {
+			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Parse file format: %s ", dataCtx.DataFileFormat))
+			continue
+		}
+		keyRow := sheet.GetRowAt(keyRowNum - 1)
+		typeRow := sheet.GetRowAt(Setting.Excel.Title.FieldFormatRow - 1)
 		startRow := Setting.Excel.Data.StartRow
 		builder := data.GenBuilder(dataCtx.DataFileFormat)
 		builder.StartWriteData()
 		for startRow > 0 {
 			dataRow := sheet.GetRowAt(startRow - 1)
+			if nil == dataRow || len(dataRow.Cell) == 0 || dataRow.Cell[0] == "" { // 到达 表尾、空白头
+				break
+			}
 			ktvRow := getRowData(keyRow, typeRow, dataRow, selects)
 			builder.WriteRow(ktvRow)
 			builder.StartNewRow()
+			startRow += 1
+		}
+		builder.FinishWriteData()
+
+		targetDir := Setting.Project.Target.GetDataDir(dataCtx.RangeName)
+		if !filex.IsExist(targetDir) {
+			os.MkdirAll(targetDir, os.ModePerm)
+		}
+		extendName := dataCtx.DataFileFormat
+		filePath := filex.Combine(targetDir, fileName+"."+extendName)
+		Logger.Infoln(fmt.Sprintf("[core.executeDataContext] Sheet[%s]", filePath))
+		err = builder.WriteDataToFile(filePath)
+		if nil != err {
+			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] WriteDataFile error: %s ", err))
 		}
 	}
 	return nil

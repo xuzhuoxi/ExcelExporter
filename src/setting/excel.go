@@ -92,16 +92,37 @@ func (o LangKeyRows) String() string {
 
 // 不同编程语言对应的字段名称，
 type FileKeyRows struct {
-	JsonRow int `yaml:"json"`
-	SqlRow  int `yaml:"sql"`
+	BinRow        int `yaml:"bin"`
+	SqlRow        int `yaml:"sql"`
+	JsonRow       int `yaml:"json"`
+	YamlRow       int `yaml:"yaml"`
+	YmlRow        int `yaml:"yml"`
+	TomlRow       int `yaml:"toml"`
+	HclRow        int `yaml:"hcl"`
+	EnvRow        int `yaml:"env"`
+	PropertiesRow int `yaml:"properties"`
 }
 
 func (o FileKeyRows) GetRowNum(name string) int {
 	switch name {
-	case FileNameJson:
-		return o.JsonRow
+	case FileNameBin:
+		return o.BinRow
 	case FileNameSql:
 		return o.SqlRow
+	case FileNameJson:
+		return o.JsonRow
+	case FileNameYaml:
+		return o.YamlRow
+	case FileNameYml:
+		return o.YmlRow
+	case FileNameToml:
+		return o.TomlRow
+	case FileNameHcl:
+		return o.HclRow
+	case FileNameEnv:
+		return o.EnvRow
+	case FileNameProperties:
+		return o.PropertiesRow
 	default:
 		return -1
 	}
@@ -120,7 +141,7 @@ type ExcelTitle struct {
 	// 数据注释所在行号，与Excel行号一致
 	RemarkRow int `yaml:"remark_row"`
 	// 输出开关选择，格式: 'c,s,d'，c、s、d的格式只能是0或1，c指前端，s指后端，d指数据库，顺序不能颠倒。从1开始
-	FieldSwitchRow int `yaml:"field_switch_row"`
+	FieldRangeRow int `yaml:"field_range_row"`
 	// 数据格式,单元格格式目前支持{uint8,uint16,uint32,int8,int16,int32,float32,boolean,string,string(*)}
 	FieldFormatRow int `yaml:"field_format_row"`
 	// 语言使用的字段名称
@@ -131,15 +152,15 @@ type ExcelTitle struct {
 
 func (o ExcelTitle) String() string {
 	return fmt.Sprintf("TitleRow{name=%d, remark=%d, valid_mark=%d, data_type=%d, fields=%v}",
-		o.NameRow, o.RemarkRow, o.FieldSwitchRow, o.FieldFormatRow, o.LangKeyRows)
+		o.NameRow, o.RemarkRow, o.FieldRangeRow, o.FieldFormatRow, o.LangKeyRows)
 }
 
 // 数据定义
 type ExcelData struct {
 	// 数据的开始行号
-	StartRow int
+	StartRow int `yaml:"start"`
 	// 数据忽略
-	Pass string
+	Pass string `yaml:"pass"`
 }
 
 func (o ExcelData) String() string {

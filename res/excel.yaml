@@ -19,13 +19,13 @@ output:
     # 数据结构定义名(类名)
     title_name: B1
     # 数据文件名
-    data_name: D1
+    data_name: C1
   # 数据库定义
   database:
     # 数据结构定义名(类名)
     title_name: B1
     # 数据文件名
-    data_name: E1
+    data_name: C1
   # 其它定义
   data_key: F_1
 
@@ -38,7 +38,7 @@ title:
   # 数据注释所在行号，与Excel行号一致
   remark_row: 3
   # 输出选择行号，内容格式: 'c,s,d'，c、s、d的格式只能是0或1，c指前端，s指后端，d指数据库，顺序不能颠倒。从1开始。
-  field_switch_row: 4
+  field_range_row: 4
   # 数据格式行号，内容格式支持:
   # uint8,uint16,uint32,int8,int16,int32,float32,boolean,string,string(*),
   # uint8[],uint16[],uint32[],int8[],int16[],int32[],float32[],boolean[],string[],string(*)[]
@@ -53,8 +53,15 @@ title:
     ts: 6
   # 数据文件使用的字段名称行号
   file_key_rows:
-    json: 7
+    bin: 7
     sql: 7
+    json: 7
+    yaml: 7
+    yml: 7
+    toml: 7
+    hcl: 7
+    env: 7
+    properties: 7
 
 # 数据定义
 data:

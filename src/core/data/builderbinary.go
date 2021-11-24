@@ -26,3 +26,7 @@ func (b *binaryDataBuilder) WriteCell(ktv *KTValue) error {
 func (b *binaryDataBuilder) WriteRow(ktvArr []*KTValue) error {
 	panic("implement me")
 }
+
+func (b *binaryDataBuilder) WriteDataToFile(filePath string) error {
+	panic("implement me")
+}

@@ -28,6 +28,7 @@ const (
 	FileNameSql        = "sql"
 	FileNameJson       = "json"
 	FileNameYaml       = "yaml"
+	FileNameYml        = "yml"
 	FileNameToml       = "toml"
 	FileNameHcl        = "hcl"
 	FileNameEnv        = "env"
