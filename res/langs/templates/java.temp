@@ -20,7 +20,7 @@ import xu.JsonReaderProxy;
      * @remark {{$proxy.GetTitleRemark $value}}
      * @return {{$langDefine.Name}}
      */
-    public{{$langDefine.Name}} get{{ToUpperCamelCase $fieldName}}() {
+    public {{$langDefine.Name}} get{{ToUpperCamelCase $fieldName}}() {
         return this.{{ToLowerCamelCase $fieldName}};
     }
 {{end}}

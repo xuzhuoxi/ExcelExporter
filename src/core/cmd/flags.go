@@ -5,8 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/xuzhuoxi/ExcelExporter/src/core"
-	"regexp"
-	"strconv"
+	"github.com/xuzhuoxi/ExcelExporter/src/setting"
 	"strings"
 )
 
@@ -14,59 +13,123 @@ const (
 	ParamsSep = ","
 )
 
-type FlagParams struct {
-	Mode            string
-	LangRefs        string
-	FieldTypes      string
-	DataFileFormats string
-	Source          string
-	Target          string
+func ModeNameToType(modeName string) core.ModeType {
+	if modeName == setting.ModeNameTitle {
+		return core.ModeTitle
+	}
+	if modeName == setting.ModeNameData {
+		return core.ModeData
+	}
+	if modeName == setting.ModeNameConst {
+		return core.ModeConst
+	}
+	return core.ModeNone
 }
 
-func (fp *FlagParams) String() string {
-	return fmt.Sprintf("FlagParams(Mode=%s, Lang=%s, Field=%s, File=%s, Source=%s, Target=%s)",
-		fp.Mode, fp.LangRefs, fp.FieldTypes, fp.DataFileFormats, fp.Source, fp.Target)
+func FieldRangeNameToType(rangeName string) core.FieldRangeType {
+	if rangeName == setting.FieldRangeNameClient {
+		return core.FieldRangeClient
+	}
+	if rangeName == setting.FieldRangeNameServer {
+		return core.FieldRangeServer
+	}
+	if rangeName == setting.FieldRangeNameDb {
+		return core.FieldRangeDatabase
+	}
+	return core.FieldRangeNone
 }
 
-func (fp *FlagParams) GetCommandParams() *CommandParams {
-	modes := strings.Split(fp.Mode, ParamsSep)
-	modeValues := make([]core.ModeType, len(modes))
-	for index, o := range modes {
-		value, err := strconv.Atoi(o)
-		if err != nil {
-			panic(err)
-		}
-		if value < 0 {
-			panic(errors.New("Command -mode error! "))
-		}
-		modeValues[index] = core.ModeType(value)
+func ParseFlag() (cfg *SysFlags, err error) {
+	modes := flag.String("mode", "", "Running Mode! ")
+	ranges := flag.String("range", "", "Use Fields! ")
+	langRefs := flag.String("lang", "", "Use Languages! ")
+	dataFiles := flag.String("file", "", "Output Files! ")
+	source := flag.String("source", "", "Source Redefine! ")
+	target := flag.String("target", "", "Target Redefine! ")
+	flag.Parse()
+
+	modesVal := strings.ToLower(*modes)
+	rangesVal := strings.ToLower(*ranges)
+	return &SysFlags{Modes: modesVal, Ranges: rangesVal, LangRefs: *langRefs, DataFiles: *dataFiles,
+		Source: *source, Target: *target}, nil
+}
+
+type SysFlags struct {
+	Modes     string
+	Ranges    string
+	LangRefs  string
+	DataFiles string
+	Source    string
+	Target    string
+}
+
+func (f *SysFlags) String() string {
+	return fmt.Sprintf("SysFlags(Modes=%s, Rangs=%s, LangRefs=%s, DataFiles=%s, Source=%s, Target=%s)",
+		f.Modes, f.Ranges, f.LangRefs, f.DataFiles, f.Source, f.Target)
+}
+
+func (f *SysFlags) GetCommandParams() *AppFlags {
+	modeNames, modeValues := f.parseModes()
+	if len(modeValues) == 0 {
+		panic(errors.New("Command -mode error! "))
+	}
+	rangeNames, rangeValues := f.parseFieldRanges()
+	if len(rangeValues) == 0 {
+		panic(errors.New("Command -range error! "))
 	}
 
-	langRefs := strings.Split(fp.LangRefs, ParamsSep)
-	fieldTypes := strings.Split(fp.FieldTypes, ParamsSep)
-	filedTypeValues := make([]core.FieldType, len(fieldTypes))
-	for index, o := range fieldTypes {
-		value, err := strconv.Atoi(o)
-		if err != nil {
-			panic(err)
-		}
-		if value < 0 {
-			panic(errors.New("Commnad -field error! "))
-		}
-		filedTypeValues[index] = core.FieldType(value)
+	langRefs := strings.Split(f.LangRefs, ParamsSep)
+	dataFiles := strings.Split(f.DataFiles, ParamsSep)
+	return &AppFlags{ModeNames: modeNames, ModeTypes: modeValues, RangeNames: rangeNames, RangeTypes: rangeValues,
+		LangRefs: langRefs, DataFiles: dataFiles}
+}
+
+func (f *SysFlags) parseModes() (names []string, types []core.ModeType) {
+	modes := strings.Split(f.Modes, ParamsSep)
+	if len(modes) == 0 {
+		return nil, nil
 	}
-	dataFileFormats := strings.Split(fp.DataFileFormats, ParamsSep)
-	return &CommandParams{ModeTypes: modeValues, LangRefs: langRefs, FieldTypes: filedTypeValues, DataFileFormats: dataFileFormats}
+	names = make([]string, 0, len(modes))
+	types = make([]core.ModeType, 0, len(modes))
+	for _, o := range modes {
+		t := ModeNameToType(o)
+		if t == core.ModeNone {
+			continue
+		}
+		names = append(names, o)
+		types = append(types, t)
+	}
+	return
 }
 
-type CommandParams struct {
-	ModeTypes       []core.ModeType
-	LangRefs        []string
-	FieldTypes      []core.FieldType
-	DataFileFormats []string
+func (f *SysFlags) parseFieldRanges() (names []string, types []core.FieldRangeType) {
+	ranges := strings.Split(f.Ranges, ParamsSep)
+	if len(ranges) == 0 {
+		return nil, nil
+	}
+	names = make([]string, 0, len(ranges))
+	types = make([]core.FieldRangeType, 0, len(ranges))
+	for _, o := range ranges {
+		t := FieldRangeNameToType(o)
+		if t == core.FieldRangeNone {
+			continue
+		}
+		names = append(names, o)
+		types = append(types, t)
+	}
+	return
 }
 
-func (o *CommandParams) CheckMode(mode core.ModeType) bool {
+type AppFlags struct {
+	ModeNames  []string
+	ModeTypes  []core.ModeType
+	RangeNames []string
+	RangeTypes []core.FieldRangeType
+	LangRefs   []string
+	DataFiles  []string
+}
+
+func (o *AppFlags) CheckMode(mode core.ModeType) bool {
 	for _, m := range o.ModeTypes {
 		if m == mode {
 			return true
@@ -75,76 +138,56 @@ func (o *CommandParams) CheckMode(mode core.ModeType) bool {
 	return false
 }
 
-func (o *CommandParams) String() string {
-	return fmt.Sprintf("CommandParams(Mode=%v, Langs=%s, Fields=%v, Files=%s)", o.ModeTypes, o.LangRefs, o.FieldTypes, o.DataFileFormats)
+func (o *AppFlags) String() string {
+	return fmt.Sprintf("AppFlags(ModeNames=%v, ModeTypes=%v, RangeNames=%v, RangeTypes=%v, LangRefs=%v, DataFiles=%v)",
+		o.ModeNames, o.ModeTypes, o.RangeNames, o.RangeTypes, o.LangRefs, o.DataFiles)
 }
 
-func (o *CommandParams) GenTitleContexts() (contexts []*core.TitleContext) {
-	fieldLen := len(o.FieldTypes)
+func (o *AppFlags) GenTitleContexts() (contexts []*core.TitleContext) {
+	if !o.CheckMode(core.ModeTitle) {
+		return nil
+	}
+	rangeLen := len(o.RangeTypes)
 	langLen := len(o.LangRefs)
-	if !o.CheckMode(core.ModeTitle) || fieldLen == 0 || langLen == 0 {
+	if rangeLen == 0 || langLen == 0 {
 		return nil
 	}
-	ln := fieldLen * langLen
+	ln := rangeLen * langLen
 	contexts = make([]*core.TitleContext, 0, ln)
-	for fieldIdx := 0; fieldIdx < fieldLen; fieldIdx += 1 {
+	for fieldIdx := 0; fieldIdx < rangeLen; fieldIdx += 1 {
 		for langIdx := 0; langIdx < langLen; langIdx += 1 {
-			context := &core.TitleContext{FieldType: o.FieldTypes[fieldIdx], ProgramLanguage: o.LangRefs[langIdx]}
+			context := &core.TitleContext{RangeName: o.RangeNames[fieldIdx], RangeType: o.RangeTypes[fieldIdx],
+				ProgramLanguage: o.LangRefs[langIdx]}
 			contexts = append(contexts, context)
 		}
 	}
 	return
 }
 
-func (o *CommandParams) GenDataContexts() (contexts []*core.DataContext) {
-	fieldLen := len(o.FieldTypes)
-	fileLen := len(o.DataFileFormats)
-	if !o.CheckMode(core.ModeData) || fieldLen == 0 || fileLen == 0 {
+func (o *AppFlags) GenDataContexts() (contexts []*core.DataContext) {
+	if !o.CheckMode(core.ModeData) {
 		return nil
 	}
-	ln := fieldLen * fileLen
+	rangeLen := len(o.RangeTypes)
+	fileLen := len(o.DataFiles)
+	if rangeLen == 0 || fileLen == 0 {
+		return nil
+	}
+	ln := rangeLen * fileLen
 	contexts = make([]*core.DataContext, 0, ln)
-	for fieldIdx := 0; fieldIdx < fieldLen; fieldIdx += 1 {
+	for fieldIdx := 0; fieldIdx < rangeLen; fieldIdx += 1 {
 		for fileIdx := 0; fileIdx < fileLen; fileIdx += 1 {
-			context := &core.DataContext{FieldType: o.FieldTypes[fieldIdx], DataFileFormat: o.DataFileFormats[fileIdx]}
+			context := &core.DataContext{RangeName: o.RangeNames[fieldIdx], RangeType: o.RangeTypes[fieldIdx],
+				DataFileFormat: o.DataFiles[fileIdx]}
 			contexts = append(contexts, context)
 		}
 	}
 	return
 }
 
-func ParseFlag() (cfg *FlagParams, err error) {
-	mode := flag.String("mode", "", "Running Mode! ")
-	langRefs := flag.String("lang", "", "Use Languages! ")
-	fieldTypes := flag.String("field", "", "Use Fields! ")
-	dataFileFormats := flag.String("file", "", "Output Files! ")
-	source := flag.String("source", "", "Source Redefine! ")
-	target := flag.String("target", "", "Target Redefine! ")
-	flag.Parse()
-
-	modeVal := *mode
-	mm, err := regexp.MatchString(`\d[,\d]+`, modeVal)
-	if nil != err {
-		return nil, err
+func (o *AppFlags) GenConstContexts() (contexts []*core.ConstContext) {
+	if !o.CheckMode(core.ModeConst) {
+		return nil
 	}
-	if !mm {
-		return nil, errors.New("-mode config error! ")
-	}
-
-	langRefsVal := *langRefs
-	if len(langRefsVal) == 0 {
-		return nil, errors.New("Field Type Error! ")
-	}
-
-	fieldTypesVal := *fieldTypes
-	fm, err := regexp.MatchString(`\d[,\d]+`, fieldTypesVal)
-	if nil != err {
-		return nil, err
-	}
-	if !fm {
-		return nil, errors.New("-field config error! ")
-	}
-
-	return &FlagParams{Mode: modeVal, FieldTypes: fieldTypesVal, LangRefs: langRefsVal, DataFileFormats: *dataFileFormats,
-		Source: *source, Target: *target}, nil
+	return nil
 }

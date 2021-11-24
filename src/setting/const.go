@@ -2,13 +2,46 @@ package setting
 
 import "regexp"
 
-type FieldType uint
+const (
+	ModeNameTitle = "title"
+	ModeNameData  = "data"
+	ModeNameConst = "const"
+)
 
 const (
-	FieldTypeClient FieldType = iota + 1
-	FieldTypeServer
-	FieldTypeDatabase
+	FieldRangeNameClient = "client"
+	FieldRangeNameServer = "server"
+	FieldRangeNameDb     = "db"
 )
+
+const (
+	LangNameAs3    = "as3"
+	LangNameCPlus  = "c++"
+	LangNameCSharp = "c#"
+	LangNameGo     = "go"
+	LangNameJava   = "java"
+	LangNameTs     = "ts"
+)
+
+const (
+	FileNameBin        = "bin"
+	FileNameSql        = "sql"
+	FileNameJson       = "json"
+	FileNameYaml       = "yaml"
+	FileNameToml       = "toml"
+	FileNameHcl        = "hcl"
+	FileNameEnv        = "env"
+	FileNameProperties = "properties"
+)
+
+//
+//type FieldType uint
+//
+//const (
+//	FieldTypeClient FieldType = iota + 1
+//	FieldTypeServer
+//	FieldTypeDatabase
+//)
 
 const (
 	FieldBool       = "boolean"
@@ -39,29 +72,13 @@ const (
 	FieldJsonArr    = "json[]"
 )
 
-const (
-	LangAs3        = "as3"
-	LangCPlus      = "c++"
-	LangCSharp     = "c#"
-	LangGo         = "go"
-	LangJava       = "java"
-	LangTypeScript = "ts"
-)
-
-const (
-	FileJson   = "json"
-	FileSql    = "sql"
-	FileBinary = "binary"
-	FileYaml   = "yaml"
-)
-
 var (
-	reg = regexp.MustCompile(`string\(\d+\)`)
+	regFixedString = regexp.MustCompile(`string\(\d+\)`)
 )
 
 func FormatStringField(fieldValue string) string {
-	if !reg.MatchString(fieldValue) {
+	if !regFixedString.MatchString(fieldValue) {
 		return fieldValue
 	}
-	return reg.ReplaceAllString(fieldValue, "string")
+	return regFixedString.ReplaceAllString(fieldValue, "string")
 }

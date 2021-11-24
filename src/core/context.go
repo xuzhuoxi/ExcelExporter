@@ -8,25 +8,31 @@ import (
 )
 
 type TitleContext struct {
+	// 使用的字段索引名称
+	RangeName string
 	// 使用的字段索引
-	FieldType FieldType
+	RangeType FieldRangeType
 	// 使用的编程语言
 	ProgramLanguage string
 }
 
 func (o TitleContext) String() string {
-	return fmt.Sprintf("TitleContent(FieldType=%v, ProgramLanguage=%s)", o.FieldType, o.ProgramLanguage)
+	return fmt.Sprintf("TitleContent(RangeName=%s, RangeType=%v, ProgramLanguage=%s)",
+		o.RangeName, o.RangeType, o.ProgramLanguage)
 }
 
 type DataContext struct {
+	// 使用的字段索引名称
+	RangeName string
 	// 使用的字段索引
-	FieldType FieldType
+	RangeType FieldRangeType
 	// 输出的文件类型
 	DataFileFormat string
 }
 
 func (o DataContext) String() string {
-	return fmt.Sprintf("DataContext(FieldTypeIndex=%v, DataFileFormat=%s)", o.FieldType, o.DataFileFormat)
+	return fmt.Sprintf("DataContext(RangeName=%s, RangeType=%v, ProgramLanguage=%s)",
+		o.RangeName, o.RangeType, o.DataFileFormat)
 }
 
 type ConstContext struct {

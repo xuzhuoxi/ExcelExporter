@@ -42,13 +42,13 @@ func (o ExcelOutput) String() string {
 	return fmt.Sprintf("Output{Client=%s, Server=%s, Database=%s}", o.Client, o.Server, o.Database)
 }
 
-func (o ExcelOutput) GetElement(fieldType FieldType) (ele ExcelOutputElement, ok bool) {
-	switch fieldType {
-	case FieldTypeClient:
+func (o ExcelOutput) GetElement(rangeName string) (ele ExcelOutputElement, ok bool) {
+	switch rangeName {
+	case FieldRangeNameClient:
 		return o.Client, true
-	case FieldTypeServer:
+	case FieldRangeNameServer:
 		return o.Server, true
-	case FieldTypeDatabase:
+	case FieldRangeNameDb:
 		return o.Database, true
 	default:
 		ok = false
@@ -68,17 +68,17 @@ type LangKeyRows struct {
 
 func (o LangKeyRows) GetRowNum(name string) int {
 	switch name {
-	case LangAs3:
+	case LangNameAs3:
 		return o.As3Row
-	case LangCPlus:
+	case LangNameCPlus:
 		return o.CPlusRow
-	case LangCSharp:
+	case LangNameCSharp:
 		return o.CSharpRow
-	case LangGo:
+	case LangNameGo:
 		return o.GoRow
-	case LangJava:
+	case LangNameJava:
 		return o.JavaRow
-	case LangTypeScript:
+	case LangNameTs:
 		return o.TypeScriptRow
 	default:
 		return -1
@@ -98,9 +98,9 @@ type FileKeyRows struct {
 
 func (o FileKeyRows) GetRowNum(name string) int {
 	switch name {
-	case FileJson:
+	case FileNameJson:
 		return o.JsonRow
-	case FileSql:
+	case FileNameSql:
 		return o.SqlRow
 	default:
 		return -1

@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-type FieldOutputCfg struct {
+type OutputCfg struct {
 	// 前端定义输出目录
 	Client string `yaml:"client"`
 	// 后端定义输出目录
@@ -15,13 +15,13 @@ type FieldOutputCfg struct {
 	Database string `yaml:"database"`
 }
 
-func (o FieldOutputCfg) GetValue(fieldType FieldType) string {
-	switch fieldType {
-	case FieldTypeClient:
+func (o OutputCfg) GetValue(fieldRangeName string) string {
+	switch fieldRangeName {
+	case FieldRangeNameClient:
 		return o.Client
-	case FieldTypeServer:
+	case FieldRangeNameServer:
 		return o.Server
-	case FieldTypeDatabase:
+	case FieldRangeNameDb:
 		return o.Database
 	default:
 		return ""
@@ -70,9 +70,9 @@ type TargetCfg struct {
 	// 根目录
 	RootDir string `yaml:"root"`
 	// 定义目录
-	Title FieldOutputCfg `yaml:"title"`
+	Title OutputCfg `yaml:"title"`
 	// 数据目录
-	Data FieldOutputCfg `yaml:"data"`
+	Data OutputCfg `yaml:"data"`
 	// 常量目录
 	Const string `yaml:"const"`
 }
@@ -83,12 +83,12 @@ func (o *TargetCfg) UpgradePath(basePath string) {
 	}
 }
 
-func (o *TargetCfg) GetTitleDir(fieldType FieldType) string {
-	return filex.Combine(o.RootDir, o.Title.GetValue(fieldType))
+func (o *TargetCfg) GetTitleDir(fieldRangeName string) string {
+	return filex.Combine(o.RootDir, o.Title.GetValue(fieldRangeName))
 }
 
-func (o *TargetCfg) GetDataDir(fieldType FieldType) string {
-	return filex.Combine(o.RootDir, o.Data.GetValue(fieldType))
+func (o *TargetCfg) GetDataDir(fieldRangeName string) string {
+	return filex.Combine(o.RootDir, o.Data.GetValue(fieldRangeName))
 }
 
 func (o *TargetCfg) ConstDir() string {
@@ -126,9 +126,9 @@ type ProjectSetting struct {
 	Buff ProjectBuff `yaml:"buff"`
 }
 
-func (o *ProjectSetting) UpgradePath(basePath string) {
-	o.Source.UpgradePath(basePath)
-	o.Target.UpgradePath(basePath)
+func (ps *ProjectSetting) UpgradePath(basePath string) {
+	ps.Source.UpgradePath(basePath)
+	ps.Target.UpgradePath(basePath)
 }
 func (ps *ProjectSetting) String() string {
 	return fmt.Sprintf("Project{Source=%s, Target=%s, Buff=%v}",

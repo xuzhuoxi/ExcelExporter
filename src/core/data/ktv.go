@@ -16,6 +16,10 @@ type KTValue struct {
 	cacheErr   error
 }
 
+func (ktv *KTValue) IsEmpty() bool {
+	return ktv.Value == ""
+}
+
 func (ktv *KTValue) Set(k, t, v string) {
 	ktv.Key, ktv.Type, ktv.Value = k, t, v
 	ktv.cacheValue, ktv.cacheErr = nil, nil
@@ -510,16 +514,28 @@ func (ktv *KTValue) toValueStringArr() (value []string, err error) {
 	return ktv.valueToArray()
 }
 
-func (ktv *KTValue) toValueStringN() (value string, err error) {
+func (ktv *KTValue) toValueFixedString() (value string, err error) {
 	n, err := ktv.getTypeN()
 	if nil != err {
 		return "", err
 	}
-	return ktv.getFixedRuneStr(ktv.Value, n), nil
+	return ktv.toFixedRuneStr(ktv.Value, n), nil
 }
 
-func (ktv *KTValue) toValueStringNArr() (value []string, err error) {
-	return ktv.valueToArray()
+func (ktv *KTValue) toValueFixedStringArr() (value []string, err error) {
+	arr, err := ktv.valueToArray()
+	if nil != err {
+		return nil, err
+	}
+	n, err := ktv.getTypeN()
+	if nil != err {
+		return nil, err
+	}
+	value = make([]string, len(arr))
+	for index := range arr {
+		value[index] = ktv.toFixedRuneStr(ktv.Value, n)
+	}
+	return
 }
 
 func (ktv *KTValue) toValueJson() (value string, err error) {
@@ -559,7 +575,7 @@ func (ktv *KTValue) getTypeArrN() (n int, err error) {
 	return int(rs), nil
 }
 
-func (ktv *KTValue) getFixedRuneStr(str string, ln int) string {
+func (ktv *KTValue) toFixedRuneStr(str string, ln int) string {
 	rn := []rune(str)
 	strLen := len(rn)
 	if strLen > ln {

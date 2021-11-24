@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/xuzhuoxi/ExcelExporter/src/core/data"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/naming"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/temps"
@@ -23,6 +24,7 @@ var (
 	Setting  *setting.Settings
 	TitleCtx []*TitleContext
 	DataCtx  []*DataContext
+	ConstCtx []*ConstContext
 	Excel    *excel.ExcelProxy
 )
 
@@ -43,13 +45,15 @@ func SetLogger(logger logx.ILogger) {
 	Logger = logger
 }
 
-func Execute(setting *setting.Settings, titleCtx []*TitleContext, dataCtx []*DataContext) {
+func Execute(setting *setting.Settings, titleCtx []*TitleContext, dataCtx []*DataContext, constCtx []*ConstContext) {
 	Setting = setting
 	TitleCtx = titleCtx
 	DataCtx = dataCtx
+	ConstCtx = constCtx
 	Logger.Infof("[core.Execute] Setting=%s", setting)
-	Logger.Infof("[core.Execute] TitleContext=%s", titleCtx)
-	Logger.Infof("[core.Execute] DataContext=%s", dataCtx)
+	Logger.Infof("[core.Execute] TitleContext=%v", titleCtx)
+	Logger.Infof("[core.Execute] DataContext=%v", dataCtx)
+	Logger.Infof("[core.Execute] ConstCtx=%v", constCtx)
 	execute()
 }
 
@@ -115,17 +119,22 @@ func executeExcelFile(dataFilePath string) (err error) {
 		return
 	}
 
-	for _, titleCtx := range TitleCtx {
-		et := executeTitleContext(Excel, titleCtx)
-		if nil != et {
-			Logger.Warnln(fmt.Sprintf("[core.executeExcelFile] %s", et))
+	if len(TitleCtx) > 0 {
+		for _, titleCtx := range TitleCtx {
+			et := executeTitleContext(Excel, titleCtx)
+			if nil != et {
+				Logger.Warnln(fmt.Sprintf("[core.executeExcelFile] %s", et))
+			}
+
 		}
 	}
 
-	for _, dataCtx := range DataCtx {
-		ed := executeDataContext(Excel, dataCtx)
-		if nil != ed {
-			Logger.Warnln(fmt.Sprintf("[core.executeExcelFile] %s", ed))
+	if len(DataCtx) > 0 {
+		for _, dataCtx := range DataCtx {
+			ed := executeDataContext(Excel, dataCtx)
+			if nil != ed {
+				Logger.Warnln(fmt.Sprintf("[core.executeExcelFile] %s", ed))
+			}
 		}
 	}
 	return
@@ -146,16 +155,15 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 	}
 
 	prefix := Setting.Excel.Prefix.Data
-	fieldType := setting.FieldType(titleCtx.FieldType)
 	Logger.Infoln(fmt.Sprintf("[core.executeTitleContext] Start Execute Content: %s", titleCtx))
 	for _, sheet := range excel.Sheets {
 		// 过滤Sheet的命名
 		if strings.Index(sheet.SheetName, prefix) != 0 {
 			continue
 		}
-		outEle, ok := Setting.Excel.Output.GetElement(fieldType)
+		outEle, ok := Setting.Excel.Output.GetElement(titleCtx.RangeName)
 		if !ok {
-			err = errors.New(fmt.Sprintf("-field error at %d", titleCtx.FieldType))
+			err = errors.New(fmt.Sprintf("-field error at %s", titleCtx.RangeName))
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Error A %s ", err))
 			return err
 		}
@@ -165,10 +173,13 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
 			continue
 		}
-		selects, err := parseFileTypeRow(sheet, fieldTypeRow, uint(fieldType)-1)
+		selects, err := parseFileTypeRow(sheet, fieldTypeRow, uint(titleCtx.RangeType)-1)
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Parse file type error: %s ", err))
 			return err
+		}
+		if len(selects) == 0 {
+			continue
 		}
 		//Logger.Infoln("Selects:", selects)
 		titleName, _ := sheet.ValueAtAxis(outEle.TitleName)
@@ -176,7 +187,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 		tempDataProxy := &TempDataProxy{Sheet: sheet, Excel: excel, Index: selects,
 			TitleName: titleName, Language: titleCtx.ProgramLanguage}
 
-		targetDir := Setting.Project.Target.GetTitleDir(fieldType)
+		targetDir := Setting.Project.Target.GetTitleDir(titleCtx.RangeName)
 		if !filex.IsExist(targetDir) {
 			os.MkdirAll(targetDir, os.ModePerm)
 		}
@@ -202,6 +213,44 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 }
 
 func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
+	prefix := Setting.Excel.Prefix.Data
+	for _, sheet := range excel.Sheets {
+		// 过滤Sheet的命名
+		if strings.Index(sheet.SheetName, prefix) != 0 {
+			continue
+		}
+		_, ok := Setting.Excel.Output.GetElement(dataCtx.RangeName)
+		if !ok {
+			err := errors.New(fmt.Sprintf("-field error at \"%s\"", dataCtx.RangeName))
+			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Error A %s ", err))
+			return err
+		}
+		fieldTypeRow := sheet.GetRowAt(Setting.Excel.Title.FieldSwitchRow - 1)
+		if nil == fieldTypeRow || fieldTypeRow.Empty() {
+			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
+			continue
+		}
+		selects, err := parseFileTypeRow(sheet, fieldTypeRow, uint(dataCtx.RangeType)-1)
+		if nil != err {
+			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Parse file type error: %s ", err))
+			return err
+		}
+		if len(selects) == 0 {
+			continue
+		}
+
+		keyRow := sheet.GetRowAt(Setting.Excel.Title.FileKeyRows.GetRowNum(dataCtx.DataFileFormat))
+		typeRow := sheet.GetRowAt(Setting.Excel.Title.FieldFormatRow)
+		startRow := Setting.Excel.Data.StartRow
+		builder := data.GenBuilder(dataCtx.DataFileFormat)
+		builder.StartWriteData()
+		for startRow > 0 {
+			dataRow := sheet.GetRowAt(startRow - 1)
+			ktvRow := getRowData(keyRow, typeRow, dataRow, selects)
+			builder.WriteRow(ktvRow)
+			builder.StartNewRow()
+		}
+	}
 	return nil
 }
 
@@ -233,6 +282,18 @@ func parseFileTypeRow(sheet *excel.ExcelSheet, row *excel.ExcelRow, selectIndex 
 			continue
 		}
 		selects = append(selects, index)
+	}
+	return
+}
+
+func getRowData(keyRow *excel.ExcelRow, typeRow *excel.ExcelRow, valueRow *excel.ExcelRow,
+	selects []int) (dataRow []*data.KTValue) {
+	dataRow = make([]*data.KTValue, len(selects), len(selects))
+	for index, rowIndex := range selects {
+		k := keyRow.Cell[rowIndex]
+		t := typeRow.Cell[rowIndex]
+		v := valueRow.Cell[rowIndex]
+		dataRow[index] = &data.KTValue{Key: k, Type: t, Value: v}
 	}
 	return
 }

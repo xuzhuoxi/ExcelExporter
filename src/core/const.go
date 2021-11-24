@@ -3,15 +3,17 @@ package core
 type ModeType uint
 
 const (
-	ModeTitle ModeType = iota + 1
+	ModeNone ModeType = iota
+	ModeTitle
 	ModeData
 	ModeConst
 )
 
-type FieldType uint
+type FieldRangeType uint
 
 const (
-	FieldClient = iota + 1
-	FieldServer
-	FieldDatabase
+	FieldRangeNone FieldRangeType = iota
+	FieldRangeClient
+	FieldRangeServer
+	FieldRangeDatabase
 )

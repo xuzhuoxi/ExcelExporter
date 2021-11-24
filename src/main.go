@@ -49,8 +49,8 @@ func main() {
 		}
 	}
 
-	titleContexts := cmdParams.GenTitleContexts()
-	dataContexts := cmdParams.GenDataContexts()
-
-	core.Execute(s, titleContexts, dataContexts)
+	titleCtxArr := cmdParams.GenTitleContexts()
+	dataCtxArr := cmdParams.GenDataContexts()
+	constCtxArr := cmdParams.GenConstContexts()
+	core.Execute(s, titleCtxArr, dataCtxArr, constCtxArr)
 }
