@@ -35,15 +35,6 @@ const (
 	FileNameProperties = "properties"
 )
 
-//
-//type FieldType uint
-//
-//const (
-//	FieldTypeClient FieldType = iota + 1
-//	FieldTypeServer
-//	FieldTypeDatabase
-//)
-
 const (
 	FieldBool       = "boolean"
 	FieldInt8       = "int8"

@@ -25,28 +25,26 @@ func GenBuilder(format string) IDataBuilder {
 }
 
 func init() {
-	RegisterBuilder(setting.FileNameBin, newBinDataBuilder)
+	RegisterBuilder(setting.FileNameBin, newIBinDataBuilder)
 	RegisterBuilder(setting.FileNameSql, nil)
-	RegisterBuilder(setting.FileNameJson, func() IDataBuilder {
-		return newCharDataBuilder(setting.FileNameJson)
-	})
+	RegisterBuilder(setting.FileNameJson, newJsonDataBuilder)
 	RegisterBuilder(setting.FileNameYaml, func() IDataBuilder {
-		return newCharDataBuilder(setting.FileNameYaml)
+		return newICharDataBuilder(setting.FileNameYaml)
 	})
 	RegisterBuilder(setting.FileNameYml, func() IDataBuilder {
-		return newCharDataBuilder(setting.FileNameYml)
+		return newICharDataBuilder(setting.FileNameYml)
 	})
 	RegisterBuilder(setting.FileNameToml, func() IDataBuilder {
-		return newCharDataBuilder(setting.FileNameToml)
+		return newICharDataBuilder(setting.FileNameToml)
 	})
 	RegisterBuilder(setting.FileNameHcl, func() IDataBuilder {
-		return newCharDataBuilder(setting.FileNameHcl)
+		return newICharDataBuilder(setting.FileNameHcl)
 	})
 	RegisterBuilder(setting.FileNameEnv, func() IDataBuilder {
-		return newCharDataBuilder(setting.FileNameEnv)
+		return newICharDataBuilder(setting.FileNameEnv)
 	})
 	RegisterBuilder(setting.FileNameProperties, func() IDataBuilder {
-		return newCharDataBuilder(setting.FileNameProperties)
+		return newICharDataBuilder(setting.FileNameProperties)
 	})
 }
 

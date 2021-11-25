@@ -1,6 +1,10 @@
 package data
 
-func newBinDataBuilder() IDataBuilder {
+func newIBinDataBuilder() IDataBuilder {
+	return newBinDataBuilder()
+}
+
+func newBinDataBuilder() *binaryDataBuilder {
 	return &binaryDataBuilder{}
 }
 

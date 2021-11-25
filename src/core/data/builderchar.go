@@ -3,9 +3,14 @@ package data
 import (
 	"fmt"
 	"github.com/spf13/viper"
+	"github.com/xuzhuoxi/ExcelExporter/src/setting"
 )
 
-func newCharDataBuilder(format string) IDataBuilder {
+func newICharDataBuilder(format string) IDataBuilder {
+	return newCharDataBuilder(format)
+}
+
+func newCharDataBuilder(format string) *charDataBuilder {
 	dataViper := viper.New()
 	dataViper.SetConfigType(format)
 	return &charDataBuilder{dataViper: dataViper}
@@ -41,16 +46,46 @@ func (b *charDataBuilder) WriteCell(ktv *KTValue) error {
 }
 
 func (b *charDataBuilder) WriteRow(ktvArr []*KTValue) error {
-	for index := range ktvArr {
-		err := b.WriteCell(ktvArr[index])
+	for _, ktv := range ktvArr {
+		err := b.WriteCell(ktv)
 		if nil != err {
 			return err
 		}
 	}
+	b.StartNewRow()
+
+	b.dataViper.AllSettings()
+
+	return nil
+}
+
+func (b *charDataBuilder) WriteRow2(ktvArr []*KTValue) error {
+	row := make(map[string]interface{})
+	for _, ktv := range ktvArr {
+		value, err := ktv.GetValue()
+		if nil != err {
+			return err
+		}
+		row[ktv.Key] = value
+	}
+	path := fmt.Sprintf("data.%d", b.rowIndex)
+	b.dataViper.Set(path, row)
 	b.StartNewRow()
 	return nil
 }
 
 func (b *charDataBuilder) WriteDataToFile(filePath string) error {
 	return b.dataViper.WriteConfigAs(filePath)
+}
+
+func newJsonDataBuilder() IDataBuilder {
+	return &jsonDataBuilder{charDataBuilder: *newCharDataBuilder(setting.FileNameJson)}
+}
+
+type jsonDataBuilder struct {
+	charDataBuilder
+}
+
+func (b *jsonDataBuilder) WriteDataToFile(filePath string) error {
+	return b.charDataBuilder.WriteDataToFile(filePath)
 }
