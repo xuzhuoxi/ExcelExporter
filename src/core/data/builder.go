@@ -2,6 +2,11 @@ package data
 
 import "github.com/xuzhuoxi/ExcelExporter/src/setting"
 
+const (
+	countName = "count"
+	dataName  = "data"
+)
+
 type IDataBuilder interface {
 	// 开始写入数据
 	StartWriteData()
@@ -29,22 +34,22 @@ func init() {
 	RegisterBuilder(setting.FileNameSql, nil)
 	RegisterBuilder(setting.FileNameJson, newJsonDataBuilder)
 	RegisterBuilder(setting.FileNameYaml, func() IDataBuilder {
-		return newICharDataBuilder(setting.FileNameYaml)
+		return newIViperDataBuilder(setting.FileNameYaml)
 	})
 	RegisterBuilder(setting.FileNameYml, func() IDataBuilder {
-		return newICharDataBuilder(setting.FileNameYml)
+		return newIViperDataBuilder(setting.FileNameYml)
 	})
 	RegisterBuilder(setting.FileNameToml, func() IDataBuilder {
-		return newICharDataBuilder(setting.FileNameToml)
+		return newIViperDataBuilder(setting.FileNameToml)
 	})
 	RegisterBuilder(setting.FileNameHcl, func() IDataBuilder {
-		return newICharDataBuilder(setting.FileNameHcl)
+		return newIViperDataBuilder(setting.FileNameHcl)
 	})
 	RegisterBuilder(setting.FileNameEnv, func() IDataBuilder {
-		return newICharDataBuilder(setting.FileNameEnv)
+		return newIViperDataBuilder(setting.FileNameEnv)
 	})
 	RegisterBuilder(setting.FileNameProperties, func() IDataBuilder {
-		return newICharDataBuilder(setting.FileNameProperties)
+		return newIViperDataBuilder(setting.FileNameProperties)
 	})
 }
 
