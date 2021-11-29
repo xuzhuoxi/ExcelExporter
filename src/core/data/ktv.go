@@ -36,10 +36,16 @@ func (ktv *KTValue) GetValue() (val interface{}, err error) {
 	return ktv.updateCacheValue()
 }
 
+func (ktv *KTValue) isFixedString() bool {
+	return regexpTypeFixedString.MatchString(ktv.Type)
+}
+
+func (ktv *KTValue) isFixedStringArr() bool {
+	return regexpTypeFixedStringArr.MatchString(ktv.Type)
+}
+
 func (ktv *KTValue) updateCacheValue() (val interface{}, err error) {
 	switch ktv.Type {
-	default:
-		ktv.cacheValue, ktv.cacheErr = nil, ErrTypeUndefined
 	case setting.FieldBool:
 		ktv.cacheValue, ktv.cacheErr = ktv.toValueBool()
 	case setting.FieldBoolArr:
@@ -92,6 +98,16 @@ func (ktv *KTValue) updateCacheValue() (val interface{}, err error) {
 		ktv.cacheValue, ktv.cacheErr = ktv.toValueJson()
 	case setting.FieldJsonArr:
 		ktv.cacheValue, ktv.cacheErr = ktv.toValueJsonArr()
+	default:
+		if ktv.isFixedString() {
+			ktv.cacheValue, ktv.cacheErr = ktv.toValueFixedString()
+			return ktv.cacheValue, ktv.cacheErr
+		}
+		if ktv.isFixedStringArr() {
+			ktv.cacheValue, ktv.cacheErr = ktv.toValueFixedStringArr()
+			return ktv.cacheValue, ktv.cacheErr
+		}
+		ktv.cacheValue, ktv.cacheErr = nil, ErrTypeUndefined
 	}
 	return ktv.cacheValue, ktv.cacheErr
 }
@@ -527,13 +543,13 @@ func (ktv *KTValue) toValueFixedStringArr() (value []string, err error) {
 	if nil != err {
 		return nil, err
 	}
-	n, err := ktv.getTypeN()
+	n, err := ktv.getTypeArrN()
 	if nil != err {
 		return nil, err
 	}
 	value = make([]string, len(arr))
 	for index := range arr {
-		value[index] = ktv.toFixedRuneStr(ktv.Value, n)
+		value[index] = ktv.toFixedRuneStr(arr[index], n)
 	}
 	return
 }
@@ -553,12 +569,12 @@ func (ktv *KTValue) valueToArray() (arr []string, err error) {
 	if !CheckStringArr(ktv.Value) {
 		return nil, ErrValueFormatWrong
 	}
-	str := ktv.Value[1 : len(ktv.Value)-2]
+	str := ktv.Value[1 : len(ktv.Value)-1]
 	return strings.Split(str, ","), nil
 }
 
 func (ktv *KTValue) getTypeN() (n int, err error) {
-	nStr := ktv.Type[len("string(") : len(ktv.Type)-2]
+	nStr := ktv.Type[len("string(") : len(ktv.Type)-1]
 	rs, err := strconv.ParseUint(nStr, 10, 16)
 	if nil != err {
 		return 0, err
@@ -567,7 +583,7 @@ func (ktv *KTValue) getTypeN() (n int, err error) {
 }
 
 func (ktv *KTValue) getTypeArrN() (n int, err error) {
-	nStr := ktv.Type[len("[]string(") : len(ktv.Type)-2]
+	nStr := ktv.Type[len("[]string(") : len(ktv.Type)-1]
 	rs, err := strconv.ParseUint(nStr, 10, 16)
 	if nil != err {
 		return 0, err
@@ -579,7 +595,7 @@ func (ktv *KTValue) toFixedRuneStr(str string, ln int) string {
 	rn := []rune(str)
 	strLen := len(rn)
 	if strLen > ln {
-		return string(str[:ln])
+		return string(rn[:ln])
 	}
 	if strLen < ln {
 		rs := make([]rune, ln)

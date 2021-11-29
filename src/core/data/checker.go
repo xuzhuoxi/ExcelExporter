@@ -11,8 +11,8 @@ var (
 )
 
 var (
-	typeRegexpStringN    *regexp.Regexp
-	typeRegexpStringArrN *regexp.Regexp
+	regexpTypeFixedString    *regexp.Regexp
+	regexpTypeFixedStringArr *regexp.Regexp
 )
 
 func init() {
@@ -26,12 +26,12 @@ func initTypeRegexps() {
 	if nil != err {
 		panic(err)
 	}
-	typeRegexpStringN = r
+	regexpTypeFixedString = r
 	rArr, errArr := regexp.Compile(`^\[\]string\([1-9]\d*\)$`)
 	if nil != errArr {
 		panic(errArr)
 	}
-	typeRegexpStringArrN = rArr
+	regexpTypeFixedStringArr = rArr
 }
 
 func initValueRegexps() {

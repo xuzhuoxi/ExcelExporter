@@ -20,19 +20,31 @@ func (b *jsonDataBuilder) StartWriteData() {
 	b.rowIndex = 0
 }
 
-func (b *jsonDataBuilder) StartNewRow() {
-	b.rowIndex += 1
-}
-
 func (b *jsonDataBuilder) FinishWriteData() {
-	c, err := sjson.Set(b.content, countName, b.rowIndex+1)
-	if nil != err {
-
-	}
+	c, _ := sjson.Set(b.content, countName, b.rowIndex+1)
 	b.content = c
 }
 
-func (b *jsonDataBuilder) WriteCell(ktv *KTValue) error {
+func (b *jsonDataBuilder) WriteRow(ktvArr []*KTValue) error {
+	for _, ktv := range ktvArr {
+		err := b.writeCell(ktv)
+		if nil != err {
+			return err
+		}
+	}
+	b.startNewRow()
+	return nil
+}
+
+func (b *jsonDataBuilder) WriteDataToFile(filePath string) error {
+	return os.WriteFile(filePath, []byte(b.content), fs.ModePerm)
+}
+
+func (b *jsonDataBuilder) startNewRow() {
+	b.rowIndex += 1
+}
+
+func (b *jsonDataBuilder) writeCell(ktv *KTValue) error {
 	v, err := ktv.GetValue()
 	if nil != err {
 		return err
@@ -44,19 +56,4 @@ func (b *jsonDataBuilder) WriteCell(ktv *KTValue) error {
 	}
 	b.content = c
 	return nil
-}
-
-func (b *jsonDataBuilder) WriteRow(ktvArr []*KTValue) error {
-	for _, ktv := range ktvArr {
-		err := b.WriteCell(ktv)
-		if nil != err {
-			return err
-		}
-	}
-	b.StartNewRow()
-	return nil
-}
-
-func (b *jsonDataBuilder) WriteDataToFile(filePath string) error {
-	return os.WriteFile(filePath, []byte(b.content), fs.ModePerm)
 }

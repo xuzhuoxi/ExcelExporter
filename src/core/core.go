@@ -260,8 +260,11 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 				break
 			}
 			ktvRow := getRowData(keyRow, typeRow, dataRow, selects)
-			builder.WriteRow(ktvRow)
-			builder.StartNewRow()
+			err := builder.WriteRow(ktvRow)
+			if nil != err {
+				Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Error:%s", err))
+				return err
+			}
 			startRow += 1
 		}
 		builder.FinishWriteData()
