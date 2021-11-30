@@ -31,7 +31,7 @@ func (o LangTemp) String() string {
 type LangSetting struct {
 	Name string `yaml:"name"`
 
-	Boolean    LangDefine `yaml:"boolean,omitempty"`
+	Bool       LangDefine `yaml:"bool,omitempty"`
 	Int8       LangDefine `yaml:"int8,omitempty"`
 	Int16      LangDefine `yaml:"int16,omitempty"`
 	Int32      LangDefine `yaml:"int32,omitempty"`
@@ -44,27 +44,27 @@ type LangSetting struct {
 	Float64    LangDefine `yaml:"float64,omitempty"`
 	Str        LangDefine `yaml:"string,omitempty"`
 	Json       LangDefine `yaml:"json,omitempty"`
-	BooleanArr LangDefine `yaml:"boolean[],omitempty"`
-	Int8Arr    LangDefine `yaml:"int8[],omitempty"`
-	Int16Arr   LangDefine `yaml:"int16[],omitempty"`
-	Int32Arr   LangDefine `yaml:"int32[],omitempty"`
-	Int64Arr   LangDefine `yaml:"int64[],omitempty"`
-	UInt8Arr   LangDefine `yaml:"uint8[],omitempty"`
-	UInt16Arr  LangDefine `yaml:"uint16[],omitempty"`
-	UInt32Arr  LangDefine `yaml:"uint32[],omitempty"`
-	UInt64Arr  LangDefine `yaml:"uint64[],omitempty"`
-	Float32Arr LangDefine `yaml:"float32[],omitempty"`
-	Float64Arr LangDefine `yaml:"float64[],omitempty"`
-	StrArr     LangDefine `yaml:"string[],omitempty"`
-	JsonArr    LangDefine `yaml:"json[],omitempty"`
+	BoolArr    LangDefine `yaml:"[]bool,omitempty"`
+	Int8Arr    LangDefine `yaml:"[]int8,omitempty"`
+	Int16Arr   LangDefine `yaml:"[]int16,omitempty"`
+	Int32Arr   LangDefine `yaml:"[]int32,omitempty"`
+	Int64Arr   LangDefine `yaml:"[]int64,omitempty"`
+	UInt8Arr   LangDefine `yaml:"[]uint8,omitempty"`
+	UInt16Arr  LangDefine `yaml:"[]uint16,omitempty"`
+	UInt32Arr  LangDefine `yaml:"[]uint32,omitempty"`
+	UInt64Arr  LangDefine `yaml:"[]uint64,omitempty"`
+	Float32Arr LangDefine `yaml:"[]float32,omitempty"`
+	Float64Arr LangDefine `yaml:"[]float64,omitempty"`
+	StrArr     LangDefine `yaml:"[]string,omitempty"`
+	JsonArr    LangDefine `yaml:"[]json,omitempty"`
 }
 
 func (o *LangSetting) GetLangDefine(name string) (format LangDefine, ok bool) {
 	switch name {
 	case FieldBool:
-		return o.Boolean, true
+		return o.Bool, true
 	case FieldBoolArr:
-		return o.BooleanArr, true
+		return o.BoolArr, true
 	case FieldInt8:
 		return o.Int8, true
 	case FieldInt8Arr:
@@ -127,22 +127,22 @@ func (o *LangSetting) getFormat(name string) (format LangDefine, ok bool) {
 		tag := f.Tag.Get("yaml")
 		fmt.Println(tag)
 	}
-	return o.Boolean, ok
+	return o.Bool, ok
 }
 
 func (o *LangSetting) String() string {
 	format := "Lang(%s)[\n" +
-		"Boolean=%v, \n" +
+		"Bool=%v, \n" +
 		"Int8=%v, \nInt16=%v, \nInt32=%v, \nInt64=%v, \n" +
 		"UInt8=%v, \nUInt16=%v, \nUInt32=%v, \nUInt64=%v, \n" +
 		"Float32=%v, \nFloat64=%v, \n" +
 		"String=%v, \nJson=%v, \n" +
-		"Boolean[]=%v, \n" +
+		"Bool[]=%v, \n" +
 		"Int8[]=%v, \nInt16[]=%v, \nInt32[]=%v, \nInt64[]=%v, \n" +
 		"UInt8[]=%v, \nUInt16[]=%v, \nUInt32[]=%v, \nUInt64[]=%v, \n" +
 		"Float32[]=%v, \nFloat64[]=%v, \n" +
 		"String[]=%v, \nJson[]=%v"
 	return fmt.Sprintf(format, o.Name,
-		o.Boolean, o.Int8, o.Int16, o.Int32, o.Int64, o.UInt8, o.UInt16, o.UInt32, o.UInt64, o.Float32, o.Float64, o.Str, o.Json,
-		o.BooleanArr, o.Int8Arr, o.Int16Arr, o.Int32Arr, o.Int64Arr, o.UInt8Arr, o.UInt16Arr, o.UInt32Arr, o.UInt64Arr, o.Float32Arr, o.Float64Arr, o.StrArr, o.JsonArr)
+		o.Bool, o.Int8, o.Int16, o.Int32, o.Int64, o.UInt8, o.UInt16, o.UInt32, o.UInt64, o.Float32, o.Float64, o.Str, o.Json,
+		o.BoolArr, o.Int8Arr, o.Int16Arr, o.Int32Arr, o.Int64Arr, o.UInt8Arr, o.UInt16Arr, o.UInt32Arr, o.UInt64Arr, o.Float32Arr, o.Float64Arr, o.StrArr, o.JsonArr)
 }

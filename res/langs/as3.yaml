@@ -104,7 +104,7 @@ json:
   yaml_set: ''
   bin_get: 'readString'
   bin_set: ''
-'boolean[]':
+'[]bool':
   name: 'Vector.<Boolean>'
   json_get: ''
   json_set: ''
@@ -112,7 +112,7 @@ json:
   yaml_set: ''
   bin_get: 'readBooleanArray'
   bin_set: ''
-'int8[]':
+'[]int8':
   name: 'Vector.<int>'
   json_get: ''
   json_set: ''
@@ -120,7 +120,7 @@ json:
   yaml_set: ''
   bin_get: 'readInt8Array'
   bin_set: ''
-'int16[]':
+'[]int16':
   name: 'Vector.<int>'
   json_get: ''
   json_set: ''
@@ -128,7 +128,7 @@ json:
   yaml_set: ''
   bin_get: 'readInt16Array'
   bin_set: ''
-'int32[]':
+'[]int32':
   name: 'Vector.<int>'
   json_get: ''
   json_set: ''
@@ -136,7 +136,7 @@ json:
   yaml_set: ''
   bin_get: 'readInt32Array'
   bin_set: ''
-'int64[]':
+'[]int64':
   name: 'Vector.<int>'
   json_get: ''
   json_set: ''
@@ -144,7 +144,7 @@ json:
   yaml_set: ''
   bin_get: ''
   bin_set: ''
-'uint8[]':
+'[]uint8':
   name: 'Vector.<uint>'
   json_get: ''
   json_set: ''
@@ -152,7 +152,7 @@ json:
   yaml_set: ''
   bin_get: 'readUInt8Array'
   bin_set: ''
-'uint16[]':
+'[]uint16':
   name: 'Vector.<uint>'
   json_get: ''
   json_set: ''
@@ -160,7 +160,7 @@ json:
   yaml_set: ''
   bin_get: 'readUInt16Array'
   bin_set: ''
-'uint32[]':
+'[]uint32':
   name: 'Vector.<uint>'
   json_get: ''
   json_set: ''
@@ -168,7 +168,7 @@ json:
   yaml_set: ''
   bin_get: 'readUInt32Array'
   bin_set: ''
-'uint64[]':
+'[]uint64':
   name: 'Vector.<uint>'
   json_get: ''
   json_set: ''
@@ -176,7 +176,7 @@ json:
   yaml_set: ''
   bin_get: 'readUInt64Array'
   bin_set: ''
-'float32[]':
+'[]float32':
   name: 'Vector.<Number>'
   json_get: ''
   json_set: ''
@@ -184,7 +184,7 @@ json:
   yaml_set: ''
   bin_get: 'readFloat32Array'
   bin_set: ''
-'float64[]':
+'[]float64':
   name: 'Vector.<Number>'
   json_get: ''
   json_set: ''
@@ -192,7 +192,7 @@ json:
   yaml_set: ''
   bin_get: 'readFloat64Array'
   bin_set: ''
-'string[]':
+'[]string':
   name: 'Vector.<String>'
   json_get: ''
   json_set: ''
@@ -200,7 +200,7 @@ json:
   yaml_set: ''
   bin_get: 'readStringArray'
   bin_set: ''
-'json[]':
+'[]json':
   name: 'Vector.<String>'
   json_get: ''
   json_set: ''

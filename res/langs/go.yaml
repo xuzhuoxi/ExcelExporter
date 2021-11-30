@@ -1,6 +1,6 @@
 name: go
 
-boolean:
+bool:
   name: 'bool'
   json_get: 'GetBoolean'
   json_set: ''
@@ -104,7 +104,7 @@ json:
   yaml_set: ''
   bin_get: 'ReadString'
   bin_set: ''
-'boolean[]':
+'[]bool':
   name: '[]bool'
   json_get: 'GetBooleanArray'
   json_set: ''
@@ -112,7 +112,7 @@ json:
   yaml_set: ''
   bin_get: 'ReadBooleanArray'
   bin_set: ''
-'int8[]':
+'[]int8':
   name: '[]int8'
   json_get: 'GetInt8Array'
   json_set: ''
@@ -120,7 +120,7 @@ json:
   yaml_set: ''
   bin_get: 'ReadInt8Array'
   bin_set: ''
-'int16[]':
+'[]int16':
   name: '[]int16'
   json_get: 'GetInt16Array'
   json_set: ''
@@ -128,7 +128,7 @@ json:
   yaml_set: ''
   bin_get: 'ReadInt16Array'
   bin_set: ''
-'int32[]':
+'[]int32':
   name: '[]int32'
   json_get: 'GetInt32Array'
   json_set: ''
@@ -136,7 +136,7 @@ json:
   yaml_set: ''
   bin_get: 'ReadInt32Array'
   bin_set: ''
-'int64[]':
+'[]int64':
   name: '[]int64'
   json_get: 'GetInt64Array'
   json_set: ''
@@ -144,7 +144,7 @@ json:
   yaml_set: ''
   bin_get: 'ReadInt64Array'
   bin_set: ''
-'uint8[]':
+'[]uint8':
   name: '[]uint8'
   json_get: 'GetUInt8Array'
   json_set: ''
@@ -152,7 +152,7 @@ json:
   yaml_set: ''
   bin_get: 'ReadUInt8Array'
   bin_set: ''
-'uint16[]':
+'[]uint16':
   name: '[]uint16'
   json_get: 'GetUInt16Array'
   json_set: ''
@@ -160,7 +160,7 @@ json:
   yaml_set: ''
   bin_get: 'ReadUInt16Array'
   bin_set: ''
-'uint32[]':
+'[]uint32':
   name: '[]uint32'
   json_get: 'GetUInt32Array'
   json_set: ''
@@ -168,7 +168,7 @@ json:
   yaml_set: ''
   bin_get: 'ReadUInt32Array'
   bin_set: ''
-'uint64[]':
+'[]uint64':
   name: '[]uint64'
   json_get: 'GetUInt64Array'
   json_set: ''
@@ -176,7 +176,7 @@ json:
   yaml_set: ''
   bin_get: 'ReadUInt64Array'
   bin_set: ''
-'float32[]':
+'[]float32':
   name: '[]float32'
   json_get: 'GetFloat32Array'
   json_set: ''
@@ -184,7 +184,7 @@ json:
   yaml_set: ''
   bin_get: 'ReadFloat32Array'
   bin_set: ''
-'float64[]':
+'[]float64':
   name: '[]float64'
   json_get: 'GetFloat64Array'
   json_set: ''
@@ -192,7 +192,7 @@ json:
   yaml_set: ''
   bin_get: 'ReadFloat64Array'
   bin_set: ''
-'string[]':
+'[]string':
   name: '[]string'
   json_get: 'GetStringArray'
   json_set: ''
@@ -200,7 +200,7 @@ json:
   yaml_set: ''
   bin_get: 'ReadStringArray'
   bin_set: ''
-'json[]':
+'[]json':
   name: '[]string'
   json_get: 'GetStringArray'
   json_set: ''

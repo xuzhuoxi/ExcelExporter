@@ -142,7 +142,7 @@ type ExcelTitle struct {
 	RemarkRow int `yaml:"remark_row"`
 	// 输出开关选择，格式: 'c,s,d'，c、s、d的格式只能是0或1，c指前端，s指后端，d指数据库，顺序不能颠倒。从1开始
 	FieldRangeRow int `yaml:"field_range_row"`
-	// 数据格式,单元格格式目前支持{uint8,uint16,uint32,int8,int16,int32,float32,boolean,string,string(*)}
+	// 数据格式,单元格格式目前支持{uint8,uint16,uint32,int8,int16,int32,float32,bool,string,string(*)}
 	FieldFormatRow int `yaml:"field_format_row"`
 	// 语言使用的字段名称
 	LangKeyRows LangKeyRows `yaml:"lang_key_rows"`

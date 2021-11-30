@@ -1,6 +1,6 @@
 name: 'c++'
 
-boolean:
+bool:
   name: 'bool'
   json_get: ''
   json_set: ''
@@ -104,7 +104,7 @@ json:
   yaml_set: ''
   bin_get: ''
   bin_set: ''
-'boolean[]':
+'[]bool':
   name: 'bool[]'
   json_get: ''
   json_set: ''
@@ -112,7 +112,7 @@ json:
   yaml_set: ''
   bin_get: ''
   bin_set: ''
-'int8[]':
+'[]int8':
   name: 'sbyte[]'
   json_get: ''
   json_set: ''
@@ -120,7 +120,7 @@ json:
   yaml_set: ''
   bin_get: ''
   bin_set: ''
-'int16[]':
+'[]int16':
   name: 'short[]'
   json_get: ''
   json_set: ''
@@ -128,7 +128,7 @@ json:
   yaml_set: ''
   bin_get: ''
   bin_set: ''
-'int32[]':
+'[]int32':
   name: 'int[]'
   json_get: ''
   json_set: ''
@@ -136,7 +136,7 @@ json:
   yaml_set: ''
   bin_get: ''
   bin_set: ''
-'int64[]':
+'[]int64':
   name: 'long[]'
   json_get: ''
   json_set: ''
@@ -144,7 +144,7 @@ json:
   yaml_set: ''
   bin_get: ''
   bin_set: ''
-'uint8[]':
+'[]uint8':
   name: 'byte[]'
   json_get: ''
   json_set: ''
@@ -152,7 +152,7 @@ json:
   yaml_set: ''
   bin_get: ''
   bin_set: ''
-'uint16[]':
+'[]uint16':
   name: 'ushort[]'
   json_get: ''
   json_set: ''
@@ -160,7 +160,7 @@ json:
   yaml_set: ''
   bin_get: ''
   bin_set: ''
-'uint32[]':
+'[]uint32':
   name: 'uint[]'
   json_get: ''
   json_set: ''
@@ -168,7 +168,7 @@ json:
   yaml_set: ''
   bin_get: ''
   bin_set: ''
-'uint64[]':
+'[]uint64':
   name: 'ulong[]'
   json_get: ''
   json_set: ''
@@ -176,7 +176,7 @@ json:
   yaml_set: ''
   bin_get: ''
   bin_set: ''
-'float32[]':
+'[]float32':
   name: 'float[]'
   json_get: ''
   json_set: ''
@@ -184,7 +184,7 @@ json:
   yaml_set: ''
   bin_get: ''
   bin_set: ''
-'float64[]':
+'[]float64':
   name: 'double[]'
   json_get: ''
   json_set: ''
@@ -192,7 +192,7 @@ json:
   yaml_set: ''
   bin_get: ''
   bin_set: ''
-'string[]':
+'[]string':
   name: 'string[]'
   json_get: ''
   json_set: ''
@@ -200,7 +200,7 @@ json:
   yaml_set: ''
   bin_get: ''
   bin_set: ''
-'json[]':
+'[]json':
   name: 'string[]'
   json_get: ''
   json_set: ''
