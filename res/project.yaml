@@ -7,10 +7,10 @@ source:
   encoding: utf-8
   # 文件扩展名
   ext_name:
-    - xls
     - xlsx
 
-# 输出目录,以'':''开关，或路径中包含'':''的，视为绝对路径,encoding属性作用于字符文件的输出,和字节文件中字符串的编码
+# 输出目录,以'':''开关，或路径中包含'':''的，视为绝对路径,
+# encoding属性作用于字符文件的输出,和字节文件中字符串的编码
 target:
   # 定义目录
   root: ./target
@@ -26,7 +26,7 @@ target:
     database: data/db
   # 常量目录
   const: const
-  # 编码格式
+  # 编码格式(暂时不支持修改)
   encoding : utf-8
 
 # 缓冲区定义
