@@ -1,5 +1,4 @@
 name: 'c++'
-
 bool:
   name: 'bool'
   json_get: ''

@@ -1,5 +1,4 @@
 name: ts
-
 bool:
   name: 'boolean'
   json_get: ''

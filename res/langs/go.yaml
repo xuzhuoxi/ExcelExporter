@@ -1,5 +1,4 @@
 name: go
-
 bool:
   name: 'bool'
   json_get: 'GetBoolean'

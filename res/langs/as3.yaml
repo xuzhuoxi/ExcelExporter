@@ -1,6 +1,5 @@
 name: 'as3'
-
-boolean:
+bool:
   name: 'Boolean'
   json_get: ''
   json_set: ''
