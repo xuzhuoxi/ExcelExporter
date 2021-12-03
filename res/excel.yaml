@@ -1,3 +1,78 @@
+# 表头配置
+'title&data':
+  # 启用前缀
+  prefix: Data_
+  # 导出命名
+  naming:
+    client_title: B1
+    client_data: C1
+    server_title: B1
+    server_data: C1
+    database_title: B1
+    database_data: C1
+ # 字段别名行号，用于查找指定列，值为0时使用列号作为别名
+  nick_row: 0
+  # 数据名称所在行号，与Excel行号一致
+  name_row: 2
+  # 数据注释所在行号，与Excel行号一致
+  remark_row: 3
+  # 输出选择行号，内容格式: 'c,s,d'，c、s、d的格式只能是0或1，c指前端，s指后端，d指数据库，顺序不能颠倒。从1开始。
+  field_range_row: 4
+  # 数据格式行号，内容格式支持:
+  # uint8,uint16,uint32,int8,int16,int32,float32,boolean,string,string(*),
+  # uint8[],uint16[],uint32[],int8[],int16[],int32[],float32[],boolean[],string[],string(*)[]
+  field_format_row: 5
+  # 各语言使用的字段名称对应行号
+  filed_names:
+    - name: 'as3'
+      row: 6
+    - name: 'c++'
+      row: 6
+    - name: 'c#'
+      row: 6
+    - name: 'go'
+      row: 6
+    - name: 'java'
+      row: 6
+    - name: 'ts'
+      row: 6
+  # 数据文件使用的字段名称行号
+  file_keys:
+    - name: 'bin'
+      row: 7
+    - name: 'sql'
+      row: 7
+    - name: 'json'
+      row: 7
+    - name: 'yaml'
+      row: 7
+    - name: 'yml'
+      row: 7
+    - name: 'toml'
+      row: 7
+    - name: 'hcl'
+      row: 7
+    - name: 'env'
+      row: 7
+    - name: 'properties'
+      row: 7
+  # 数据的开始行号
+  data_start_row: 8
+
+const:
+  # 启用前缀
+  prefix: Const_
+  # 常量名
+  name_col: A
+  # 常量值
+  value_col: B
+  # 常量值类型
+  type_col: C
+  # 注释
+  remark_col: C
+  # 数据的开始行号
+  data_start_row: 2
+
 # 要求输出的Sheet的名称前缀，只有带这个前缀的Sheet才参与处理
 prefix:
   # 定义及数据处理

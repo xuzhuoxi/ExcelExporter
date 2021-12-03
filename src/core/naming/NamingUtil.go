@@ -21,7 +21,7 @@ func ClearUnderScore(naming string) string {
 	if 0 == ln {
 		return naming
 	}
-	reg := regexp.MustCompile(`[_]+[a-z](\w.)`)
+	reg := regexp.MustCompile(`[_]+[a-zA-Z](\w.)`)
 	return reg.ReplaceAllStringFunc(naming, clearUnderScore)
 }
 

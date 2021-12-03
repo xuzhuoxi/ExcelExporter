@@ -1,37 +1,50 @@
 # 数据结构定义所支持的编程语言
 # ref:字段定义路径，只支持相对路径
-# temp:模板路径，只支持相对路径，多个路径用","分隔，第一个模板为主模板
-program_languages:
+# temps_title:表头模板路径，只支持相对路径，多个路径用","分隔，第一个模板为主模板
+# temps_const:常量表模板路径，只支持相对路径，多个路径用","分隔，第一个模板为主模板
+languages:
   - name: 'as3'
     ext: 'as'
     ref: './langs/as3.yaml'
-    temp:
-      - './langs/templates/as3.temp'
+    temps_title:
+      - './langs/templates/as3_title.temp'
+    temps_const:
+      - './langs/templates/as3_const.temp'
   - name: 'c++'
     ext: 'cpp'
     ref: './langs/c++.yaml'
-    temp:
-      - './langs/templates/c++.temp'
+    temps_title:
+      - './langs/templates/c++_title.temp'
+    temps_const:
+      - './langs/templates/c++_const.temp'
   - name: 'c#'
     ext: 'cs'
     ref: './langs/c#.yaml'
-    temp:
-      - './langs/templates/c#.temp'
+    temps_title:
+      - './langs/templates/c#_title.temp'
+    temps_const:
+      - './langs/templates/c#_const.temp'
   - name: 'go'
     ext: 'go'
     ref: './langs/go.yaml'
-    temp:
-      - './langs/templates/go.temp'
+    temps_title:
+      - './langs/templates/go_title.temp'
+    temps_const:
+      - './langs/templates/go_const.temp'
   - name: 'java'
     ext: 'java'
     ref: './langs/java.yaml'
-    temp:
-      - './langs/templates/java.temp'
+    temps_title:
+      - './langs/templates/java_title.temp'
+    temps_const:
+      - './langs/templates/java_const.temp'
   - name: 'ts'
     ext: 'ts'
     ref: './langs/ts.yaml'
-    temp:
-      - './langs/templates/ts.temp'
+    temps_title:
+      - './langs/templates/ts_title.temp'
+    temps_const:
+      - './langs/templates/ts_const.temp'
 
 # 支持的数据字段格式
 # 其中string中的*代表字符数，范围[1,1024]。

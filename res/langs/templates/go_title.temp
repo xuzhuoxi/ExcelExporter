@@ -1,0 +1,58 @@
+package {module}
+{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$clsName := $proxy.TitleName}}
+/**
+ * @author {AUTHOR}
+ * Created on {DATE}.
+ */
+type I{{$clsName}} interface {
+{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+    /**
+     * {{$proxy.GetTitleName $value}}
+     *
+     * @remark {{$proxy.GetTitleRemark $value}}
+     * @return {{$langDefine.Name}}
+     */
+    Get{{ToUpperCamelCase $fieldName}}() {{$langDefine.Name}}
+{{end}}
+}
+
+/**
+ * @author ${AUTHOR}
+ * Created on ${DATE}.
+ */
+type {{$clsName}} struct {
+    //以下为属性声明
+{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}} {{$jsonName := $proxy.GetTitleFileKey $value "json"}}
+    // {{$proxy.GetTitleName $value}}
+    {{ToLowerCamelCase $fieldName}} {{$langDefine.Name}} `json:"{{$jsonName}}"`{{end}}
+}
+
+// 接口实现
+{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+/**
+ * {{$proxy.GetTitleName $value}}
+*/
+func (o *{{$clsName}}) Get{{ToUpperCamelCase $fieldName}}() {{$langDefine.Name}} {
+	return o.{{ToLowerCamelCase $fieldName}}
+}
+{{end}}
+
+//解释接口实现
+
+// Json数据解释
+//func (o *{{$clsName}}) ParseJson(proxy IJsonReaderProxy) {
+//	//以下为从 Json数据代理 中解释出字段数据{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}{{$jsonName := $proxy.GetTitleFileKey $value "json"}}
+//    o.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.JsonGet}}("{{$jsonName}}"){{end}}
+//}
+
+// Yaml数据解释
+//func (o *{{$clsName}}) ParseYaml(proxy IYamlReaderProxy) {
+//	//以下为从 Yaml数据代理 中解释出字段数据{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+//    o.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.YamlGet}}("{{$fieldName}}"){{end}}
+//}
+
+// 二进制数据解释
+func (o *{{$clsName}}) ParseBinary(proxy IBinaryReaderProxy) {
+	//以下为从 二进制数据代理 中解释出字段数据{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+    o.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.BinaryGet}}(){{end}}
+}

@@ -29,7 +29,8 @@ var (
 )
 
 var (
-	ProgramLanguageTemps = make(map[string]*temps.TemplateProxy)
+	TitleLanguageTemps = make(map[string]*temps.TemplateProxy)
+	ConstLanguageTemps = make(map[string]*temps.TemplateProxy)
 )
 
 func init() {
@@ -136,12 +137,21 @@ func executeExcelFile(dataFilePath string) (err error) {
 			}
 		}
 	}
+
+	if len(ConstCtx) > 0 {
+		for _, constCtx := range ConstCtx {
+			ed := executeConstContext(Excel, constCtx)
+			if nil != ed {
+				Logger.Warnln(fmt.Sprintf("[core.executeExcelFile] %s", ed))
+			}
+		}
+	}
 	return
 }
 
 func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error {
 	lang := titleCtx.ProgramLanguage
-	temp, err := getProgramLanguageTemp(lang)
+	temp, err := getTitleLanguageTemp(lang)
 	if nil != err {
 		return err
 	}
@@ -284,20 +294,40 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 	return nil
 }
 
-func getProgramLanguageTemp(lang string) (t *temps.TemplateProxy, err error) {
-	if _, ok := ProgramLanguageTemps[lang]; ok {
-		return ProgramLanguageTemps[lang], nil
+func executeConstContext(excel *excel.ExcelProxy, constCtx *ConstContext) error {
+	return nil
+}
+
+func getTitleLanguageTemp(lang string) (t *temps.TemplateProxy, err error) {
+	if _, ok := TitleLanguageTemps[lang]; ok {
+		return TitleLanguageTemps[lang], nil
 	}
 	if l, ok := Setting.System.FindProgramLanguage(lang); ok {
-		temp, err := temps.LoadTemplates(l.TempPaths())
+		temp, err := temps.LoadTemplates(l.GetTempsTitlePath())
 		if nil != err {
 			return nil, err
 		}
-		ProgramLanguageTemps[lang] = temp
+		TitleLanguageTemps[lang] = temp
 
 		return temp, nil
 	}
-	return nil, errors.New(fmt.Sprintf("Undefined Program Lanaguage: %s", lang))
+	return nil, errors.New(fmt.Sprintf("Undefined Program Lanaguage for Title: %s", lang))
+}
+
+func getConstLanguageTemp(lang string) (t *temps.TemplateProxy, err error) {
+	if _, ok := ConstLanguageTemps[lang]; ok {
+		return ConstLanguageTemps[lang], nil
+	}
+	if l, ok := Setting.System.FindProgramLanguage(lang); ok {
+		temp, err := temps.LoadTemplates(l.GetTempsConstPath())
+		if nil != err {
+			return nil, err
+		}
+		ConstLanguageTemps[lang] = temp
+
+		return temp, nil
+	}
+	return nil, errors.New(fmt.Sprintf("Undefined Program Lanaguage for Const: %s", lang))
 }
 
 func parseFileTypeRow(sheet *excel.ExcelSheet, row *excel.ExcelRow, selectIndex uint) (selects []int, err error) {

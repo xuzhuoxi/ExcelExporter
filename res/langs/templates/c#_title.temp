@@ -1,0 +1,51 @@
+using System;
+using UnityEngine;
+{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$clsName := $proxy.TitleName}}
+/**
+ * C#定义
+ */
+namespace {MODULE}
+{
+    /**
+     * @author {AUTHOR}
+     * Created on {DATE}.
+     */
+    [Serializable]
+    public class {{$clsName}}
+    {
+        // 以下为属性声明
+{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+        // {{$proxy.GetTitleName $value}}
+        [SerializeField] private {{$langDefine.Name}} {{ToLowerCamelCase $fieldName}};{{end}}
+
+        // 以下为Get方法
+{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+        /**
+         * {{$proxy.GetTitleName $value}}
+         *
+         * @remark {{$proxy.GetTitleRemark $value}}
+         * @return {{$langDefine.Name}}
+         */
+        public{{$langDefine.Name}} {{ToUpperCamelCase $fieldName}} => {{ToLowerCamelCase $fieldName}};
+{{end}}
+        // 以下为解释数据方法
+
+        // Json数据解释
+        public void ParseJson(string data)
+        {
+            JsonUtility.FromJsonOverwrite(data, this);
+        }
+
+        // 二进制数据解释
+//		public void ParseBinary(proxy: xu.BinaryReaderProxy)
+//		{   {{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+            //this.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.BinaryGet}}();{{end}}
+//		}
+
+        // 静态实例化
+        public static ${CLASS} FromJson(string data)
+        {
+            return JsonUtility.FromJson<${CLASS}>(data);
+        }
+    }
+}
