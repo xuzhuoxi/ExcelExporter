@@ -39,7 +39,7 @@ namespace {MODULE}
         // 二进制数据解释
 //		public void ParseBinary(proxy: xu.BinaryReaderProxy)
 //		{   {{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
-            //this.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.BinaryGet}}();{{end}}
+            //this.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.GetGetOperate "bin"}}();{{end}}
 //		}
 
         // 静态实例化

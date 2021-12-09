@@ -114,7 +114,8 @@ func executeExcelFile(dataFilePath string) (err error) {
 		return
 	}
 
-	colNameRow := Setting.Excel.Title.ColNickRow
+	//colNameRow := Setting.Excel.Title.ColNickRow
+	colNameRow := Setting.Excel.TitleData.NickRow
 	err = Excel.LoadSheets("", colNameRow, true) //加载全部
 	if nil != err {
 		return
@@ -163,21 +164,24 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 		return err
 	}
 
-	prefix := Setting.Excel.Prefix.Data
+	//prefix := Setting.Excel.Prefix.Data
+	prefix := Setting.Excel.TitleData.Prefix
 	Logger.Infoln(fmt.Sprintf("[core.executeTitleContext] Start Execute Content: %s", titleCtx))
 	for _, sheet := range excel.Sheets {
 		// 过滤Sheet的命名
 		if strings.Index(sheet.SheetName, prefix) != 0 {
 			continue
 		}
-		outEle, ok := Setting.Excel.Output.GetElement(titleCtx.RangeName)
+		//outEle, ok := Setting.Excel.Output.GetElement(titleCtx.RangeName)
+		outEle, ok := Setting.Excel.TitleData.GetOutputInfo(titleCtx.RangeName)
 		if !ok {
 			err = errors.New(fmt.Sprintf("-field error at %s", titleCtx.RangeName))
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Error A %s ", err))
 			return err
 		}
 
-		fieldRangeRow := sheet.GetRowAt(Setting.Excel.Title.FieldRangeRow - 1)
+		//fieldRangeRow := sheet.GetRowAt(Setting.Excel.Title.FieldRangeRow - 1)
+		fieldRangeRow := sheet.GetRowAt(Setting.Excel.TitleData.FieldRangeRow - 1)
 		if nil == fieldRangeRow || fieldRangeRow.Empty() {
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
 			continue
@@ -191,7 +195,8 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 			continue
 		}
 		//Logger.Infoln("Selects:", selects)
-		titleName, _ := sheet.ValueAtAxis(outEle.TitleName)
+		//titleName, _ := sheet.ValueAtAxis(outEle.TitleName)
+		titleName, _ := sheet.ValueAtAxis(outEle.Title)
 		// 创建模板数据代理
 		tempDataProxy := &TempDataProxy{Sheet: sheet, Excel: excel, Index: selects,
 			TitleName: titleName, Language: titleCtx.ProgramLanguage}
@@ -201,7 +206,8 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 			os.MkdirAll(targetDir, os.ModePerm)
 		}
 
-		fileName, err := sheet.ValueAtAxis(outEle.TitleName)
+		//fileName, err := sheet.ValueAtAxis(outEle.TitleName)
+		fileName, err := sheet.ValueAtAxis(outEle.Title)
 		extendName := langDefine.ExtendName
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] GetTitleFileName error: %s ", err))
@@ -222,20 +228,23 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 }
 
 func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
-	prefix := Setting.Excel.Prefix.Data
+	//prefix := Setting.Excel.Prefix.Data
+	prefix := Setting.Excel.TitleData.Prefix
 	for _, sheet := range excel.Sheets {
 		// 过滤Sheet的命名
 		if strings.Index(sheet.SheetName, prefix) != 0 {
 			continue
 		}
 		Logger.Infoln(fmt.Sprintf("[core.executeDataContext] Sheet[%s]", sheet.SheetName))
-		outEle, ok := Setting.Excel.Output.GetElement(dataCtx.RangeName)
+		//outEle, ok := Setting.Excel.Output.GetElement(dataCtx.RangeName)
+		outEle, ok := Setting.Excel.TitleData.GetOutputInfo(dataCtx.RangeName)
 		if !ok {
 			err := errors.New(fmt.Sprintf("-field error at \"%s\"", dataCtx.RangeName))
 			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Error A %s ", err))
 			return err
 		}
-		fieldRangeRow := sheet.GetRowAt(Setting.Excel.Title.FieldRangeRow - 1)
+		//fieldRangeRow := sheet.GetRowAt(Setting.Excel.Title.FieldRangeRow - 1)
+		fieldRangeRow := sheet.GetRowAt(Setting.Excel.TitleData.FieldRangeRow - 1)
 		if nil == fieldRangeRow || fieldRangeRow.Empty() {
 			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
 			continue
@@ -249,19 +258,23 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 			continue
 		}
 
-		fileName, err := sheet.ValueAtAxis(outEle.DataName)
+		//fileName, err := sheet.ValueAtAxis(outEle.DataName)
+		fileName, err := sheet.ValueAtAxis(outEle.Data)
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] GetDataFileName error: %s ", err))
 			return err
 		}
-		keyRowNum := Setting.Excel.Title.FileKeyRows.GetRowNum(dataCtx.DataFileFormat)
+		//keyRowNum := Setting.Excel.Title.FileKeyRows.GetRowNum(dataCtx.DataFileFormat)
+		keyRowNum := Setting.Excel.TitleData.GetFileKeyRow(dataCtx.DataFileFormat)
 		if -1 == keyRowNum {
 			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Parse file format: %s ", dataCtx.DataFileFormat))
 			continue
 		}
 		keyRow := sheet.GetRowAt(keyRowNum - 1)
-		typeRow := sheet.GetRowAt(Setting.Excel.Title.FieldFormatRow - 1)
-		startRow := Setting.Excel.Data.StartRow
+		//typeRow := sheet.GetRowAt(Setting.Excel.Title.FieldFormatRow - 1)
+		typeRow := sheet.GetRowAt(Setting.Excel.TitleData.FieldFormatRow - 1)
+		//startRow := Setting.Excel.Data.StartRow
+		startRow := Setting.Excel.TitleData.DataStartRow
 		builder := data.GenBuilder(dataCtx.DataFileFormat)
 		builder.StartWriteData()
 		for startRow > 0 {

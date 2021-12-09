@@ -1,209 +1,313 @@
 name: java
 bool:
   name: 'boolean'
-  json_get: 'getBoolean'
-  json_set: 'optBoolean'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readBoolean'
-  bin_set: 'writeBoolean'
+  operates:
+    - file_name: json
+      get: 'getBoolean'
+      set: 'setBoolean'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readBoolean'
+      set: 'writeBoolean'
 int8:
   name: 'int'
-  json_get: 'getInt8'
-  json_set: 'optInt'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readInt8'
-  bin_set: 'writeInt8'
+  operates:
+    - file_name: json
+      get: 'getInt8'
+      set: 'setInt8'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readInt8'
+      set: 'writeInt8'
 int16:
   name: 'int'
-  json_get: 'getInt16'
-  json_set: 'optInt'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readInt16'
-  bin_set: 'writeInt16'
+  operates:
+    - file_name: json
+      get: 'getInt16'
+      set: 'setInt16'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readInt16'
+      set: 'writeInt16'
 int32:
   name: 'int'
-  json_get: 'getInt32'
-  json_set: 'optInt'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readInt32'
-  bin_set: 'writeInt32'
+  operates:
+    - file_name: json
+      get: 'getInt32'
+      set: 'setInt32'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readInt32'
+      set: 'writeInt32'
 int64:
   name: 'int'
-  json_get: 'getInt64'
-  json_set: 'optInt'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readInt64'
-  bin_set: 'writeInt64'
+  operates:
+    - file_name: json
+      get: 'getInt64'
+      set: 'setInt64'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readInt64'
+      set: 'writeInt64'
 uint8:
   name: 'int'
-  json_get: 'getUInt8'
-  json_set: 'optInt'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readUInt8'
-  bin_set: 'writeUInt8'
+  operates:
+    - file_name: json
+      get: 'getUInt8'
+      set: 'setUInt8'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readUInt8'
+      set: 'writeUInt8'
 uint16:
   name: 'int'
-  json_get: 'getUInt16'
-  json_set: 'optInt'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readUInt16'
-  bin_set: 'writeUInt16'
+  operates:
+    - file_name: json
+      get: 'getUInt16'
+      set: 'setUInt16'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readUInt16'
+      set: 'writeUInt16'
 uint32:
   name: 'long'
-  json_get: 'getUInt32'
-  json_set: 'optLong'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readUInt32'
-  bin_set: 'writeUInt32'
+  operates:
+    - file_name: json
+      get: 'getUInt32'
+      set: 'setUInt32'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readUInt32'
+      set: 'writeUInt32'
 uint64:
   name: 'long'
-  json_get: 'getUInt64'
-  json_set: 'optLong'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readUInt64'
-  bin_set: 'writeUInt64'
+  operates:
+    - file_name: json
+      get: 'getUInt64'
+      set: 'setUInt64'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readUInt64'
+      set: 'writeUInt64'
 float32:
   name: 'float'
-  json_get: 'getDouble'
-  json_set: 'optDouble'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readFloat32'
-  bin_set: 'writeFloat32'
+  operates:
+    - file_name: json
+      get: 'getDouble'
+      set: 'setDouble'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readFloat32'
+      set: 'writeFloat32'
 float64:
   name: 'double'
-  json_get: 'getFloat64'
-  json_set: 'optDouble'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readFloat64'
-  bin_set: 'writeFloat64'
+  operates:
+    - file_name: json
+      get: 'getFloat64'
+      set: 'setFloat64'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readFloat64'
+      set: 'writeFloat64'
 string:
   name: 'String'
-  json_get: 'getString'
-  json_set: 'optString'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readString'
-  bin_set: 'writeString'
+  operates:
+    - file_name: json
+      get: 'getString'
+      set: 'setString'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readString'
+      set: 'writeString'
 json:
   name: 'JSONObject'
-  json_get: 'getJsonObject'
-  json_set: 'optString'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readJsonObject'
-  bin_set: 'writeString'
+  operates:
+    - file_name: json
+      get: 'getJsonObject'
+      set: 'setJsonObject'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readJsonObject'
+      set: 'writeString'
 '[]bool':
   name: 'boolean[]'
-  json_get: 'getBooleanArray'
-  json_set: 'optJSONArray'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readBooleanArray'
-  bin_set: 'writeBooleanArray'
+  operates:
+    - file_name: json
+      get: 'getBooleanArray'
+      set: 'setBooleanArray'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readBooleanArray'
+      set: 'writeBooleanArray'
 '[]int8':
   name: 'byte[]'
-  json_get: 'getInt8Array'
-  json_set: 'optJSONArray'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readInt8Array'
-  bin_set: 'writeInt8Array'
+  operates:
+    - file_name: json
+      get: 'getInt8Array'
+      set: 'setInt8Array'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readInt8Array'
+      set: 'writeInt8Array'
 '[]int16':
   name: 'short[]'
-  json_get: 'getInt16Array'
-  json_set: 'optJSONArray'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readInt16Array'
-  bin_set: 'writeInt16Array'
+  operates:
+    - file_name: json
+      get: 'getInt16Array'
+      set: 'setInt16Array'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readInt16Array'
+      set: 'writeInt16Array'
 '[]int32':
   name: 'int[]'
-  json_get: 'getInt32Array'
-  json_set: 'optJSONArray'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readInt32Array'
-  bin_set: 'writeInt32Array'
+  operates:
+    - file_name: json
+      get: 'getInt32Array'
+      set: 'setInt32Array'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readInt32Array'
+      set: 'writeInt32Array'
 '[]int64':
   name: '[]int64'
-  json_get: 'getInt64Array'
-  json_set: 'optJSONArray'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readInt64Array'
-  bin_set: 'writeInt64Array'
+  operates:
+    - file_name: json
+      get: 'getInt64Array'
+      set: 'setInt64Array'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readInt64Array'
+      set: 'writeInt64Array'
 '[]uint8':
   name: 'short[]'
-  json_get: 'getUInt8Array'
-  json_set: 'optJSONArray'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readUInt8Array'
-  bin_set: 'writeUInt8Array'
+  operates:
+    - file_name: json
+      get: 'getUInt8Array'
+      set: 'setUInt8Array'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readUInt8Array'
+      set: 'writeUInt8Array'
 '[]uint16':
   name: 'int[]'
-  json_get: 'getUInt16Array'
-  json_set: 'optJSONArray'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readUInt16Array'
-  bin_set: 'writeUInt16Array'
+  operates:
+    - file_name: json
+      get: 'getUInt16Array'
+      set: 'setUInt16Array'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readUInt16Array'
+      set: 'writeUInt16Array'
 '[]uint32':
   name: 'long[]'
-  json_get: 'getUInt32Array'
-  json_set: 'optJSONArray'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readUInt32Array'
-  bin_set: 'writeUInt32Array'
+  operates:
+    - file_name: json
+      get: 'getUInt32Array'
+      set: 'setUInt32Array'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readUInt32Array'
+      set: 'writeUInt32Array'
 '[]uint64':
   name: 'long[]'
-  json_get: 'getUInt64Array'
-  json_set: 'optJSONArray'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readUInt64Array'
-  bin_set: 'writeUInt64Array'
+  operates:
+    - file_name: json
+      get: 'getUInt64Array'
+      set: 'setUInt64Array'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readUInt64Array'
+      set: 'writeUInt64Array'
 '[]float32':
   name: 'float[]'
-  json_get: 'getFloat32Array'
-  json_set: 'optJSONArray'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readFloat32Array'
-  bin_set: 'writeFloat32Array'
+  operates:
+    - file_name: json
+      get: 'getFloat32Array'
+      set: 'setFloat32Array'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readFloat32Array'
+      set: 'writeFloat32Array'
 '[]float64':
   name: 'float[]'
-  json_get: 'getFloat64Array'
-  json_set: 'optJSONArray'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readFloat64Array'
-  bin_set: 'writeFloat64Array'
+  operates:
+    - file_name: json
+      get: 'getFloat64Array'
+      set: 'setFloat64Array'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readFloat64Array'
+      set: 'writeFloat64Array'
 '[]string':
   name: 'String[]'
-  json_get: 'getStringArray'
-  json_set: 'optJSONArray'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readStringArray'
-  bin_set: 'writeStringArray'
+  operates:
+    - file_name: json
+      get: 'getStringArray'
+      set: 'setStringArray'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readStringArray'
+      set: 'writeStringArray'
 '[]json':
   name: 'JSONArray'
-  json_get: 'getJsonArray'
-  json_set: 'optJSONArray'
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: 'readJsonArray'
-  bin_set: 'writeStringArray'
+  operates:
+    - file_name: json
+      get: 'getJsonArray'
+      set: 'setJsonArray'
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: 'readJsonArray'
+      set: 'writeStringArray'

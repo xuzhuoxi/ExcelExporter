@@ -5,19 +5,46 @@ import (
 	"reflect"
 )
 
-type LangDefine struct {
-	Name      string `yaml:"name"`
-	JsonGet   string `yaml:"json_get,omitempty"`
-	JsonSet   string `yaml:"json_set,omitempty"`
-	YamlGet   string `yaml:"yaml_get,omitempty"`
-	YamlSet   string `yaml:"yaml_set,omitempty"`
-	BinaryGet string `yaml:"bin_get,omitempty"`
-	BinarySet string `yaml:"bin_set,omitempty"`
+type PropertyFileOperate struct {
+	FileName string `yaml:"file_name"`
+	Get      string `yaml:"get,omitempty"`
+	Set      string `yaml:"set,omitempty"`
 }
 
-func (o LangDefine) String() string {
-	return fmt.Sprintf("{Name=%s, JsonGet=%s, JsonSet=%s, YamlGet=%s, YamlSet=%s, BinaryGet=%s, BinarySet=%s}",
-		o.Name, o.JsonGet, o.JsonSet, o.YamlGet, o.YamlSet, o.BinaryGet, o.BinarySet)
+func (o *PropertyFileOperate) String() string {
+	return fmt.Sprintf("PropertyFileOperate{Name=%s, Get=%s, Set=%s}", o.FileName, o.Get, o.Set)
+}
+
+type FieldOperate struct {
+	Name     string                `yaml:"name"`
+	Operates []PropertyFileOperate `yaml:"operates"`
+}
+
+func (o FieldOperate) String() string {
+	return fmt.Sprintf("FieldOperate{FieldName=%s, Operates=%v}", o.Name, o.Operates)
+}
+
+func (o FieldOperate) GetPropertyOperate(fileName string) (op PropertyFileOperate, ok bool) {
+	for index := range o.Operates {
+		if o.Operates[index].FileName == fileName {
+			return o.Operates[index], true
+		}
+	}
+	return PropertyFileOperate{}, false
+}
+
+func (o FieldOperate) GetGetOperate(fileName string) string {
+	if op, ok := o.GetPropertyOperate(fileName); ok {
+		return op.Get
+	}
+	return ""
+}
+
+func (o FieldOperate) GetSetOperate(fileName string) string {
+	if op, ok := o.GetPropertyOperate(fileName); ok {
+		return op.Set
+	}
+	return ""
 }
 
 type LangTemp struct {
@@ -31,35 +58,35 @@ func (o LangTemp) String() string {
 type LangSetting struct {
 	Name string `yaml:"name"`
 
-	Bool       LangDefine `yaml:"bool,omitempty"`
-	Int8       LangDefine `yaml:"int8,omitempty"`
-	Int16      LangDefine `yaml:"int16,omitempty"`
-	Int32      LangDefine `yaml:"int32,omitempty"`
-	Int64      LangDefine `yaml:"int64,omitempty"`
-	UInt8      LangDefine `yaml:"uint8,omitempty"`
-	UInt16     LangDefine `yaml:"uint16,omitempty"`
-	UInt32     LangDefine `yaml:"uint32,omitempty"`
-	UInt64     LangDefine `yaml:"uint64,omitempty"`
-	Float32    LangDefine `yaml:"float32,omitempty"`
-	Float64    LangDefine `yaml:"float64,omitempty"`
-	Str        LangDefine `yaml:"string,omitempty"`
-	Json       LangDefine `yaml:"json,omitempty"`
-	BoolArr    LangDefine `yaml:"[]bool,omitempty"`
-	Int8Arr    LangDefine `yaml:"[]int8,omitempty"`
-	Int16Arr   LangDefine `yaml:"[]int16,omitempty"`
-	Int32Arr   LangDefine `yaml:"[]int32,omitempty"`
-	Int64Arr   LangDefine `yaml:"[]int64,omitempty"`
-	UInt8Arr   LangDefine `yaml:"[]uint8,omitempty"`
-	UInt16Arr  LangDefine `yaml:"[]uint16,omitempty"`
-	UInt32Arr  LangDefine `yaml:"[]uint32,omitempty"`
-	UInt64Arr  LangDefine `yaml:"[]uint64,omitempty"`
-	Float32Arr LangDefine `yaml:"[]float32,omitempty"`
-	Float64Arr LangDefine `yaml:"[]float64,omitempty"`
-	StrArr     LangDefine `yaml:"[]string,omitempty"`
-	JsonArr    LangDefine `yaml:"[]json,omitempty"`
+	Bool       FieldOperate `yaml:"bool,omitempty"`
+	Int8       FieldOperate `yaml:"int8,omitempty"`
+	Int16      FieldOperate `yaml:"int16,omitempty"`
+	Int32      FieldOperate `yaml:"int32,omitempty"`
+	Int64      FieldOperate `yaml:"int64,omitempty"`
+	UInt8      FieldOperate `yaml:"uint8,omitempty"`
+	UInt16     FieldOperate `yaml:"uint16,omitempty"`
+	UInt32     FieldOperate `yaml:"uint32,omitempty"`
+	UInt64     FieldOperate `yaml:"uint64,omitempty"`
+	Float32    FieldOperate `yaml:"float32,omitempty"`
+	Float64    FieldOperate `yaml:"float64,omitempty"`
+	Str        FieldOperate `yaml:"string,omitempty"`
+	Json       FieldOperate `yaml:"json,omitempty"`
+	BoolArr    FieldOperate `yaml:"[]bool,omitempty"`
+	Int8Arr    FieldOperate `yaml:"[]int8,omitempty"`
+	Int16Arr   FieldOperate `yaml:"[]int16,omitempty"`
+	Int32Arr   FieldOperate `yaml:"[]int32,omitempty"`
+	Int64Arr   FieldOperate `yaml:"[]int64,omitempty"`
+	UInt8Arr   FieldOperate `yaml:"[]uint8,omitempty"`
+	UInt16Arr  FieldOperate `yaml:"[]uint16,omitempty"`
+	UInt32Arr  FieldOperate `yaml:"[]uint32,omitempty"`
+	UInt64Arr  FieldOperate `yaml:"[]uint64,omitempty"`
+	Float32Arr FieldOperate `yaml:"[]float32,omitempty"`
+	Float64Arr FieldOperate `yaml:"[]float64,omitempty"`
+	StrArr     FieldOperate `yaml:"[]string,omitempty"`
+	JsonArr    FieldOperate `yaml:"[]json,omitempty"`
 }
 
-func (o *LangSetting) GetLangDefine(name string) (format LangDefine, ok bool) {
+func (o *LangSetting) GetLangDefine(name string) (format FieldOperate, ok bool) {
 	switch name {
 	case FieldBool:
 		return o.Bool, true
@@ -114,11 +141,11 @@ func (o *LangSetting) GetLangDefine(name string) (format LangDefine, ok bool) {
 	case FieldJsonArr:
 		return o.JsonArr, true
 	default:
-		return LangDefine{}, false
+		return FieldOperate{}, false
 	}
 }
 
-func (o *LangSetting) getFormat(name string) (format LangDefine, ok bool) {
+func (o *LangSetting) getFormat(name string) (format FieldOperate, ok bool) {
 	t := reflect.TypeOf(o)
 	elem := t.Elem()
 	ln := elem.NumField()

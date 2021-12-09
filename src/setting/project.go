@@ -12,7 +12,7 @@ type OutputCfg struct {
 	// 后端定义输出目录
 	Server string `yaml:"server"`
 	// 数据库定义输出目录
-	Database string `yaml:"database"`
+	Db string `yaml:"db"`
 }
 
 func (o OutputCfg) GetValue(fieldRangeName string) string {
@@ -22,7 +22,7 @@ func (o OutputCfg) GetValue(fieldRangeName string) string {
 	case FieldRangeNameServer:
 		return o.Server
 	case FieldRangeNameDb:
-		return o.Database
+		return o.Db
 	default:
 		return ""
 	}

@@ -3,14 +3,17 @@
   # 启用前缀
   prefix: Data_
   # 导出命名
-  naming:
-    client_title: B1
-    client_data: C1
-    server_title: B1
-    server_data: C1
-    database_title: B1
-    database_data: C1
- # 字段别名行号，用于查找指定列，值为0时使用列号作为别名
+  outputs:
+    - range_name: 'client'
+      title: 'B1'
+      data: 'C1'
+    - range_name: 'server'
+      title: 'B1'
+      data: 'C1'
+    - range_name: 'db'
+      title: 'B1'
+      data: 'C1'
+  # 字段别名行号，用于查找指定列，值为0时使用列号作为别名
   nick_row: 0
   # 数据名称所在行号，与Excel行号一致
   name_row: 2
@@ -23,7 +26,7 @@
   # uint8[],uint16[],uint32[],int8[],int16[],int32[],float32[],boolean[],string[],string(*)[]
   field_format_row: 5
   # 各语言使用的字段名称对应行号
-  filed_names:
+  field_names:
     - name: 'as3'
       row: 6
     - name: 'c++'
@@ -69,78 +72,78 @@ const:
   # 常量值类型
   type_col: C
   # 注释
-  remark_col: C
+  remark_col: D
   # 数据的开始行号
   data_start_row: 2
 
-# 要求输出的Sheet的名称前缀，只有带这个前缀的Sheet才参与处理
-prefix:
-  # 定义及数据处理
-  data: Data_
-  # 常量表处理
-  const: Const_
-
-# 导出定义
-# 值为Excel对应单元格号，用'_'分隔
-output:
-  # 客户端定义
-  client:
-    #数据结构定义名(类名)
-    title_name: B1
-    #数据文件名
-    data_name: C1
-  # 服务端定义
-  server:
-    # 数据结构定义名(类名)
-    title_name: B1
-    # 数据文件名
-    data_name: C1
-  # 数据库定义
-  database:
-    # 数据结构定义名(类名)
-    title_name: B1
-    # 数据文件名
-    data_name: C1
-  # 其它定义
-  data_key: F_1
-
-# 表头定义
-title:
-  # 字段别名行号，用于查找指定列，值为0时使用列号作为别名
-  col_nick_row: 0
-  # 数据名称所在行号，与Excel行号一致
-  name_row: 2
-  # 数据注释所在行号，与Excel行号一致
-  remark_row: 3
-  # 输出选择行号，内容格式: 'c,s,d'，c、s、d的格式只能是0或1，c指前端，s指后端，d指数据库，顺序不能颠倒。从1开始。
-  field_range_row: 4
-  # 数据格式行号，内容格式支持:
-  # uint8,uint16,uint32,int8,int16,int32,float32,boolean,string,string(*),
-  # uint8[],uint16[],uint32[],int8[],int16[],int32[],float32[],boolean[],string[],string(*)[]
-  field_format_row: 5
-  # 各语言使用的字段名称对应行号
-  lang_key_rows:
-    as3: 6
-    c++: 6
-    'c#': 6
-    go: 6
-    java: 6
-    ts: 6
-  # 数据文件使用的字段名称行号
-  file_key_rows:
-    bin: 7
-    sql: 7
-    json: 7
-    yaml: 7
-    yml: 7
-    toml: 7
-    hcl: 7
-    env: 7
-    properties: 7
-
-# 数据定义
-data:
-  # 数据的开始行号
-  start: 8
-  # 数据忽略
-  pass: gray
+## 要求输出的Sheet的名称前缀，只有带这个前缀的Sheet才参与处理
+#prefix:
+#  # 定义及数据处理
+#  data: Data_
+#  # 常量表处理
+#  const: Const_
+#
+## 导出定义
+## 值为Excel对应单元格号，用'_'分隔
+#output:
+#  # 客户端定义
+#  client:
+#    #数据结构定义名(类名)
+#    title_name: B1
+#    #数据文件名
+#    data_name: C1
+#  # 服务端定义
+#  server:
+#    # 数据结构定义名(类名)
+#    title_name: B1
+#    # 数据文件名
+#    data_name: C1
+#  # 数据库定义
+#  database:
+#    # 数据结构定义名(类名)
+#    title_name: B1
+#    # 数据文件名
+#    data_name: C1
+#  # 其它定义
+#  data_key: F_1
+#
+## 表头定义
+#title:
+#  # 字段别名行号，用于查找指定列，值为0时使用列号作为别名
+#  col_nick_row: 0
+#  # 数据名称所在行号，与Excel行号一致
+#  name_row: 2
+#  # 数据注释所在行号，与Excel行号一致
+#  remark_row: 3
+#  # 输出选择行号，内容格式: 'c,s,d'，c、s、d的格式只能是0或1，c指前端，s指后端，d指数据库，顺序不能颠倒。从1开始。
+#  field_range_row: 4
+#  # 数据格式行号，内容格式支持:
+#  # uint8,uint16,uint32,int8,int16,int32,float32,boolean,string,string(*),
+#  # uint8[],uint16[],uint32[],int8[],int16[],int32[],float32[],boolean[],string[],string(*)[]
+#  field_format_row: 5
+#  # 各语言使用的字段名称对应行号
+#  lang_key_rows:
+#    as3: 6
+#    c++: 6
+#    'c#': 6
+#    go: 6
+#    java: 6
+#    ts: 6
+#  # 数据文件使用的字段名称行号
+#  file_key_rows:
+#    bin: 7
+#    sql: 7
+#    json: 7
+#    yaml: 7
+#    yml: 7
+#    toml: 7
+#    hcl: 7
+#    env: 7
+#    properties: 7
+#
+## 数据定义
+#data:
+#  # 数据的开始行号
+#  start: 8
+#  # 数据忽略
+#  pass: gray

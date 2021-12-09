@@ -49,7 +49,8 @@ type TempDataProxy struct {
 }
 
 func (o *TempDataProxy) GetTitleName(index int) string {
-	nameRowIndex := Setting.Excel.Title.NameRow - 1
+	//nameRowIndex := Setting.Excel.Title.NameRow - 1
+	nameRowIndex := Setting.Excel.TitleData.NameRow - 1
 	value, err := o.Sheet.GetRowAt(nameRowIndex).ValueAtIndex(index)
 	if err != nil {
 		Logger.Error(fmt.Sprintf("GetFieldName Error At %d", index))
@@ -59,7 +60,8 @@ func (o *TempDataProxy) GetTitleName(index int) string {
 }
 
 func (o *TempDataProxy) GetTitleRemark(index int) string {
-	remarkRowIndex := Setting.Excel.Title.RemarkRow - 1
+	//remarkRowIndex := Setting.Excel.Title.RemarkRow - 1
+	remarkRowIndex := Setting.Excel.TitleData.RemarkRow - 1
 	value, err := o.Sheet.GetRowAt(remarkRowIndex).ValueAtIndex(index)
 	if err != nil {
 		Logger.Error(fmt.Sprintf("GetFieldRemark Error At %d", index))
@@ -68,25 +70,26 @@ func (o *TempDataProxy) GetTitleRemark(index int) string {
 	return value
 }
 
-func (o *TempDataProxy) GetTitleLangDefine(index int) setting.LangDefine {
-	formatRowIndex := Setting.Excel.Title.FieldFormatRow - 1
+func (o *TempDataProxy) GetTitleLangDefine(index int) setting.FieldOperate {
+	//formatRowIndex := Setting.Excel.Title.FieldFormatRow - 1
+	formatRowIndex := Setting.Excel.TitleData.FieldFormatRow - 1
 	value, err := o.Sheet.GetRowAt(formatRowIndex).ValueAtIndex(index)
 	if err != nil {
 		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error At %d: %v", index, err))
-		return setting.LangDefine{}
+		return setting.FieldOperate{}
 	}
 	ls, ok := Setting.System.FindProgramLanguage(o.Language)
 	if !ok {
 		err = errors.New(fmt.Sprintf("Find Program Language Fail At %d ", index))
 		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error At %d: %v", index, err))
-		return setting.LangDefine{}
+		return setting.FieldOperate{}
 	}
 	value = setting.FormatStringField(value)
 	format, ok := ls.Setting.GetLangDefine(value)
 	if !ok {
 		err = errors.New(fmt.Sprintf("Get Lang Define Fail At %d, %s ", index, value))
 		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error At %d: %v", index, err))
-		return setting.LangDefine{}
+		return setting.FieldOperate{}
 	}
 	return format
 }
@@ -97,7 +100,8 @@ func (o *TempDataProxy) GetFieldName(index int) string {
 
 func (o *TempDataProxy) GetTitleLangKey(index int, langName string) string {
 	//fmt.Println("TempDataProxy.GetFieldName:", index)
-	langFormatRowIndex := Setting.Excel.Title.LangKeyRows.GetRowNum(langName) - 1
+	//langFormatRowIndex := Setting.Excel.Title.LangKeyRows.GetRowNum(langName) - 1
+	langFormatRowIndex := Setting.Excel.TitleData.GetFieldNameRow(langName) - 1
 	value, err := o.Sheet.GetRowAt(langFormatRowIndex).ValueAtIndex(index)
 	if err != nil {
 		Logger.Error(fmt.Sprintf("GetTitleLangKey Error At [%s,%d]", langName, index))
@@ -108,7 +112,8 @@ func (o *TempDataProxy) GetTitleLangKey(index int, langName string) string {
 
 func (o *TempDataProxy) GetTitleFileKey(index int, fileType string) string {
 	//fmt.Println("TempDataProxy.GetTitleFileKey:", fileType, index)
-	langFormatRowIndex := Setting.Excel.Title.FileKeyRows.GetRowNum(fileType) - 1
+	//langFormatRowIndex := Setting.Excel.Title.FileKeyRows.GetRowNum(fileType) - 1
+	langFormatRowIndex := Setting.Excel.TitleData.GetFileKeyRow(fileType) - 1
 	value, err := o.Sheet.GetRowAt(langFormatRowIndex).ValueAtIndex(index)
 	if err != nil {
 		Logger.Error(fmt.Sprintf("GetTitleFileKey Error At [%s,%d]", fileType, index))

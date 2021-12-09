@@ -1,209 +1,313 @@
 name: 'c++'
 bool:
   name: 'bool'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 int8:
   name: 'sbyte'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 int16:
   name: 'short'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 int32:
   name: 'int'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 int64:
   name: 'long'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 uint8:
   name: 'byte'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 uint16:
   name: 'ushort'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 uint32:
   name: 'uint'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 uint64:
   name: 'long'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 float32:
   name: 'float'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 float64:
   name: 'double'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 string:
   name: 'string'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 json:
   name: 'string'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 '[]bool':
   name: 'bool[]'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 '[]int8':
   name: 'sbyte[]'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 '[]int16':
   name: 'short[]'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 '[]int32':
   name: 'int[]'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 '[]int64':
   name: 'long[]'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 '[]uint8':
   name: 'byte[]'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 '[]uint16':
   name: 'ushort[]'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 '[]uint32':
   name: 'uint[]'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 '[]uint64':
   name: 'ulong[]'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 '[]float32':
   name: 'float[]'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 '[]float64':
   name: 'double[]'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 '[]string':
   name: 'string[]'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
 '[]json':
   name: 'string[]'
-  json_get: ''
-  json_set: ''
-  yaml_get: ''
-  yaml_set: ''
-  bin_get: ''
-  bin_set: ''
+  operates:
+    - file_name: json
+      get: ''
+      set: ''
+    - file_name: yaml
+      get: ''
+      set: ''
+    - file_name: bin
+      get: ''
+      set: ''
