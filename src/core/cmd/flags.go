@@ -189,5 +189,23 @@ func (o *AppFlags) GenConstContexts() (contexts []*core.ConstContext) {
 	if !o.CheckMode(core.ModeConst) {
 		return nil
 	}
-	return nil
+	rangeLen := len(o.RangeTypes)
+	langLen := len(o.LangRefs)
+	if rangeLen == 0 || langLen == 0 {
+		return nil
+	}
+	ln := rangeLen * langLen
+	contexts = make([]*core.ConstContext, 0, ln)
+	for fieldIdx := 0; fieldIdx < rangeLen; fieldIdx += 1 {
+		for langIdx := 0; langIdx < langLen; langIdx += 1 {
+			rangeName := o.RangeNames[fieldIdx]
+			if rangeName != setting.FieldRangeNameClient && rangeName != setting.FieldRangeNameServer {
+				continue
+			}
+			context := &core.ConstContext{RangeName: o.RangeNames[fieldIdx], RangeType: o.RangeTypes[fieldIdx],
+				ProgramLanguage: o.LangRefs[langIdx]}
+			contexts = append(contexts, context)
+		}
+	}
+	return
 }

@@ -194,26 +194,24 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 		if len(selects) == 0 {
 			continue
 		}
-		//Logger.Infoln("Selects:", selects)
-		//titleName, _ := sheet.ValueAtAxis(outEle.TitleName)
-		titleName, _ := sheet.ValueAtAxis(outEle.Title)
-		// 创建模板数据代理
-		tempDataProxy := &TempDataProxy{Sheet: sheet, Excel: excel, Index: selects,
-			TitleName: titleName, Language: titleCtx.ProgramLanguage}
 
-		targetDir := Setting.Project.Target.GetTitleDir(titleCtx.RangeName)
-		if !filex.IsExist(targetDir) {
-			os.MkdirAll(targetDir, os.ModePerm)
-		}
-
-		//fileName, err := sheet.ValueAtAxis(outEle.TitleName)
-		fileName, err := sheet.ValueAtAxis(outEle.Title)
-		extendName := langDefine.ExtendName
+		titleName, err := sheet.ValueAtAxis(outEle.Title)
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] GetTitleFileName error: %s ", err))
 			return err
 		}
-		filePath := filex.Combine(targetDir, fileName+"."+extendName)
+		targetDir := Setting.Project.Target.GetTitleDir(titleCtx.RangeName)
+		if !filex.IsExist(targetDir) {
+			os.MkdirAll(targetDir, os.ModePerm)
+		}
+		extendName := langDefine.ExtendName
+		filePath := filex.Combine(targetDir, titleName+"."+extendName)
+
+		// 创建模板数据代理
+		tempDataProxy := &TempDataProxy{Sheet: sheet, Excel: excel, Index: selects,
+			TitleName: titleName, Language: titleCtx.ProgramLanguage}
+
+		//fileName, err := sheet.ValueAtAxis(outEle.TitleName)
 		buff := bytes.NewBuffer(nil)
 		err = temp.Execute(buff, tempDataProxy, false)
 		if nil != err {
@@ -308,6 +306,60 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 }
 
 func executeConstContext(excel *excel.ExcelProxy, constCtx *ConstContext) error {
+	lang := constCtx.ProgramLanguage
+	temp, err := getConstLanguageTemp(lang)
+	if nil != err {
+		return err
+	}
+	langDefine, ok := Setting.System.FindProgramLanguage(lang)
+	if !ok {
+		err := errors.New(fmt.Sprintf("-lang error at %s", lang))
+		Logger.Warnln(fmt.Sprintf("[core.executeConstContext] %s ", err))
+		return err
+	}
+	prefix := Setting.Excel.Const.Prefix
+	for _, sheet := range excel.Sheets {
+		// 过滤Sheet的命名
+		if strings.Index(sheet.SheetName, prefix) != 0 {
+			continue
+		}
+		Logger.Infoln(fmt.Sprintf("[core.executeConstContext] Sheet[%s]", sheet.SheetName))
+		outEle, ok := Setting.Excel.Const.GetOutputInfo(constCtx.RangeName)
+		if !ok {
+			err := errors.New(fmt.Sprintf("-field error at \"%s\"", constCtx.RangeName))
+			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Error A %s ", err))
+			return err
+		}
+		if outEle.Value == "" {
+			continue
+		}
+		fileName, err := sheet.ValueAtAxis(outEle.Value)
+		if nil != err {
+			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] GetTitleFileName error: %s ", err))
+			return err
+		}
+		targetDir := Setting.Project.Target.GetConstDir(constCtx.RangeName)
+		if !filex.IsExist(targetDir) {
+			os.MkdirAll(targetDir, os.ModePerm)
+		}
+		extendName := langDefine.ExtendName
+		filePath := filex.Combine(targetDir, fileName+"."+extendName)
+		fmt.Println("6666:", filePath)
+
+		// 创建模板数据代理
+		tempDataProxy := &TempConstProxy{Sheet: sheet, Excel: excel,
+			TitleName: fileName, Language: constCtx.ProgramLanguage,
+			StartRow: Setting.Excel.Const.DataStartRow, EndRow: len(sheet.Rows)}
+
+		buff := bytes.NewBuffer(nil)
+		err = temp.Execute(buff, tempDataProxy, false)
+		if nil != err {
+			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Execute Template error: %s ", err))
+			return err
+		}
+		ioutil.WriteFile(filePath, buff.Bytes(), os.ModePerm)
+		Logger.Infoln(fmt.Sprintf("[core.executeConstContext] Generate file : %s", filePath))
+	}
 	return nil
 }
 

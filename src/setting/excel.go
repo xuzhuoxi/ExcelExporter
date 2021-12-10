@@ -13,6 +13,15 @@ func (o NameRow) String() string {
 	return fmt.Sprintf("NameRow{Name=%s, Row=%d}", o.Name, o.Row)
 }
 
+type NameValue struct {
+	Name  string `yaml:"name"`
+	Value string `yaml:"value"`
+}
+
+func (o NameValue) String() string {
+	return fmt.Sprintf("NameRow{Name=%s, NameValue=%s}", o.Name, o.Value)
+}
+
 type OutputInfo struct {
 	RangeName string `yaml:"range_name"`
 	Title     string `yaml:"title"`
@@ -92,6 +101,8 @@ func (td TitleData) GetFileKeyRow(name string) int {
 type Const struct {
 	// 启用前缀
 	Prefix string `yaml:"prefix"`
+	// 导出命名
+	Outputs []NameValue `yaml:"outputs"`
 	// 常量名
 	NameCol string `yaml:"name_col"`
 	// 常量值
@@ -101,11 +112,20 @@ type Const struct {
 	// 注释
 	RemarkCol string `yaml:"remark_col"`
 	// 数据的开始行号
-	DataStartRow string `yaml:"data_start_row"`
+	DataStartRow int `yaml:"data_start_row"`
+}
+
+func (c Const) GetOutputInfo(rangeName string) (v NameValue, ok bool) {
+	for index := range c.Outputs {
+		if c.Outputs[index].Name == rangeName {
+			return c.Outputs[index], true
+		}
+	}
+	return NameValue{}, false
 }
 
 // 要求输出的Sheet
 type ExcelSetting struct {
 	TitleData TitleData `yaml:"title&data"`
-	Const     Const     `yaml:"const&data"`
+	Const     Const     `yaml:"const"`
 }

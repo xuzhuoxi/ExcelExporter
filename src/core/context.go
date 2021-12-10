@@ -36,6 +36,64 @@ func (o DataContext) String() string {
 }
 
 type ConstContext struct {
+	// 使用的字段索引名称
+	RangeName string
+	// 使用的字段索引
+	RangeType FieldRangeType
+	// 使用的编程语言
+	ProgramLanguage string
+}
+
+func (o ConstContext) String() string {
+	return fmt.Sprintf("ConstContext(RangeName=%s, RangeType=%v, ProgramLanguage=%s)",
+		o.RangeName, o.RangeType, o.ProgramLanguage)
+}
+
+//--------------------------------
+
+type ConstItem struct {
+	Name   string
+	Value  string
+	Type   string
+	Remark string
+}
+
+type TempConstProxy struct {
+	Sheet     *excel.ExcelSheet
+	Excel     *excel.ExcelProxy
+	TitleName string
+	Language  string
+	StartRow  int
+	EndRow    int
+}
+
+func (o *TempConstProxy) ValueAtAxis(axis string) string {
+	value, err := o.Sheet.ValueAtAxis(axis)
+	fmt.Println("TempConstProxy.ValueAtAxis", value)
+	if nil != err {
+		return ""
+	}
+	return value
+}
+
+func (o *TempConstProxy) GetItem(row int) (item ConstItem) {
+	excelRow := o.Sheet.GetRowAt(row - 1)
+	name, _ := excelRow.ValueAtAxis(Setting.Excel.Const.NameCol)
+	remark, _ := excelRow.ValueAtAxis(Setting.Excel.Const.RemarkCol)
+	tp, _ := excelRow.ValueAtAxis(Setting.Excel.Const.TypeCol)
+	ld, ok := Setting.System.FindProgramLanguage(o.Language)
+	err := errors.New(fmt.Sprintf("Const Item Type Error At Row %d ", row))
+	if !ok {
+		Logger.Error(err)
+		return
+	}
+	typeFormat, ok := ld.Setting.GetLangDefine(tp)
+	if !ok {
+		Logger.Error(err)
+		return
+	}
+	value, _ := excelRow.ValueAtAxis(Setting.Excel.Const.ValueCol)
+	return ConstItem{Name: name, Type: typeFormat.Name, Value: value, Remark: remark}
 }
 
 //--------------------------------
@@ -48,8 +106,15 @@ type TempDataProxy struct {
 	Language  string
 }
 
+func (o *TempDataProxy) ValueAtAxis(axis string) string {
+	value, err := o.Sheet.ValueAtAxis(axis)
+	if nil != err {
+		return ""
+	}
+	return value
+}
+
 func (o *TempDataProxy) GetTitleName(index int) string {
-	//nameRowIndex := Setting.Excel.Title.NameRow - 1
 	nameRowIndex := Setting.Excel.TitleData.NameRow - 1
 	value, err := o.Sheet.GetRowAt(nameRowIndex).ValueAtIndex(index)
 	if err != nil {
@@ -60,7 +125,6 @@ func (o *TempDataProxy) GetTitleName(index int) string {
 }
 
 func (o *TempDataProxy) GetTitleRemark(index int) string {
-	//remarkRowIndex := Setting.Excel.Title.RemarkRow - 1
 	remarkRowIndex := Setting.Excel.TitleData.RemarkRow - 1
 	value, err := o.Sheet.GetRowAt(remarkRowIndex).ValueAtIndex(index)
 	if err != nil {
@@ -71,7 +135,6 @@ func (o *TempDataProxy) GetTitleRemark(index int) string {
 }
 
 func (o *TempDataProxy) GetTitleLangDefine(index int) setting.FieldOperate {
-	//formatRowIndex := Setting.Excel.Title.FieldFormatRow - 1
 	formatRowIndex := Setting.Excel.TitleData.FieldFormatRow - 1
 	value, err := o.Sheet.GetRowAt(formatRowIndex).ValueAtIndex(index)
 	if err != nil {
@@ -100,7 +163,6 @@ func (o *TempDataProxy) GetFieldName(index int) string {
 
 func (o *TempDataProxy) GetTitleLangKey(index int, langName string) string {
 	//fmt.Println("TempDataProxy.GetFieldName:", index)
-	//langFormatRowIndex := Setting.Excel.Title.LangKeyRows.GetRowNum(langName) - 1
 	langFormatRowIndex := Setting.Excel.TitleData.GetFieldNameRow(langName) - 1
 	value, err := o.Sheet.GetRowAt(langFormatRowIndex).ValueAtIndex(index)
 	if err != nil {
@@ -112,7 +174,6 @@ func (o *TempDataProxy) GetTitleLangKey(index int, langName string) string {
 
 func (o *TempDataProxy) GetTitleFileKey(index int, fileType string) string {
 	//fmt.Println("TempDataProxy.GetTitleFileKey:", fileType, index)
-	//langFormatRowIndex := Setting.Excel.Title.FileKeyRows.GetRowNum(fileType) - 1
 	langFormatRowIndex := Setting.Excel.TitleData.GetFileKeyRow(fileType) - 1
 	value, err := o.Sheet.GetRowAt(langFormatRowIndex).ValueAtIndex(index)
 	if err != nil {

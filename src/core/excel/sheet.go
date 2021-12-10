@@ -82,5 +82,9 @@ func (es *ExcelSheet) ValueAtAxis(axis string) (value string, err error) {
 	if nil != err {
 		return "", err
 	}
-	return es.Rows[rowIndex].Cell[cellIndex], nil
+	row := es.Rows[rowIndex]
+	if cellIndex >= row.CellLength() {
+		return "", nil
+	}
+	return row.Cell[cellIndex], nil
 }

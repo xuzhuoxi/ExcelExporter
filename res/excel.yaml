@@ -65,6 +65,12 @@
 const:
   # 启用前缀
   prefix: Const_
+  # 导出命名
+  outputs:
+    - name: 'client'
+      value: 'A1'
+    - name: 'server'
+      value: 'B1'
   # 常量名
   name_col: A
   # 常量值

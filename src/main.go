@@ -34,9 +34,9 @@ func main() {
 	s.Project.UpdateSource(flags.Source)
 	s.Project.UpdateTarget(flags.Target)
 	s.Project.UpgradePath(runningPath)
-	logger.Infoln(fmt.Sprintf("[main] %s", s.System))
-	logger.Infoln(fmt.Sprintf("[main] %s", s.Excel))
-	logger.Infoln(fmt.Sprintf("[main] %s", s.Project))
+	logger.Infoln(fmt.Sprintf("[main] %v", s.System))
+	logger.Infoln(fmt.Sprintf("[main] %v", s.Excel))
+	logger.Infoln(fmt.Sprintf("[main] %v", s.Project))
 
 	cmdParams := flags.GetCommandParams()
 	logger.Infoln(fmt.Sprintf("[main] Command=%s", cmdParams))

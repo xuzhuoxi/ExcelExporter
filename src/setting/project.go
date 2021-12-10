@@ -74,7 +74,7 @@ type TargetCfg struct {
 	// 数据目录
 	Data OutputCfg `yaml:"data"`
 	// 常量目录
-	Const string `yaml:"const"`
+	Const OutputCfg `yaml:"const"`
 }
 
 func (o *TargetCfg) UpgradePath(basePath string) {
@@ -91,12 +91,12 @@ func (o *TargetCfg) GetDataDir(fieldRangeName string) string {
 	return filex.Combine(o.RootDir, o.Data.GetValue(fieldRangeName))
 }
 
-func (o *TargetCfg) ConstDir() string {
-	return filex.Combine(o.RootDir, o.Const)
+func (o *TargetCfg) GetConstDir(fieldRangeName string) string {
+	return filex.Combine(o.RootDir, o.Const.GetValue(fieldRangeName))
 }
 
 func (o TargetCfg) String() string {
-	return fmt.Sprintf("IO{Path=%s, Encoding=%s}", o.RootDir, o.Title, o.Data, o.Const)
+	return fmt.Sprintf("TargetCfg{RootDir=%s, Title=%v, Data=%v, Const=%v}", o.RootDir, o.Title, o.Data, o.Const)
 }
 
 // 缓冲区定义

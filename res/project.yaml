@@ -25,7 +25,9 @@ target:
     server: data/server
     db: data/db
   # 常量目录
-  const: const
+  const:
+    client: const/client
+    server: const/server
   # 编码格式(暂时不支持修改)
   encoding : utf-8
 
