@@ -1,2 +1,7 @@
-{{$proxy := .}}
-A2={{$proxy.ValueAtAxis "A2"}}
+{{$proxy := .}}package 可修改包名
+
+const (
+    {{range $index, $value := $proxy.GetItems}}
+    // {{$value.Remark}}
+    {{$value.Name}} {{$value.Type}} = {{$value.Value}}{{end}}
+)

@@ -76,6 +76,17 @@ func (o *TempConstProxy) ValueAtAxis(axis string) string {
 	return value
 }
 
+func (o *TempConstProxy) GetItems() []ConstItem {
+	if o.EndRow-o.StartRow <= 0 {
+		return nil
+	}
+	rs := make([]ConstItem, 0, o.EndRow-o.StartRow+1)
+	for row := o.StartRow; row <= o.EndRow; row += 1 {
+		rs = append(rs, o.GetItem(row))
+	}
+	return rs
+}
+
 func (o *TempConstProxy) GetItem(row int) (item ConstItem) {
 	excelRow := o.Sheet.GetRowAt(row - 1)
 	name, _ := excelRow.ValueAtAxis(Setting.Excel.Const.NameCol)

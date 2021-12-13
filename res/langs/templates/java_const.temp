@@ -1,2 +1,10 @@
-{{$proxy := .}}
-A2={{$proxy.ValueAtAxis "A2"}}
+{{$proxy := .}}package 可修改包名;
+
+/**
+ * @author ${AUTHOR}
+ * Created on ${DATE}.
+ */
+public class 可修改类名 { {{range $index, $value := $proxy.GetItems}}
+    // {{$value.Remark}}
+    public static const {{$value.Type}} {{$value.Name}} = {{$value.Value}};{{end}}
+}

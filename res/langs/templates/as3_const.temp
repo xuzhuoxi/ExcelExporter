@@ -1,2 +1,9 @@
-{{$proxy := .}}
-A2={{$proxy.ValueAtAxis "B1"}},{{$proxy.ValueAtAxis "B2"}}
+{{$proxy := .}}package 可修改包名 {
+    public class 可修改类名
+    {   {{range $index, $value := $proxy.GetItems}}
+         /// <summary>
+         /// {{$value.Remark}}
+         /// </summary>
+         public static const {{$value.Name}} : {{$value.Type}} = {{$value.Value}};{{end}}
+    }
+}
