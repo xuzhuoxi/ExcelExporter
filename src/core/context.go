@@ -104,6 +104,9 @@ func (o *TempConstProxy) GetItem(row int) (item ConstItem) {
 		return
 	}
 	value, _ := excelRow.ValueAtAxis(Setting.Excel.Const.ValueCol)
+	if tp == setting.FieldString {
+		value = fmt.Sprintf("`%s`", value)
+	}
 	return ConstItem{Name: name, Type: typeFormat.Name, Value: value, Remark: remark}
 }
 
