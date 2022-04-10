@@ -1,10 +1,5 @@
 package temps
 
-import (
-	"os"
-	"testing"
-)
-
 type ab struct {
 	A string
 	B string
@@ -21,13 +16,13 @@ var (
 	datas = []ab{{A: "A1", B: "B1", C: "B1"}, {A: "A2", B: "B2"}, {A: "A3", B: "B3"}, {A: "A4", B: "B4"}}
 )
 
-func TestNewTemplate(t *testing.T) {
-	temp, err := NewTemplate("Test", const_temp)
-	if nil != err {
-		t.Fatal(err)
-	}
-	temp.Execute(os.Stdout, datas, true)
-}
+//func TestNewTemplate(t *testing.T) {
+//	temp, err := NewTemplate("Test", const_temp)
+//	if nil != err {
+//		t.Fatal(err)
+//	}
+//	temp.Execute(os.Stdout, datas, true)
+//}
 
 //func TestLoadTemplate(t *testing.T) {
 //	path := filex.Combine(osxu.GetRunningDir(), "test/const.tmp")

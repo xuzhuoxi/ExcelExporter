@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	path = `D:\workspaces\go\src\github.com\xuzhuoxi\ExcelExporter\res\source\const.xlsx`
+	path = `D:\workspaces\GoPath\src\github.com\xuzhuoxi\ExcelExporter\res\source\const.xlsx`
 )
 
 func TestLoadExcel(t *testing.T) {
