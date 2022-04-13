@@ -1,4 +1,4 @@
-namespace {modle} { {{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$clsName := $proxy.TitleName}}
+namespace {modle} { {{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$clsName := $proxy.TitleName}}{{$lang := $proxy.Language}}
     /**
 	 * @author {AUTHOR}
 	 * Created on {DATE}.

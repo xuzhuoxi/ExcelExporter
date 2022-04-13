@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$clsName := $proxy.TitleName}}
+{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$clsName := $proxy.TitleName}}{{$lang := $proxy.Language}}
 /**
  * C#定义
  */
@@ -26,7 +26,7 @@ namespace {MODULE}
          * @remark {{$proxy.GetTitleRemark $value}}
          * @return {{$langDefine.Name}}
          */
-        public{{$langDefine.Name}} {{ToUpperCamelCase $fieldName}} => {{ToLowerCamelCase $fieldName}};
+        public {{$langDefine.Name}} {{ToUpperCamelCase $fieldName}} => {{ToLowerCamelCase $fieldName}};
 {{end}}
         // 以下为解释数据方法
 
@@ -43,9 +43,9 @@ namespace {MODULE}
 //		}
 
         // 静态实例化
-        public static ${CLASS} FromJson(string data)
+        public static {{$clsName}} FromJson(string data)
         {
-            return JsonUtility.FromJson<${CLASS}>(data);
+            return JsonUtility.FromJson<{{$clsName}}>(data);
         }
     }
 }
