@@ -11,12 +11,12 @@ import (
 	"github.com/xuzhuoxi/ExcelExporter/src/setting"
 	"github.com/xuzhuoxi/infra-go/filex"
 	"github.com/xuzhuoxi/infra-go/logx"
-	"io/ioutil"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/tools"
+	"io/fs"
 )
 
 var (
@@ -215,7 +215,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 		}
 		targetDir := Setting.Project.Target.GetTitleDir(titleCtx.RangeName)
 		if !filex.IsExist(targetDir) {
-			os.MkdirAll(targetDir, os.ModePerm)
+			os.MkdirAll(targetDir, fs.ModePerm)
 		}
 		extendName := langDefine.ExtendName
 		filePath := filex.Combine(targetDir, titleName+"."+extendName)
@@ -231,7 +231,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Execute Template error: %s ", err))
 			return err
 		}
-		ioutil.WriteFile(filePath, buff.Bytes(), os.ModePerm)
+		os.WriteFile(filePath, buff.Bytes(), fs.ModePerm)
 		Logger.Infoln(fmt.Sprintf("[core.executeTitleContext] Generate file : %s", filePath))
 	}
 	Logger.Infoln(fmt.Sprintf("[core.executeTitleContext] Finish execute: %s", titleCtx))
@@ -305,7 +305,7 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 
 		targetDir := Setting.Project.Target.GetDataDir(dataCtx.RangeName)
 		if !filex.IsExist(targetDir) {
-			os.MkdirAll(targetDir, os.ModePerm)
+			os.MkdirAll(targetDir, fs.ModePerm)
 		}
 		extendName := dataCtx.DataFileFormat
 		filePath := filex.Combine(targetDir, fileName+"."+extendName)
@@ -353,7 +353,7 @@ func executeConstContext(excel *excel.ExcelProxy, constCtx *ConstContext) error 
 		}
 		targetDir := Setting.Project.Target.GetConstDir(constCtx.RangeName)
 		if !filex.IsExist(targetDir) {
-			os.MkdirAll(targetDir, os.ModePerm)
+			os.MkdirAll(targetDir, fs.ModePerm)
 		}
 		extendName := langDefine.ExtendName
 		filePath := filex.Combine(targetDir, fileName+"."+extendName)
@@ -370,7 +370,7 @@ func executeConstContext(excel *excel.ExcelProxy, constCtx *ConstContext) error 
 			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Execute Template error: %s ", err))
 			return err
 		}
-		ioutil.WriteFile(filePath, buff.Bytes(), os.ModePerm)
+		os.WriteFile(filePath, buff.Bytes(), fs.ModePerm)
 		Logger.Infoln(fmt.Sprintf("[core.executeConstContext] Generate file : %s", filePath))
 	}
 	return nil

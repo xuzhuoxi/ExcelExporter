@@ -3,8 +3,8 @@ package data
 import (
 	"bytes"
 	"encoding/binary"
-	"io/ioutil"
 	"os"
+	"io/fs"
 )
 
 func newIBinDataBuilderDefault() IDataBuilder {
@@ -58,7 +58,7 @@ func (b *binaryDataBuilder) WriteRow(ktvArr []*KTValue) error {
 
 func (b *binaryDataBuilder) WriteDataToFile(filePath string) error {
 	data := append(b.title, b.content.Bytes()...)
-	return ioutil.WriteFile(filePath, data, os.ModePerm)
+	return os.WriteFile(filePath, data, fs.ModePerm)
 }
 
 func (b *binaryDataBuilder) startNewRow() {
