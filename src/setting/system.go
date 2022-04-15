@@ -21,13 +21,13 @@ func (o ProgramLanguage) String() string {
 		o.Name, o.RefPath, o.TempsTitle, o.TempsConst)
 }
 
-func (o *ProgramLanguage) UpgradePaths(basePath string) {
-	o.RefPath = filex.Combine(basePath, o.RefPath)
+func (o *ProgramLanguage) UpgradePaths(envPath string) {
+	o.RefPath = filex.Combine(envPath, o.RefPath)
 	for index := range o.TempsTitle {
-		o.TempsTitle[index] = filex.Combine(basePath, o.TempsTitle[index])
+		o.TempsTitle[index] = filex.Combine(envPath, o.TempsTitle[index])
 	}
 	for index := range o.TempsConst {
-		o.TempsConst[index] = filex.Combine(basePath, o.TempsConst[index])
+		o.TempsConst[index] = filex.Combine(envPath, o.TempsConst[index])
 	}
 }
 
@@ -71,9 +71,9 @@ func (s *SystemSetting) String() string {
 		s.Languages, s.DataFieldFormats, s.DataFileFormats)
 }
 
-func (s *SystemSetting) UpgradePath(basePath string) {
+func (s *SystemSetting) UpgradeEnvPath(envPath string) {
 	for index := range s.Languages {
-		s.Languages[index].UpgradePaths(basePath)
+		s.Languages[index].UpgradePaths(envPath)
 	}
 }
 

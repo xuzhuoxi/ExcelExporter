@@ -13,10 +13,10 @@ var (
 	//RootPath = `D:\workspaces\GoPath\src\github.com\xuzhuoxi\ExcelExporter\res`
 	RootPath = osxu.GetRunningDir()
 
-	SystemPath  = filex.Combine(RootPath, "system.yaml")
-	ProjectPath = filex.Combine(RootPath, "project.yaml")
-	ExcelPath   = filex.Combine(RootPath, "excel.yaml")
-	LangGoPath  = filex.Combine(RootPath, "./langs/go.yaml")
+	EnvPath     = RootPath
+	SystemPath  = filex.Combine(EnvPath, "system.yaml")
+	ProjectPath = filex.Combine(EnvPath, "project.yaml")
+	ExcelPath   = filex.Combine(EnvPath, "excel.yaml")
 )
 
 type Settings struct {
@@ -25,10 +25,20 @@ type Settings struct {
 	Excel   *ExcelSetting
 }
 
-func (s *Settings) Init() {
+func (s *Settings) Init(envPath string) {
+	s.initPath(envPath)
 	s.loadSystemSetting()
 	s.loadProjectSetting()
 	s.loadExcelSetting()
+}
+
+func (s *Settings) initPath(envPath string) {
+	if len(envPath) > 0 {
+		EnvPath = envPath
+		SystemPath = filex.Combine(EnvPath, "system.yaml")
+		ProjectPath = filex.Combine(EnvPath, "project.yaml")
+		ExcelPath = filex.Combine(EnvPath, "excel.yaml")
+	}
 }
 
 func (s *Settings) InitLangSetting(lang string) error {

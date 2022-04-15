@@ -28,12 +28,11 @@ func main() {
 	}
 	logger.Infoln(fmt.Sprintf("[main] Flag=%s", flags))
 	s := &setting.Settings{}
-	s.Init()
-	runningPath := osxu.GetRunningDir()
-	s.System.UpgradePath(runningPath)
+	s.Init(flags.EnvPath)
+	s.System.UpgradeEnvPath(setting.EnvPath)
 	s.Project.UpdateSource(flags.Source)
 	s.Project.UpdateTarget(flags.Target)
-	s.Project.UpgradePath(runningPath)
+	s.Project.UpgradeEnvPath(setting.EnvPath)
 	logger.Infoln(fmt.Sprintf("[main] %v", s.System))
 	logger.Infoln(fmt.Sprintf("[main] %v", s.Excel))
 	logger.Infoln(fmt.Sprintf("[main] %v", s.Project))

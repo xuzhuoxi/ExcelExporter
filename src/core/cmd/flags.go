@@ -40,6 +40,7 @@ func FieldRangeNameToType(rangeName string) core.FieldRangeType {
 }
 
 func ParseFlag() (cfg *SysFlags, err error) {
+	envPath := flag.String("env", "", "Running Environment Path! ")
 	modes := flag.String("mode", "", "Running Mode! ")
 	ranges := flag.String("range", "", "Use Fields! ")
 	langRefs := flag.String("lang", "", "Use Languages! ")
@@ -50,11 +51,12 @@ func ParseFlag() (cfg *SysFlags, err error) {
 
 	modesVal := strings.ToLower(*modes)
 	rangesVal := strings.ToLower(*ranges)
-	return &SysFlags{Modes: modesVal, Ranges: rangesVal, LangRefs: *langRefs, DataFiles: *dataFiles,
+	return &SysFlags{EnvPath: *envPath, Modes: modesVal, Ranges: rangesVal, LangRefs: *langRefs, DataFiles: *dataFiles,
 		Source: *source, Target: *target}, nil
 }
 
 type SysFlags struct {
+	EnvPath   string
 	Modes     string
 	Ranges    string
 	LangRefs  string

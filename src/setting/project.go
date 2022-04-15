@@ -37,7 +37,7 @@ type SourceCfg struct {
 	ExtName []string `yaml:"ext_name"`
 }
 
-func (o *SourceCfg) UpgradePath(basePath string) {
+func (o *SourceCfg) UpgradeEnvPath(envPath string) {
 	if len(o.Value) == 0 {
 		return
 	}
@@ -45,7 +45,7 @@ func (o *SourceCfg) UpgradePath(basePath string) {
 		if filex.IsExist(o.Value[index]) {
 			continue
 		}
-		o.Value[index] = filex.Combine(basePath, o.Value[index])
+		o.Value[index] = filex.Combine(envPath, o.Value[index])
 	}
 }
 
@@ -77,10 +77,11 @@ type TargetCfg struct {
 	Const OutputCfg `yaml:"const"`
 }
 
-func (o *TargetCfg) UpgradePath(basePath string) {
-	if !filex.IsFolder(o.RootDir) {
-		o.RootDir = filex.Combine(basePath, o.RootDir)
+func (o *TargetCfg) UpgradeEnvPath(envPath string) {
+	if !filex.IsRelativeFormat(o.RootDir) || filex.IsDir(o.RootDir) {
+		return
 	}
+	o.RootDir = filex.Combine(envPath, o.RootDir)
 }
 
 func (o *TargetCfg) GetTitleDir(fieldRangeName string) string {
@@ -126,9 +127,9 @@ type ProjectSetting struct {
 	Buff ProjectBuff `yaml:"buff"`
 }
 
-func (ps *ProjectSetting) UpgradePath(basePath string) {
-	ps.Source.UpgradePath(basePath)
-	ps.Target.UpgradePath(basePath)
+func (ps *ProjectSetting) UpgradeEnvPath(envPath string) {
+	ps.Source.UpgradeEnvPath(envPath)
+	ps.Target.UpgradeEnvPath(envPath)
 }
 func (ps *ProjectSetting) String() string {
 	return fmt.Sprintf("Project{Source=%s, Target=%s, Buff=%v}",
