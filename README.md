@@ -4,7 +4,7 @@
 
 ## 兼容性
 
-go 1.16.4
+go 1.16.15
 
 ## 获取
 
@@ -155,13 +155,63 @@ go 1.16.4
 	
   选择的编程语言		
 
-- [ToLowerCamelCase](/src/core/naming/NamingUtil.go)
+- 开放的自定义函数
 
-  把字符串内容转化为**小驼峰**格式
+	- [ToLowerCamelCase](/src/core/naming/NamingUtil.go)
+	
+	把字符串内容转化为**小驼峰**格式
 
-- [ToUpperCamelCase](/src/core/naming/NamingUtil.go)
+	- [ToUpperCamelCase](/src/core/naming/NamingUtil.go)
+	
+	把字符串内容转化为**大驼峰**格式
 
-  把字符串内容转化为**大驼峰**格式
+	- [NowTime](/src/core/tools/time.go)
+	
+	取当前时间
+	2006-01-02 15**:**04**:**05 PM Mon Jan
+	2006-01-_2 15**:**04**:**05 PM Mon Jan
+
+	- [NowTimeFormat](/src/core/tools/time.go)
+	
+	取当前时间	
+	
+	- [NowYear](/src/core/tools/time.go)
+	 
+	当前时间年份
+
+	- [NowMonth](/src/core/tools/time.go)
+
+	当前时间月份
+	一月: 1
+
+	- [NowDay](/src/core/tools/time.go)
+
+	当前时间日期
+	
+	- [NowWeekday](/src/core/tools/time.go)
+
+	当前时间星期几
+	星期日： 0	
+
+	- [NowHour](/src/core/tools/time.go)
+
+	当前时间小时
+
+	- [NowMinute](/src/core/tools/time.go)
+
+	当前时间分钟
+
+	- [NowSecond](/src/core/tools/time.go)
+
+	当前时间秒
+	
+	- [NowUnix](/src/core/tools/time.go)
+
+	当前时间秒戳（s）
+	
+	- [NowUnixNano](/src/core/tools/time.go)
+ 
+	当前时间秒戳（ns）
 
 ### 字段数据类型关联配置
 
@@ -205,4 +255,4 @@ xuzhuoxi
 
 ## 开源许可证
 
-ExcelExporter 源代码基于[MIT许可证](/LICENSE)进行开源。
+~~ExcelExporter 源代码基于[MIT许可证](/LICENSE)进行开源。~~
