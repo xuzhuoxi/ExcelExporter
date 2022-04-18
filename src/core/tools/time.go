@@ -2,9 +2,18 @@ package tools
 
 import "time"
 
+const (
+	defaultFormat = "2006-01-02 15:04:05"
+)
+
 // 当前时间
 func NowTime() time.Time {
 	return time.Now()
+}
+
+// 当前时间
+func NowTimeStr() string {
+	return NowTimeFormat(defaultFormat)
 }
 
 // 当前时间

@@ -39,6 +39,7 @@ func init() {
 	temps.RegisterFunc("ToUpperCamelCase", naming.ToUpperCamelCase)
 
 	temps.RegisterFunc("NowTime", tools.NowTime)
+	temps.RegisterFunc("NowTimeStr", tools.NowTimeStr)
 	temps.RegisterFunc("NowTimeFormat", tools.NowTimeFormat)
 	temps.RegisterFunc("NowYear", tools.NowYear)
 	temps.RegisterFunc("NowMonth", tools.NowMonth)
@@ -221,7 +222,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 		filePath := filex.Combine(targetDir, titleName+"."+extendName)
 
 		// 创建模板数据代理
-		tempDataProxy := &TempDataProxy{Sheet: sheet, Excel: excel, Index: selects,
+		tempDataProxy := &TempDataProxy{Sheet: sheet, Excel: excel, TitleCtx: titleCtx, Index: selects,
 			TitleName: titleName, Language: titleCtx.ProgramLanguage}
 
 		//fileName, err := sheet.ValueAtAxis(outEle.TitleName)

@@ -128,32 +128,37 @@ go 1.16.15
 
 	```
 	type TempDataProxy struct {
-		Sheet     *excel.ExcelSheet
-		Excel     *excel.ExcelProxy
-		Index     []int
-		TitleName string
-		Language  string
+		Sheet      *excel.ExcelSheet
+		Excel      *excel.ExcelProxy
+		TitleCtx   *TitleContext
+		Index      []int
+		TitleName  string
+		Language   string
 	}```    
 
 	- Excel:[*excel.ExcelProxy](/src/core/excel/proxy.go)
 	
-  当前执行的Sheet
+  	当前执行的Excel数据对象
 
 	- Sheet:[*excel.ExcelSheet](/src/core/excel/sheet.go)
 	
-  当前执行的Sheet
+  	当前执行的Sheet数据对象
+	
+	- TitleContext:*TitleContext
+	
+  	当前执行的上下文数据
 
 	- Index:[]int
 	
-  当前选中的字段索引
+  	当前选中的字段索引
 
 	- TitleName:string
 	
-  导出结构名称
+  	导出结构名称
 
 	- Language:string
 	
-  选择的编程语言		
+  	选择的编程语言		
 
 - 开放的自定义函数
 
@@ -168,13 +173,17 @@ go 1.16.15
 	- [NowTime](/src/core/tools/time.go)
 	
 	取当前时间
-	2006-01-02 15**:**04**:**05 PM Mon Jan
-	2006-01-_2 15**:**04**:**05 PM Mon Jan
+
+	- [NowTimeStr](/src/core/tools/time.go)
+	
+	取当前时间默认格式字符串
 
 	- [NowTimeFormat](/src/core/tools/time.go)
 	
 	取当前时间	
-	
+	2006-01-02 15**:**04**:**05 PM Mon Jan
+	2006-01-_2 15**:**04**:**05 PM Mon Jan
+
 	- [NowYear](/src/core/tools/time.go)
 	 
 	当前时间年份

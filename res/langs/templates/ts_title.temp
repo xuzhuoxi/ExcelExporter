@@ -1,7 +1,8 @@
-namespace {modle} { {{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$clsName := $proxy.TitleName}}{{$lang := $proxy.Language}}
+namespace {modle} { {{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx}}{{$clsName := $proxy.TitleName}}{{$lang := $proxy.Language}}
     /**
 	 * @author {AUTHOR}
-	 * Created on {DATE}.
+	 * Created on {NowTimeStr} .
+	 * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.ProgramLanguage}}
 	 */
 	export class {{$clsName}} {
         //以下为属性声明

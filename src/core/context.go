@@ -58,6 +58,7 @@ type ConstItem struct {
 	Remark string
 }
 
+// 常量表代理
 type TempConstProxy struct {
 	Sheet     *excel.ExcelSheet
 	Excel     *excel.ExcelProxy
@@ -112,9 +113,11 @@ func (o *TempConstProxy) GetItem(row int) (item ConstItem) {
 
 //--------------------------------
 
+// 数据表代理
 type TempDataProxy struct {
 	Sheet     *excel.ExcelSheet
 	Excel     *excel.ExcelProxy
+	TitleCtx  *TitleContext
 	Index     []int
 	TitleName string
 	Language  string

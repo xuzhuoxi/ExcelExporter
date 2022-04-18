@@ -1,12 +1,13 @@
 package {module};
-{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$clsName := $proxy.TitleName}}{{$lang := $proxy.Language}}
+{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx}}{{$clsName := $proxy.TitleName}}{{$lang := $proxy.Language}}
 import org.json.JSONObject;
 import xu.BinaryReaderProxy;
 import xu.JsonReaderProxy;
 
 /**
  * @author {AUTHOR}
- * Created on {DATE}.
+ * Created on {NowTimeStr} .
+ * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.ProgramLanguage}}
  */
  public class {{$clsName}} {
 {{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}

@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$clsName := $proxy.TitleName}}{{$lang := $proxy.Language}}
+{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx}}{{$clsName := $proxy.TitleName}}{{$lang := $proxy.Language}}
 /**
  * C#定义
  */
@@ -8,7 +8,8 @@ namespace {MODULE}
 {
     /**
      * @author {AUTHOR}
-     * Created on {DATE}.
+     * Created on {NowTimeStr} .
+     * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.ProgramLanguage}}
      */
     [Serializable]
     public class {{$clsName}}
