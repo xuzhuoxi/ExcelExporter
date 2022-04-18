@@ -22,6 +22,136 @@ go 1.16.15
 	
 	2. 编译工程。 
 
+## 配置结构说明
+
+<pre><code>.配置根目录
+├── langs: 编程语言相关配置
+│   ├── templates: 模板文件目录，只支持golang模板语法
+│  		├── as3_const.temp: ActionScript3语言下，常量定义模板
+│  		├── as3_title.temp: ActionScript3语言下，Title定义模板
+│  		├── c#_const.temp: C#语言下，常量定义模板
+│  		├── c#_title.temp: C#语言下，Title定义模板
+│  		├── go_const.temp: golang语言下，常量定义模板
+│  		├── go_title.temp: golang语言下，Title定义模板
+│  		├── java_const.temp: java语言下，常量定义模板
+│  		├── java_title.temp: java语言下，Title定义模板
+│  		├── ts_const.temp: TypeScript语言下，常量定义模板
+│  		├── ts_title.temp: TypeScript语言下，Title定义模板
+│  		├── ...: 其它语言下，常量定义模板与Title定义模板
+│   ├── as3.yaml: 针对ActionScript3，不同数据文件下各基础数据类型的读写语法配置
+│   ├── c#.yaml: 针对c#，不同数据文件下各基础数据类型的读写语法配置
+│   ├── c++.yaml: 针对c++，不同数据文件下各基础数据类型的读写语法配置
+│   ├── go.yaml: 针对golang，不同数据文件下各基础数据类型的读写语法配置
+│   ├── java.yaml: 针对java，不同数据文件下各基础数据类型的读写语法配置
+│   ├── ...: 其它编程语言下，不同数据文件下各基础数据类型的读写语法配置
+├── proxy: 代理代码集(非必要)
+│   ├── as: ActionScript3相关的代理代码集
+│   ├── go: golang相关的代理代码集
+│   ├── java: java相关的代理代码集 
+│   ├── ts: TypeScript相关的代理代码集
+│   ├── ...: 其它编程语言相关的代理代码集
+├── excel.yaml: Excel的表头配置，包括数据表头配置、常量表头配置
+├── project.yaml: 项目配置，包括数据源配置、数据输出配置、缓冲配置、大小端配置等
+├── system.yaml: 应用配置，包括支持的编程语言配置(扩展名、读写配置、模板关联等)、数据字段类型配置、数据文件配置等
+</code></pre>
+
+#### 字段数据类型关联配置
+
+- system.yaml
+
+<pre><code>.
+├── languages: 支持的编程语言
+│   ├── name: 语言名称
+│   ├── ext: 语言源文件扩展名
+│   ├── ref: 基础数据读写配置文件路径(相对于配置根目录相对路径)
+│   ├── temps_title: title定义导出模板路径(相对于配置根目录相对路径)
+│   ├── temps_const: 常量定义导出模板路径(相对于配置根目录相对路径)
+├── datafield_formats: 支持的基础数据类型
+├── datafile_formats: 支持的数据文件格式
+</code></pre>
+
+- project.yaml
+
+<pre><code>.
+├── source: Excel源目录
+│   ├── value: Excel源目录路径，支持多个，相对于配置根目录相对路径
+│   ├── encoding: 编码格式(如果需要)
+│   ├── ext_name: 文件扩展名，支持多个
+├── target: 输出设置
+│   ├── root: 输出目录,以'':''开关，或路径中包含'':''的，视为绝对路径 
+│   ├── title: 
+│  		├── client: client表头定义输出目录
+│  		├── server: server表头定义输出目录
+│  		├── db: db表头定义输出目录
+│   ├── data: 
+│  		├── client: client数据文件输出目录
+│  		├── server: server数据文件输出目录
+│  		├── db: db数据文件输出目录
+│   ├── const: 
+│  		├── client: client常量表输出目录
+│  		├── server: server常量表输出目录
+│   ├── encoding: 输出文件的编码格式
+├── buff: 缓冲区定义
+│   ├── big_endian: 二进制数据文件的大小端设置(true|false)
+│   ├── token: 每一个字段的缓冲大小(未使用)
+│   ├── item: 每一条数据的缓冲大小(未使用)
+│   ├── sheet: 每个sheet表的缓冲大小(未使用)
+</code></pre>
+
+- excel.yaml
+
+<pre><code>.
+├── title&data: 
+│   ├── prefix: 启用前缀
+│   ├── outputs: 导出命名设置
+│  		├── range_name：字段域名称(client|server|db)
+│  		├── title: Title定义文件的名称
+│  		├── data： 数据文件的名称
+│   ├── nick_row: 字段别名行号，用于查找指定列，值为0时使用列号作为别名
+│   ├── name_row: 数据名称所在行号
+│   ├── remark_row: 数据注释所在行号
+│   ├── field_range_row: 输出选择行号，内容格式: 'c,s,d'，c指前端，s指后端，d指数据库，(01)
+│   ├── field_format_row: 字段数据格式行号
+│   ├── field_names: Title定义文件字段名称配置 
+│  		├── name: 语言名称
+│  		    row: 语言属性所在的行号
+│   ├── file_keys: 数据文件字段名称配置
+│  		├── name: 数据文件格式(bin,json,yaml等)
+│  		    row: 数据字段名称所在的行号
+│   ├── data_start_row: 数据开始行号
+├── const: 
+│   ├── prefix: 启用前缀
+│   ├── outputs: 导出类名配置
+│  		├── name: 字段域(client|server)
+│  		    value: 坐标(如： "A1")
+│   ├── name_col: 常量名列号
+│   ├── value_col: 常量值列号
+│   ├── type_col: 常量值类型列号
+│   ├── remark_col: 注释列号
+│   ├── data_start_row: 数据开始行号
+</code></pre>
+
+- 具体语言.yaml
+
+  配置文件位于[res/langs](/res/langs)目录中。
+
+<pre><code>.
+├── name: 当前语言名称
+├── bool: bool数据类型
+│   ├── name: 当前语言下数据类型表达
+│   ├── operates: 操作
+│  		├── file_name: 数据文件(json，bin等)
+│  		    get: 获得数据的函数方法
+│  		    set: 设置数据的函数方法
+├── ...: 其它数据类型
+</code></pre>
+
+- 具体语言.temp
+
+  配置文件位于[res/langs/templates](/res/langs/templates)目录中。
+
+  golang语法支持下的模板文件，帮助可查看**…………………………………………………………**
+
 ## 运行
 
 程序只允许通过命令行运行
@@ -222,25 +352,7 @@ go 1.16.15
  
 	当前时间秒戳（ns）
 
-### 字段数据类型关联配置
 
-- excel.yaml
-
-  lang_key_rows下配置Excel表中定义字段类型的行号。
-
-- system.yaml
-
-  program_languages列表列出来当前支持的语言的配置，其中ref为字段数据类型
-
-- 具体语言.yaml
-
-  配置文件位于[res/langs/templates](/res/langs)目录中。
-
-  name:当前配置
-
-- 具体语言.temp
-
-  配置文件位于[res/langs/templates](/res/langs/templates)目录中。
 
 ### 数据导出
 
