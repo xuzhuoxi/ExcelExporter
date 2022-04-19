@@ -1,8 +1,8 @@
 package excel
 
 import (
-	"fmt"
 	"testing"
+	"fmt"
 )
 
 var (
@@ -21,7 +21,6 @@ func TestLoadExcel(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	return
 	err = excelProxy.MergedRowsByFilter(2, func(row *ExcelRow) bool {
 		return !row.Empty()
 	})
