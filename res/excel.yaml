@@ -13,6 +13,12 @@
     - range_name: 'db'
       title: 'B1'
       data: 'C1'
+  # 表头导出类信息
+  classes:
+    - name: 'client'
+      value: 'B1'
+    - name: 'server'
+      value: 'B1'
   # 字段别名行号，用于查找指定列，值为0时使用列号作为别名
   nick_row: 0
   # 数据名称所在行号，与Excel行号一致
@@ -65,8 +71,14 @@
 const:
   # 启用前缀
   prefix: Const_
-  # 导出命名
+  # 导出文件命名
   outputs:
+    - name: 'client'
+      value: 'A1'
+    - name: 'server'
+      value: 'B1'
+  # 常量导出类信息
+  classes:
     - name: 'client'
       value: 'A1'
     - name: 'server'

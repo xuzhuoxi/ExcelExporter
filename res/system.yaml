@@ -82,5 +82,3 @@ datafield_formats:
 datafile_formats:
   - bin
   - json
-  - yaml
-  - sql

@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx}}{{$clsName := $proxy.TitleName}}{{$lang := $proxy.Language}}
+{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx}}{{$clsName := $proxy.ClassName}}{{$lang := $proxy.Language}}
 /**
  * C#定义
  */

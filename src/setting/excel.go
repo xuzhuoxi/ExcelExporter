@@ -22,21 +22,23 @@ func (o NameValue) String() string {
 	return fmt.Sprintf("NameRow{Name=%s, NameValue=%s}", o.Name, o.Value)
 }
 
-type OutputInfo struct {
-	RangeName string `yaml:"range_name"`
-	Title     string `yaml:"title"`
-	Data      string `yaml:"data"`
+type TitleDataOutputInfo struct {
+	RangeName     string `yaml:"range_name"`
+	TitleFileName string `yaml:"title"`
+	DataFileName  string `yaml:"data"`
 }
 
-func (o OutputInfo) String() string {
-	return fmt.Sprintf("NameRow{Name=%s, Title=%s, Data=%s}", o.RangeName, o.Title, o.Data)
+func (o TitleDataOutputInfo) String() string {
+	return fmt.Sprintf("NameRow{Name=%s, Title=%s, Data=%s}", o.RangeName, o.TitleFileName, o.DataFileName)
 }
 
 type TitleData struct {
 	// 启用前缀
 	Prefix string `yaml:"prefix"`
 	// 导出命名
-	Outputs []OutputInfo `yaml:"outputs"`
+	Outputs []TitleDataOutputInfo `yaml:"outputs"`
+	// 表头导出类信息
+	Classes []NameValue `yaml:"classes"`
 	// 字段别名行号，用于查找指定列，值为0时使用列号作为别名
 	NickRow int `yaml:"nick_row"`
 	// 数据名称所在行号，与Excel行号一致
@@ -57,13 +59,22 @@ type TitleData struct {
 	DataStartRow int `yaml:"data_start_row"`
 }
 
-func (td TitleData) GetOutputInfo(rangeName string) (info OutputInfo, ok bool) {
+func (td TitleData) GetOutputInfo(rangeName string) (info TitleDataOutputInfo, ok bool) {
 	for index := range td.Outputs {
 		if td.Outputs[index].RangeName == rangeName {
 			return td.Outputs[index], true
 		}
 	}
-	return OutputInfo{}, false
+	return TitleDataOutputInfo{}, false
+}
+
+func (td TitleData) GetClassInfo(rangeName string) (info NameValue, ok bool) {
+	for index := range td.Classes {
+		if td.Classes[index].Name == rangeName {
+			return td.Classes[index], true
+		}
+	}
+	return NameValue{}, false
 }
 
 func (td TitleData) GetFieldNameInfo(name string) (row NameRow, ok bool) {
@@ -103,6 +114,8 @@ type Const struct {
 	Prefix string `yaml:"prefix"`
 	// 导出命名
 	Outputs []NameValue `yaml:"outputs"`
+	// 常量导出类信息
+	Classes []NameValue `yaml:"classes"`
 	// 常量名
 	NameCol string `yaml:"name_col"`
 	// 常量值
@@ -119,6 +132,15 @@ func (c Const) GetOutputInfo(rangeName string) (v NameValue, ok bool) {
 	for index := range c.Outputs {
 		if c.Outputs[index].Name == rangeName {
 			return c.Outputs[index], true
+		}
+	}
+	return NameValue{}, false
+}
+
+func (c Const) GetClassInfo(rangeName string) (info NameValue, ok bool) {
+	for index := range c.Classes {
+		if c.Classes[index].Name == rangeName {
+			return c.Classes[index], true
 		}
 	}
 	return NameValue{}, false

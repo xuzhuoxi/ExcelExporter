@@ -1,4 +1,4 @@
-{{$proxy := .}}package 可修改包名
+{{$proxy := .}}{{$clsName := $proxy.ClassName}}package 可修改包名
 
 const (
     {{range $index, $value := $proxy.GetItems}}

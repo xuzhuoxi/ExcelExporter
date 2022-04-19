@@ -186,11 +186,18 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 		if strings.Index(sheet.SheetName, prefix) != 0 {
 			continue
 		}
-		//outEle, ok := Setting.Excel.Output.GetElement(titleCtx.RangeName)
+
 		outEle, ok := Setting.Excel.TitleData.GetOutputInfo(titleCtx.RangeName)
 		if !ok {
-			err = errors.New(fmt.Sprintf("-field error at %s", titleCtx.RangeName))
-			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Error A %s ", err))
+			err = errors.New(fmt.Sprintf("-field error at \"%s\": output file name!", titleCtx.RangeName))
+			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Error At %s ", err))
+			return err
+		}
+
+		clsEle, ok := Setting.Excel.TitleData.GetClassInfo(titleCtx.RangeName)
+		if !ok {
+			err = errors.New(fmt.Sprintf("-field error at \"%s\": output class name!", titleCtx.RangeName))
+			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Error At %s ", err))
 			return err
 		}
 
@@ -209,9 +216,14 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 			continue
 		}
 
-		titleName, err := sheet.ValueAtAxis(outEle.Title)
+		fileName, err := sheet.ValueAtAxis(outEle.TitleFileName)
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] GetTitleFileName error: %s ", err))
+			return err
+		}
+		className, err := sheet.ValueAtAxis(clsEle.Value)
+		if nil != err {
+			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] GetTitleClassName error: %s ", err))
 			return err
 		}
 		targetDir := Setting.Project.Target.GetTitleDir(titleCtx.RangeName)
@@ -219,13 +231,12 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 			os.MkdirAll(targetDir, fs.ModePerm)
 		}
 		extendName := langDefine.ExtendName
-		filePath := filex.Combine(targetDir, titleName+"."+extendName)
+		filePath := filex.Combine(targetDir, fileName+"."+extendName)
 
 		// 创建模板数据代理
-		tempDataProxy := &TempDataProxy{Sheet: sheet, Excel: excel, TitleCtx: titleCtx, Index: selects,
-			TitleName: titleName, Language: titleCtx.ProgramLanguage}
+		tempDataProxy := &TempDataProxy{Sheet: sheet, Excel: excel, TitleCtx: titleCtx, FileName: fileName, Index: selects, ClassName: className, Language: titleCtx.ProgramLanguage}
 
-		//fileName, err := sheet.ValueAtAxis(outEle.TitleName)
+		//fileName, err := sheet.ValueAtAxis(outEle.ClassName)
 		buff := bytes.NewBuffer(nil)
 		err = temp.Execute(buff, tempDataProxy, false)
 		if nil != err {
@@ -270,8 +281,7 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 			continue
 		}
 
-		//fileName, err := sheet.ValueAtAxis(outEle.DataName)
-		fileName, err := sheet.ValueAtAxis(outEle.Data)
+		fileName, err := sheet.ValueAtAxis(outEle.DataFileName)
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] GetDataFileName error: %s ", err))
 			return err
@@ -340,16 +350,29 @@ func executeConstContext(excel *excel.ExcelProxy, constCtx *ConstContext) error 
 		Logger.Infoln(fmt.Sprintf("[core.executeConstContext] Sheet[%s]", sheet.SheetName))
 		outEle, ok := Setting.Excel.Const.GetOutputInfo(constCtx.RangeName)
 		if !ok {
-			err := errors.New(fmt.Sprintf("-field error at \"%s\"", constCtx.RangeName))
-			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Error A %s ", err))
+			err := errors.New(fmt.Sprintf("-field error at \"%s\": output file name!", constCtx.RangeName))
+			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Error at %s ", err))
 			return err
 		}
 		if outEle.Value == "" {
 			continue
 		}
+
+		clsEle, ok := Setting.Excel.Const.GetClassInfo(constCtx.RangeName)
+		if !ok {
+			err := errors.New(fmt.Sprintf("-field error at \"%s\": output class name!", constCtx.RangeName))
+			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Error at %s ", err))
+			return err
+		}
+
 		fileName, err := sheet.ValueAtAxis(outEle.Value)
 		if nil != err {
-			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] GetTitleFileName error: %s ", err))
+			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Get file name error: %s ", err))
+			return err
+		}
+		clsName, err := sheet.ValueAtAxis(clsEle.Value)
+		if nil != err {
+			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Get class name error: %s ", err))
 			return err
 		}
 		targetDir := Setting.Project.Target.GetConstDir(constCtx.RangeName)
@@ -358,11 +381,9 @@ func executeConstContext(excel *excel.ExcelProxy, constCtx *ConstContext) error 
 		}
 		extendName := langDefine.ExtendName
 		filePath := filex.Combine(targetDir, fileName+"."+extendName)
-		fmt.Println("6666:", filePath)
 
 		// 创建模板数据代理
-		tempDataProxy := &TempConstProxy{Sheet: sheet, Excel: excel,
-			TitleName: fileName, Language: constCtx.ProgramLanguage,
+		tempDataProxy := &TempConstProxy{Sheet: sheet, Excel: excel, ConstCtx: constCtx, FileName: fileName, ClassName: clsName, Language: constCtx.ProgramLanguage,
 			StartRow: Setting.Excel.Const.DataStartRow, EndRow: len(sheet.Rows)}
 
 		buff := bytes.NewBuffer(nil)

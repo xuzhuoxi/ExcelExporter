@@ -3,8 +3,6 @@
 
 2. yaml, toml, hcl, env, properties数据导出时，key为**大小写无关**，本意要求**大小写相关**。
 
-3. const导出未完成。
-
 4. system.yaml中datafile_formats数据未使用，考虑是不删除掉。
 
 5. project.yaml中encoding与buff相关的配置未实现。

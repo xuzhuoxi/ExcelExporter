@@ -1,5 +1,5 @@
-{{$proxy := .}}package 可修改包名 {
-    public class 可修改类名
+{{$proxy := .}}{{$clsName := $proxy.ClassName}}package 可修改包名 {
+    public class {{$clsName}}
     {   {{range $index, $value := $proxy.GetItems}}
          /// <summary>
          /// {{$value.Remark}}

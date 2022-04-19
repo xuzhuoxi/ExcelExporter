@@ -55,102 +55,112 @@ go 1.16.15
 ├── system.yaml: 应用配置，包括支持的编程语言配置(扩展名、读写配置、模板关联等)、数据字段类型配置、数据文件配置等
 </code></pre>
 
-#### 字段数据类型关联配置
+### 字段数据类型关联配置
 
 - system.yaml
 
-<pre><code>.
-├── languages: 支持的编程语言
-│   ├── name: 语言名称
-│   ├── ext: 语言源文件扩展名
-│   ├── ref: 基础数据读写配置文件路径(相对于配置根目录相对路径)
-│   ├── temps_title: title定义导出模板路径(相对于配置根目录相对路径)
-│   ├── temps_const: 常量定义导出模板路径(相对于配置根目录相对路径)
-├── datafield_formats: 支持的基础数据类型
-├── datafile_formats: 支持的数据文件格式
-</code></pre>
+	<pre><code>
+	.
+	├── languages: 支持的编程语言
+	│   ├── name: 语言名称
+	│   ├── ext: 语言源文件扩展名
+	│   ├── ref: 基础数据读写配置文件路径(相对于配置根目录相对路径)
+	│   ├── temps_title: title定义导出模板路径(相对于配置根目录相对路径)
+	│   ├── temps_const: 常量定义导出模板路径(相对于配置根目录相对路径)
+	├── datafield_formats: 支持的基础数据类型
+	├── datafile_formats: 支持的数据文件格式
+	</code></pre>
 
 - project.yaml
 
-<pre><code>.
-├── source: Excel源目录
-│   ├── value: Excel源目录路径，支持多个，相对于配置根目录相对路径
-│   ├── encoding: 编码格式(如果需要)
-│   ├── ext_name: 文件扩展名，支持多个
-├── target: 输出设置
-│   ├── root: 输出目录,以'':''开关，或路径中包含'':''的，视为绝对路径 
-│   ├── title: 
-│  		├── client: client表头定义输出目录
-│  		├── server: server表头定义输出目录
-│  		├── db: db表头定义输出目录
-│   ├── data: 
-│  		├── client: client数据文件输出目录
-│  		├── server: server数据文件输出目录
-│  		├── db: db数据文件输出目录
-│   ├── const: 
-│  		├── client: client常量表输出目录
-│  		├── server: server常量表输出目录
-│   ├── encoding: 输出文件的编码格式
-├── buff: 缓冲区定义
-│   ├── big_endian: 二进制数据文件的大小端设置(true|false)
-│   ├── token: 每一个字段的缓冲大小(未使用)
-│   ├── item: 每一条数据的缓冲大小(未使用)
-│   ├── sheet: 每个sheet表的缓冲大小(未使用)
-</code></pre>
+	<pre><code>
+	.
+	├── source: Excel源目录
+	│   ├── value: Excel源目录路径，支持多个，相对于配置根目录相对路径
+	│   ├── encoding: 编码格式(如果需要)
+	│   ├── ext_name: 文件扩展名，支持多个
+	├── target: 输出设置
+	│   ├── root: 输出目录,以'':''开关，或路径中包含'':''的，视为绝对路径 
+	│   ├── title: 
+	│  		├── client: client表头定义输出目录
+	│  		├── server: server表头定义输出目录
+	│  		├── db: db表头定义输出目录
+	│   ├── data: 
+	│  		├── client: client数据文件输出目录
+	│  		├── server: server数据文件输出目录
+	│  		├── db: db数据文件输出目录
+	│   ├── const: 
+	│  		├── client: client常量表输出目录
+	│  		├── server: server常量表输出目录
+	│   ├── encoding: 输出文件的编码格式
+	├── buff: 缓冲区定义
+	│   ├── big_endian: 二进制数据文件的大小端设置(true|false)
+	│   ├── token: 每一个字段的缓冲大小(未使用)
+	│   ├── item: 每一条数据的缓冲大小(未使用)
+	│   ├── sheet: 每个sheet表的缓冲大小(未使用)
+	</code></pre>
 
 - excel.yaml
 
-<pre><code>.
-├── title&data: 
-│   ├── prefix: 启用前缀
-│   ├── outputs: 导出命名设置
-│  		├── range_name：字段域名称(client|server|db)
-│  		├── title: Title定义文件的名称
-│  		├── data： 数据文件的名称
-│   ├── nick_row: 字段别名行号，用于查找指定列，值为0时使用列号作为别名
-│   ├── name_row: 数据名称所在行号
-│   ├── remark_row: 数据注释所在行号
-│   ├── field_range_row: 输出选择行号，内容格式: 'c,s,d'，c指前端，s指后端，d指数据库，(01)
-│   ├── field_format_row: 字段数据格式行号
-│   ├── field_names: Title定义文件字段名称配置 
-│  		├── name: 语言名称
-│  		    row: 语言属性所在的行号
-│   ├── file_keys: 数据文件字段名称配置
-│  		├── name: 数据文件格式(bin,json,yaml等)
-│  		    row: 数据字段名称所在的行号
-│   ├── data_start_row: 数据开始行号
-├── const: 
-│   ├── prefix: 启用前缀
-│   ├── outputs: 导出类名配置
-│  		├── name: 字段域(client|server)
-│  		    value: 坐标(如： "A1")
-│   ├── name_col: 常量名列号
-│   ├── value_col: 常量值列号
-│   ├── type_col: 常量值类型列号
-│   ├── remark_col: 注释列号
-│   ├── data_start_row: 数据开始行号
-</code></pre>
+	<pre><code>
+	.
+	├── title&data: 
+	│   ├── prefix: 启用前缀
+	│   ├── outputs: 导出命名设置
+	│  		├── range_name：字段域名称(client|server|db)
+	│  		├── title: Title定义文件的名称所在坐标
+	│  		├── data： 数据文件的名称
+	│   ├── classes: 表头导出类信息
+	│  		├── name：字段域名称(client|server|db)
+	│  		├── value: 导出类所在坐标
+	│   ├── nick_row: 字段别名行号，用于查找指定列，值为0时使用列号作为别名
+	│   ├── name_row: 数据名称所在行号
+	│   ├── remark_row: 数据注释所在行号
+	│   ├── field_range_row: 输出选择行号，内容格式: 'c,s,d'，c指前端，s指后端，d指数据库，(01)
+	│   ├── field_format_row: 字段数据格式行号
+	│   ├── field_names: Title定义文件字段名称配置 
+	│  		├── name: 语言名称
+	│  		    row: 语言属性所在的行号
+	│   ├── file_keys: 数据文件字段名称配置
+	│  		├── name: 数据文件格式(bin,json,yaml等)
+	│  		    row: 数据字段名称所在的行号
+	│   ├── data_start_row: 数据开始行号
+	├── const: 
+	│   ├── prefix: 启用前缀
+	│   ├── outputs: 导出类名配置
+	│  		├── name: 字段域(client|server)
+	│  		    value: 坐标(如： "A1")
+	│   ├── classes: 常量导出类信息
+	│  		├── name：字段域名称(client|server|db)
+	│  		├── value: 导出类所在坐标
+	│   ├── name_col: 常量名列号
+	│   ├── value_col: 常量值列号
+	│   ├── type_col: 常量值类型列号
+	│   ├── remark_col: 注释列号
+	│   ├── data_start_row: 数据开始行号
+	</code></pre>
 
 - 具体语言.yaml
 
   配置文件位于[res/langs](/res/langs)目录中。
 
-<pre><code>.
-├── name: 当前语言名称
-├── bool: bool数据类型
-│   ├── name: 当前语言下数据类型表达
-│   ├── operates: 操作
-│  		├── file_name: 数据文件(json，bin等)
-│  		    get: 获得数据的函数方法
-│  		    set: 设置数据的函数方法
-├── ...: 其它数据类型
-</code></pre>
+	<pre><code>
+	.
+	├── name: 当前语言名称
+	├── bool: bool数据类型
+	│   ├── name: 当前语言下数据类型表达
+	│   ├── operates: 操作
+	│  		├── file_name: 数据文件(json，bin等)
+	│  		    get: 获得数据的函数方法
+	│  		    set: 设置数据的函数方法
+	├── ...: 其它数据类型
+	</code></pre>
 
 - 具体语言.temp
 
   配置文件位于[res/langs/templates](/res/langs/templates)目录中。
 
-  golang语法支持下的模板文件，帮助可查看**…………………………………………………………**
+  golang语法支持下的模板文件，帮助可查看**[https://golang.google.cn/pkg/text/template/](https://golang.google.cn/pkg/text/template/)**
 
 ## 运行
 
@@ -206,7 +216,7 @@ go 1.16.15
     
 ## 功能说明
 
-三种导出功能：表头导出，数据导出，常量表导出
+三种导出功能：表头导出，常量表导出，数据导出
 
 ### 表头导出
 
@@ -224,7 +234,7 @@ go 1.16.15
 
 2. 遍历Excel文件中匹配的的Sheet。
 
-	- 根据excel.yaml中的prefix.data属性进行匹配。
+	- 根据excel.yaml中的title&data.prefix属性进行匹配。
 
 3. 根据-range参数选择对应字段列表。
 
@@ -238,11 +248,156 @@ go 1.16.15
 
 6. 相应文件全生成到目标目录中。
 
-	- 目标目录由project.yaml中的target.root列表给出。
+	- 目标根目录由project.yaml中的target.root列表给出。
+	
+	- 表头输出目录中project.yaml中的target.title给出，为target.root的相对路径。
 	
 	- 可以通过-target参数重新指定源目录。
 
 	- 根据-range参数的内容，文件分别生成到project.yaml中target.title.client、target.title.server、target.title.database对应的目录中去。
+
+#### 表头模板说明
+
+1. 注入的数据对象为 [*TempDataProxy](/src/core/context.go)
+
+   可通过`{{.}}`、`{{$proxy := .}}`这类模板语法取得，结构定义为：
+
+	```
+	type TempDataProxy struct {
+		Sheet      *excel.ExcelSheet
+		Excel      *excel.ExcelProxy
+		TitleCtx   *TitleContext
+		FileName  string
+		ClassName string
+		Index     []int
+		Language  string
+	}```    
+
+  - Excel:[*excel.ExcelProxy](/src/core/excel/proxy.go)
+	
+  	当前执行的Excel数据对象
+
+  - Sheet:[*excel.ExcelSheet](/src/core/excel/sheet.go)
+	
+  	当前执行的Sheet数据对象
+	
+  - TitleCtx:*TitleContext
+	
+  	当前执行的上下文数据
+
+  - FileName:string
+	
+  	导出文件名称
+
+  - ClassName:string
+	
+  	导出类名称
+
+  - Index:[]int
+	
+  	当前选中的字段索引
+
+  - Language:string
+	
+  	选择的编程语言		
+
+2. [自定义函数](#自定义函数)
+
+### 常量表导出
+
+1. 遍历源目录中每一个符合的Excel文件。
+
+	- 源目录由project.yaml中的soruce.value列表给出。
+
+	- 可以通过-source参数重新指定源目录。
+
+	- 根据project.yaml中soruce.ext_name列表进行匹配。
+
+2. 遍历Excel文件中匹配的的Sheet。
+
+	- 根据excel.yaml中的const.prefix属性进行匹配。
+	
+	- 根据excel.yaml中的name_col、value_col、type_col、remark_col, 定位常量的名称、值、类型、注释。
+	
+	- 根据excel.yaml中的data_start_row开始向正描述数据，直到遇到空行结束。 
+
+4. 根据-lang参数，选择对应语言的配置及导出模板。
+
+	- -lang参数支持go, as3, ts, java, c#，详细请[查看]()。
+
+6. 相应文件全生成到目标目录中。
+
+	- 目标根目录由project.yaml中的target.root列表给出。
+	
+	- 常量表输出目录中project.yaml中的target.const给出，为target.root的相对路径。
+	
+	- 可以通过-target参数重新指定源目录。
+
+	- 根据-range参数的内容，文件分别生成到project.yaml中target.const.client、target.const.server对应的目录中去。
+
+#### 注入到常量模板中的数据及函数
+
+1. 注入的数据对象为 [*TempConstProxy](/src/core/context.go)
+
+  可通过`{{.}}`、`{{$proxy := .}}`这类模板语法取得，结构定义为：
+
+  ```
+	type TempConstProxy struct {
+    	Sheet     *excel.ExcelSheet
+		Excel     *excel.ExcelProxy
+		ConstCtx  *ConstContext
+		FileName  string
+		ClassName string
+		Language  string
+		StartRow  int
+		EndRow    int
+	}``` 
+
+  - Excel:[*excel.ExcelProxy](/src/core/excel/proxy.go)
+	
+  	当前执行的Excel数据对象
+
+  - Sheet:[*excel.ExcelSheet](/src/core/excel/sheet.go)
+	
+  	当前执行的Sheet数据对象
+	
+  - ConstCtx:*ConstContext
+	
+  	当前执行的上下文数据
+
+  - FileName:string
+	
+  	导出文件名称
+
+  - ClassName:string
+	
+  	常量类名称
+
+  - Index:[]int
+	
+  	当前选中的字段索引
+
+  - Language:string
+	
+  	选择的编程语言	
+
+  - StartRow:int
+	
+  	常量数据开始行号
+
+  - EndRow:int
+	
+  	常量数据结束行号	
+
+2. [自定义函数](#自定义函数)
+
+### 数据导出
+
+支持的数据导出格式：bin(二进制), json。
+
+sql导出**未实现**。
+
+yaml, toml, hcl, env, properties数据导出时，字段名称会**强制处理**为小写，本意要求**大小写相关**，固暂时不开放
 
 ### 模板定制
 
@@ -250,115 +405,73 @@ go 1.16.15
 
 [https://golang.google.cn/pkg/text/template/](https://golang.google.cn/pkg/text/template/)
 
-#### 注入到模板中的数据及函数
+#### 自定义函数
 
-- [*TempDataProxy](/src/core/context.go)
+自定义函数对全部模板有效
 
-  注入的数据结构，可通过`{{.}}`、`{{$proxy := .}}`这类模板语法取得，结构定义为：
+**注意**：自定义函数的返回值必须是1个或2个，这是官方要求。
 
-	```
-	type TempDataProxy struct {
-		Sheet      *excel.ExcelSheet
-		Excel      *excel.ExcelProxy
-		TitleCtx   *TitleContext
-		Index      []int
-		TitleName  string
-		Language   string
-	}```    
+当返回值为2个时，第2个返回值类型必须是error。
 
-	- Excel:[*excel.ExcelProxy](/src/core/excel/proxy.go)
-	
-  	当前执行的Excel数据对象
+- [ToLowerCamelCase](/src/core/naming/NamingUtil.go)
 
-	- Sheet:[*excel.ExcelSheet](/src/core/excel/sheet.go)
-	
-  	当前执行的Sheet数据对象
-	
-	- TitleContext:*TitleContext
-	
-  	当前执行的上下文数据
+  把字符串内容转化为**小驼峰**格式
 
-	- Index:[]int
-	
-  	当前选中的字段索引
+- [ToUpperCamelCase](/src/core/naming/NamingUtil.go)
 
-	- TitleName:string
-	
-  	导出结构名称
+  把字符串内容转化为**大驼峰**格式
 
-	- Language:string
-	
-  	选择的编程语言		
+- [NowTime](/src/core/tools/time.go)
 
-- 开放的自定义函数
+  取当前时间
 
-	- [ToLowerCamelCase](/src/core/naming/NamingUtil.go)
-	
-	把字符串内容转化为**小驼峰**格式
+- [NowTimeStr](/src/core/tools/time.go)
 
-	- [ToUpperCamelCase](/src/core/naming/NamingUtil.go)
-	
-	把字符串内容转化为**大驼峰**格式
+  取当前时间默认格式字符串
 
-	- [NowTime](/src/core/tools/time.go)
-	
-	取当前时间
+- [NowTimeFormat](/src/core/tools/time.go)
 
-	- [NowTimeStr](/src/core/tools/time.go)
-	
-	取当前时间默认格式字符串
+  取当前时间	
+  2006-01-02 15**:**04**:**05 PM Mon Jan
+  2006-01-_2 15**:**04**:**05 PM Mon Jan
 
-	- [NowTimeFormat](/src/core/tools/time.go)
-	
-	取当前时间	
-	2006-01-02 15**:**04**:**05 PM Mon Jan
-	2006-01-_2 15**:**04**:**05 PM Mon Jan
-
-	- [NowYear](/src/core/tools/time.go)
-	 
-	当前时间年份
-
-	- [NowMonth](/src/core/tools/time.go)
-
-	当前时间月份
-	一月: 1
-
-	- [NowDay](/src/core/tools/time.go)
-
-	当前时间日期
-	
-	- [NowWeekday](/src/core/tools/time.go)
-
-	当前时间星期几
-	星期日： 0	
-
-	- [NowHour](/src/core/tools/time.go)
-
-	当前时间小时
-
-	- [NowMinute](/src/core/tools/time.go)
-
-	当前时间分钟
-
-	- [NowSecond](/src/core/tools/time.go)
-
-	当前时间秒
-	
-	- [NowUnix](/src/core/tools/time.go)
-
-	当前时间秒戳（s）
-	
-	- [NowUnixNano](/src/core/tools/time.go)
+- [NowYear](/src/core/tools/time.go)
  
-	当前时间秒戳（ns）
+  当前时间年份
 
+- [NowMonth](/src/core/tools/time.go)
 
+  当前时间月份
+  一月: 1
 
-### 数据导出
+- [NowDay](/src/core/tools/time.go)
 
-#### 选择字段名称
+  当前时间日期
 
-### 常量表导出
+- [NowWeekday](/src/core/tools/time.go)
+
+  当前时间星期几
+  星期日： 0	
+
+- [NowHour](/src/core/tools/time.go)
+
+  当前时间小时
+
+- [NowMinute](/src/core/tools/time.go)
+
+  当前时间分钟
+
+- [NowSecond](/src/core/tools/time.go)
+
+  当前时间秒
+
+- [NowUnix](/src/core/tools/time.go)
+
+  当前时间秒戳（s）
+
+- [NowUnixNano](/src/core/tools/time.go)
+
+  当前时间秒戳（ns）
 
 ## 依赖性
 

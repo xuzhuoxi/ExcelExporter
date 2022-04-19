@@ -1,9 +1,9 @@
-{{$proxy := .}}namespace 可修改包名 {
+{{$proxy := .}}{{$clsName := $proxy.ClassName}}namespace 可修改包名 {
 	/**
 	 * @author ${AUTHOR}
 	 * Created on ${DATE}.
 	 */
-	export class 可修改类名 { {{range $index, $value := $proxy.GetItems}}
+	export class {{$clsName}} { {{range $index, $value := $proxy.GetItems}}
         /// <summary>
         /// {{$value.Remark}}
         /// </summary>

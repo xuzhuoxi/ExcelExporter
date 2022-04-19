@@ -1,6 +1,6 @@
 package {MODULE}{
     import xu.BinaryReaderProxy;
-{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx}}{{$clsName := $proxy.TitleName}}{{$lang := $proxy.Language}}
+{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx}}{{$clsName := $proxy.ClassName}}{{$lang := $proxy.Language}}
     /**
      * @author {AUTHOR}
      * Created on {NowTimeStr} .

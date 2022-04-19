@@ -62,7 +62,9 @@ type ConstItem struct {
 type TempConstProxy struct {
 	Sheet     *excel.ExcelSheet
 	Excel     *excel.ExcelProxy
-	TitleName string
+	ConstCtx  *ConstContext
+	FileName  string
+	ClassName string
 	Language  string
 	StartRow  int
 	EndRow    int
@@ -106,7 +108,7 @@ func (o *TempConstProxy) GetItem(row int) (item ConstItem) {
 	}
 	value, _ := excelRow.ValueAtAxis(Setting.Excel.Const.ValueCol)
 	if tp == setting.FieldString {
-		value = fmt.Sprintf("`%s`", value)
+		value = fmt.Sprintf("\"%s\"", value)
 	}
 	return ConstItem{Name: name, Type: typeFormat.Name, Value: value, Remark: remark}
 }
@@ -118,8 +120,9 @@ type TempDataProxy struct {
 	Sheet     *excel.ExcelSheet
 	Excel     *excel.ExcelProxy
 	TitleCtx  *TitleContext
+	FileName  string
+	ClassName string
 	Index     []int
-	TitleName string
 	Language  string
 }
 
