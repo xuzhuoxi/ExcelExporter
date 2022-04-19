@@ -9,6 +9,7 @@
 *.yaml  text    eol=lf
 *.yal   text    eol=lf
 *.md    text    eol=lf
+*.temp  text    eol=lf
 
 *.xls   -text
 *.xlsx  -text
