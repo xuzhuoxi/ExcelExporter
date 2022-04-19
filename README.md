@@ -166,7 +166,11 @@ go 1.16.15
 
 程序只允许通过命令行运行
 
-支持的命令行参数包括：-mode, -range, -lang, -file, -source, -target
+支持的命令行参数包括：-env, -mode, -range, -lang, -file, -source, -target
+
+- -env
+
+  重新指定运行环境，运行环境指的是配置根目录。
 
 - -mode
 
