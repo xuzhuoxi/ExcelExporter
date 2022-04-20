@@ -22,7 +22,7 @@ func (b *jsonDataBuilder) StartWriteData() {
 }
 
 func (b *jsonDataBuilder) FinishWriteData() {
-	c, _ := sjson.Set(b.content, countName, b.rowIndex+1)
+	c, _ := sjson.Set(b.content, countName, b.rowIndex)
 	b.content = c
 }
 
