@@ -12,3 +12,36 @@
 6. C++表头模板未实现， C++常量模板未实现。
 
 7. Sql表定义与数据导出未实现。
+
+	- 模板分两部分，一是表结构定义(create)，二是数据更新
+
+	- 创建表：
+	
+	```
+	CREATE TABLE table_name
+	(column1 datatype, column2 datatype,
+	column3 datatype, column4 datatype,
+	...	, primary key( column1, column2, ...))
+	```
+
+	- 删除全部数据：
+	
+	`truncate table table_name`
+	
+	- 批量插入数据：
+
+	```
+	Insert into table_name (column1, column2 column3, ...) 
+	values (value1, value2 value3, ...), 
+	(value1, value2 value3, ...), 
+	(value1, value2 value3, ...) ...
+	```
+
+	- 更新数据：
+	
+	```
+	update table_name
+	set column=value, column1=value, ...
+	where someColumn=someValue
+	```
+8. 增加主键定义
