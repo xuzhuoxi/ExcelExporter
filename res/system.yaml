@@ -3,48 +3,54 @@
 # temps_title:表头模板路径，只支持相对路径，多个路径用","分隔，第一个模板为主模板
 # temps_const:常量表模板路径，只支持相对路径，多个路径用","分隔，第一个模板为主模板
 languages:
+  # ActionScript3
   - name: 'as3'
     ext: 'as'
     ref: './langs/as3.yaml'
     temps_title:
-      - './langs/templates/as3_title.temp'
+      - './templates/as3_title.temp'
     temps_const:
-      - './langs/templates/as3_const.temp'
+      - './templates/as3_const.temp'
+  # C++
   - name: 'c++'
     ext: 'cpp'
     ref: './langs/c++.yaml'
     temps_title:
-      - './langs/templates/c++_title.temp'
+      - './templates/c++_title.temp'
     temps_const:
-      - './langs/templates/c++_const.temp'
+      - './templates/c++_const.temp'
+  # C#
   - name: 'c#'
     ext: 'cs'
     ref: './langs/c#.yaml'
     temps_title:
-      - './langs/templates/c#_title.temp'
+      - './templates/c#_title.temp'
     temps_const:
-      - './langs/templates/c#_const.temp'
+      - './templates/c#_const.temp'
+  # Golang
   - name: 'go'
     ext: 'go'
     ref: './langs/go.yaml'
     temps_title:
-      - './langs/templates/go_title.temp'
+      - './templates/go_title.temp'
     temps_const:
-      - './langs/templates/go_const.temp'
+      - './templates/go_const.temp'
+  # Java
   - name: 'java'
     ext: 'java'
     ref: './langs/java.yaml'
     temps_title:
-      - './langs/templates/java_title.temp'
+      - './templates/java_title.temp'
     temps_const:
-      - './langs/templates/java_const.temp'
+      - './templates/java_const.temp'
+  # TypeScript
   - name: 'ts'
     ext: 'ts'
     ref: './langs/ts.yaml'
     temps_title:
-      - './langs/templates/ts_title.temp'
+      - './templates/ts_title.temp'
     temps_const:
-      - './langs/templates/ts_const.temp'
+      - './templates/ts_const.temp'
 
 # 支持的数据字段格式
 # 其中string中的*代表字符数，范围[1,1024]。
