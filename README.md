@@ -10,7 +10,7 @@ go 1.16.15
 
 可通过下载执行文件或下载源码编译获得执行文件
 
-- 执行文件[下载地址](/)。
+- 执行文件[下载地址](https://github.com/xuzhuoxi/ExcelExporter/releases)。
 
 - 通过github下载源码编译
 
