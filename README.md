@@ -22,9 +22,9 @@ go 1.16.15
 	
 	2. 编译工程。 
 	
-	Windows下执行[goxc_build.bat](\build\goxc_build.bat)
+	Windows下执行[goxc_build.bat](/build/goxc_build.bat)
 	
-	Linux下执行[goxc_build.sh](\build\goxc_build.sh)
+	Linux下执行[goxc_build.sh](/build/goxc_build.sh)
 
 ## 配置结构说明
 
