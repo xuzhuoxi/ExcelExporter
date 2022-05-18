@@ -45,3 +45,4 @@
 	where someColumn=someValue
 	```
 8. 增加主键定义
+9. Bug:配置表最后一列一定要有数据。
