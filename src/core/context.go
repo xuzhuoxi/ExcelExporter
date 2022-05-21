@@ -80,37 +80,41 @@ func (o *TempConstProxy) ValueAtAxis(axis string) string {
 }
 
 func (o *TempConstProxy) GetItems() []ConstItem {
-	if o.EndRow-o.StartRow <= 0 {
+	capRow := o.EndRow - o.StartRow + 1
+	if capRow <= 0 {
 		return nil
 	}
-	rs := make([]ConstItem, 0, o.EndRow-o.StartRow+1)
+	rs := make([]ConstItem, 0, capRow)
 	for row := o.StartRow; row <= o.EndRow; row += 1 {
-		rs = append(rs, o.GetItem(row))
+		item, err := o.GetItem(row)
+		if nil != err {
+			continue
+		}
+		rs = append(rs, item)
 	}
 	return rs
 }
 
-func (o *TempConstProxy) GetItem(row int) (item ConstItem) {
+func (o *TempConstProxy) GetItem(row int) (item ConstItem, err error) {
+	//fmt.Println("GetItem:", row)
 	excelRow := o.Sheet.GetRowAt(row - 1)
 	name, _ := excelRow.ValueAtAxis(Setting.Excel.Const.NameCol)
 	remark, _ := excelRow.ValueAtAxis(Setting.Excel.Const.RemarkCol)
 	tp, _ := excelRow.ValueAtAxis(Setting.Excel.Const.TypeCol)
 	ld, ok := Setting.System.FindProgramLanguage(o.Language)
-	err := errors.New(fmt.Sprintf("Const Item Type Error At Row %d ", row))
+	err = errors.New(fmt.Sprintf("Const Item Type Error At Row %d ", row))
 	if !ok {
-		Logger.Error(err)
 		return
 	}
 	typeFormat, ok := ld.Setting.GetLangDefine(tp)
 	if !ok {
-		Logger.Error(err)
 		return
 	}
 	value, _ := excelRow.ValueAtAxis(Setting.Excel.Const.ValueCol)
 	if tp == setting.FieldString {
 		value = fmt.Sprintf("\"%s\"", value)
 	}
-	return ConstItem{Name: name, Type: typeFormat.Name, Value: value, Remark: remark}
+	return ConstItem{Name: name, Type: typeFormat.Name, Value: value, Remark: remark}, nil
 }
 
 //--------------------------------

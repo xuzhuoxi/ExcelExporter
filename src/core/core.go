@@ -8,15 +8,15 @@ import (
 	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/naming"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/temps"
+	"github.com/xuzhuoxi/ExcelExporter/src/core/tools"
 	"github.com/xuzhuoxi/ExcelExporter/src/setting"
 	"github.com/xuzhuoxi/infra-go/filex"
 	"github.com/xuzhuoxi/infra-go/logx"
+	"io/fs"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
-	"github.com/xuzhuoxi/ExcelExporter/src/core/tools"
-	"io/fs"
 )
 
 var (
@@ -77,7 +77,7 @@ func execExcelFiles() {
 		Logger.Infoln("[core.execExcelFiles] Execution stop with error settings. ")
 		return
 	}
-	if len(TitleCtx) == 0 && len(DataCtx) == 0 {
+	if len(TitleCtx) == 0 && len(DataCtx) == 0 && len(ConstCtx) == 0 {
 		Logger.Infoln("[core.execExcelFiles] Execution finish with doing nothing. ")
 		return
 	}

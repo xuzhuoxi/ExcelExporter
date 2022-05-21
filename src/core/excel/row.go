@@ -65,8 +65,11 @@ func (er *ExcelRow) Empty() bool {
 // Open to templates
 // 通过索引号取值，索引号从0开始
 func (er *ExcelRow) ValueAtIndex(index int) (value string, err error) {
-	if index < 0 || index >= er.CellLength() {
+	if index < 0 {
 		return "", errors.New(fmt.Sprintf("Index(%d) out of range! ", index))
+	}
+	if index >= er.CellLength() {
+		return "", nil
 	}
 	return er.Cell[index], nil
 }
@@ -78,15 +81,22 @@ func (er *ExcelRow) ValueAtNick(nick string) (value string, err error) {
 	if !ok {
 		return "", errors.New(fmt.Sprintf("Nick(%s) is not exist! ", nick))
 	}
+	if index >= er.CellLength() {
+		return "", nil
+	}
 	return er.Cell[index], nil
 }
 
 // Open to templates
 // 通过列名取值
 func (er *ExcelRow) ValueAtAxis(axis string) (value string, err error) {
-	index, ok := slicex.IndexString(er.Axis(), strings.ToUpper(axis))
-	if !ok {
+	axis = strings.ToUpper(axis)
+	index := GetColNum(axis) - 1
+	if index < 0 {
 		return "", errors.New(fmt.Sprintf("Axis(%s) is not exist! ", axis))
+	}
+	if index >= er.CellLength() {
+		return "", nil
 	}
 	return er.Cell[index], nil
 }
