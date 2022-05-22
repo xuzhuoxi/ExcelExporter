@@ -349,9 +349,9 @@ go 1.16.15
 
   可通过`{{.}}`、`{{$proxy := .}}`这类模板语法取得，结构定义为：
 
-  ```
+	```
 	type TempConstProxy struct {
-    	Sheet     *excel.ExcelSheet
+		Sheet     *excel.ExcelSheet
 		Excel     *excel.ExcelProxy
 		ConstCtx  *ConstContext
 		FileName  string
@@ -359,7 +359,8 @@ go 1.16.15
 		Language  string
 		StartRow  int
 		EndRow    int
-	}``` 
+	}
+	``` 
 
   - Excel:[*excel.ExcelProxy](/src/core/excel/proxy.go)
 	
