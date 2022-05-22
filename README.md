@@ -347,7 +347,7 @@ go 1.16.15
 
 1. 注入的数据对象为 [*TempConstProxy](/src/core/context.go)
 
-  可通过`{{.}}`、`{{$proxy := .}}`这类模板语法取得，结构定义为：
+    可通过`{{.}}`、`{{$proxy := .}}`这类模板语法取得，结构定义为：
 
 	```
 	type TempConstProxy struct {
