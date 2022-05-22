@@ -207,7 +207,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
 			continue
 		}
-		selects, err := parseFileTypeRow(sheet, fieldRangeRow, uint(titleCtx.RangeType)-1)
+		selects, err := parseRangeRow(sheet, fieldRangeRow, uint(titleCtx.RangeType)-1)
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Parse file type error: %s ", err))
 			return err
@@ -272,7 +272,7 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
 			continue
 		}
-		selects, err := parseFileTypeRow(sheet, fieldRangeRow, uint(dataCtx.RangeType)-1)
+		selects, err := parseRangeRow(sheet, fieldRangeRow, uint(dataCtx.RangeType)-1)
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Parse file type error: %s ", err))
 			return err
@@ -430,14 +430,14 @@ func getConstLanguageTemp(lang string) (t *temps.TemplateProxy, err error) {
 	return nil, errors.New(fmt.Sprintf("Undefined Program Lanaguage for Const: %s", lang))
 }
 
-func parseFileTypeRow(sheet *excel.ExcelSheet, row *excel.ExcelRow, selectIndex uint) (selects []int, err error) {
-	for index, cell := range row.Cell {
-		m, _ := regexp.MatchString(`[01],[01],[01]`, cell)
+func parseRangeRow(sheet *excel.ExcelSheet, rangeRow *excel.ExcelRow, rangeIndex uint) (selects []int, err error) {
+	for index, cell := range rangeRow.Cell {
+		m, _ := regexp.MatchString(RegexPatternRange, cell)
 		if !m {
-			return nil, errors.New(fmt.Sprintf("Cell Value Error At Sheet(%s)[%s]", sheet.SheetName, row.Axis()[index]))
+			return nil, errors.New(fmt.Sprintf("Cell Value Error At Sheet(%s)[%s]", sheet.SheetName, rangeRow.Axis()[index]))
 		}
 		ss := strings.Split(cell, ",")
-		value, _ := strconv.Atoi(ss[selectIndex])
+		value, _ := strconv.Atoi(ss[rangeIndex])
 		if value == 0 {
 			continue
 		}

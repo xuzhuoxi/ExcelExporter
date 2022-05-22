@@ -90,6 +90,9 @@ func (o *TempConstProxy) GetItems() []ConstItem {
 		if nil != err {
 			continue
 		}
+		if len(item.Name) == 0 { //过滤名称为空 或 类型为空的行
+			continue
+		}
 		rs = append(rs, item)
 	}
 	return rs

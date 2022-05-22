@@ -17,3 +17,5 @@ const (
 	FieldRangeServer
 	FieldRangeDatabase
 )
+
+const RegexPatternRange = `[01],[01],[01]`
