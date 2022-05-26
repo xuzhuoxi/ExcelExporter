@@ -450,9 +450,9 @@ func getRowData(keyRow *excel.ExcelRow, typeRow *excel.ExcelRow, valueRow *excel
 	selects []int) (dataRow []*data.KTValue) {
 	dataRow = make([]*data.KTValue, len(selects), len(selects))
 	for index, rowIndex := range selects {
-		k := keyRow.Cell[rowIndex]
-		t := typeRow.Cell[rowIndex]
-		v := valueRow.Cell[rowIndex]
+		k, _ := keyRow.ValueAtIndex(rowIndex)
+		t, _ := typeRow.ValueAtIndex(rowIndex)
+		v, _ := valueRow.ValueAtIndex(rowIndex)
 		dataRow[index] = &data.KTValue{Key: k, Type: t, Value: v}
 	}
 	return

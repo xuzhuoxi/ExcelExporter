@@ -83,3 +83,5 @@ github.com/xuzhuoxi/ExcelExporter/src/core.Execute(0xc0000982e8, 0xc0000d8340, 0
         D:/workspaces/GoPath/src/github.com/xuzhuoxi/ExcelExporter/src/core/core.go:72 +0x35d
 main.main()
         D:/workspaces/GoPath/src/github.com/xuzhuoxi/ExcelExporter/src/main.go:54 +0x8e8
+
+10. 优化表结尾处理。
