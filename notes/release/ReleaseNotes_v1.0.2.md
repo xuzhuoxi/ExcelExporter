@@ -1,6 +1,6 @@
 ## Release notes
 
-### Known Issues in v1.0.1
+### Known Issues in v1.0.2
 
 - yaml, toml, hcl, env, properties数据导出时，key为**大小写无关**，本意要求**大小写相关**。
 
