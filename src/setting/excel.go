@@ -39,6 +39,8 @@ type TitleData struct {
 	Outputs []TitleDataOutputInfo `yaml:"outputs"`
 	// 表头导出类信息
 	Classes []NameValue `yaml:"classes"`
+	// 数据控制列，决定数据范围
+	ControlRow int `yaml:"control_row"`
 	// 字段别名行号，用于查找指定列，值为0时使用列号作为别名
 	NickRow int `yaml:"nick_row"`
 	// 数据名称所在行号，与Excel行号一致

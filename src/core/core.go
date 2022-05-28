@@ -202,12 +202,13 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 		}
 
 		//fieldRangeRow := sheet.GetRowAt(Setting.Excel.Title.FieldRangeRow - 1)
+		size := getControlSize(sheet)
 		fieldRangeRow := sheet.GetRowAt(Setting.Excel.TitleData.FieldRangeRow - 1)
 		if nil == fieldRangeRow || fieldRangeRow.Empty() {
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
 			continue
 		}
-		selects, err := parseRangeRow(sheet, fieldRangeRow, uint(titleCtx.RangeType)-1)
+		selects, err := parseRangeRow(sheet, fieldRangeRow, uint(titleCtx.RangeType)-1, size)
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Parse file type error: %s ", err))
 			return err
@@ -267,12 +268,13 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 			return err
 		}
 		//fieldRangeRow := sheet.GetRowAt(Setting.Excel.Title.FieldRangeRow - 1)
+		size := getControlSize(sheet)
 		fieldRangeRow := sheet.GetRowAt(Setting.Excel.TitleData.FieldRangeRow - 1)
 		if nil == fieldRangeRow || fieldRangeRow.Empty() {
 			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
 			continue
 		}
-		selects, err := parseRangeRow(sheet, fieldRangeRow, uint(dataCtx.RangeType)-1)
+		selects, err := parseRangeRow(sheet, fieldRangeRow, uint(dataCtx.RangeType)-1, size)
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Parse file type error: %s ", err))
 			return err
@@ -301,7 +303,7 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 		builder.StartWriteData()
 		for startRow > 0 {
 			dataRow := sheet.GetRowAt(startRow - 1)
-			if nil == dataRow || len(dataRow.Cell) == 0 || dataRow.Cell[0] == "" { // 到达 表尾、空白头
+			if nil == dataRow || len(dataRow.Cell) == 0 || strings.TrimSpace(dataRow.Cell[0]) == "" { // 到达 表尾、空白头
 				break
 			}
 			ktvRow := getRowData(keyRow, typeRow, dataRow, selects)
@@ -430,11 +432,29 @@ func getConstLanguageTemp(lang string) (t *temps.TemplateProxy, err error) {
 	return nil, errors.New(fmt.Sprintf("Undefined Program Lanaguage for Const: %s", lang))
 }
 
-func parseRangeRow(sheet *excel.ExcelSheet, rangeRow *excel.ExcelRow, rangeIndex uint) (selects []int, err error) {
+func getControlSize(sheet *excel.ExcelSheet) (size int) {
+	controlRow := sheet.GetRowAt(Setting.Excel.TitleData.ControlRow - 1)
+	for index, value := range controlRow.Cell {
+		str := strings.TrimSpace(value)
+		if len(str) == 0 {
+			return index
+		}
+	}
+	return len(controlRow.Cell)
+}
+
+func parseRangeRow(sheet *excel.ExcelSheet, rangeRow *excel.ExcelRow, rangeIndex uint, maxSize int) (selects []int, err error) {
+	cellLen := rangeRow.CellLength()
+	if maxSize > cellLen {
+		return nil, errors.New(fmt.Sprintf("Range Row Lack At (%s)[%s]", sheet.SheetName, rangeRow.Axis()[cellLen]))
+	}
 	for index, cell := range rangeRow.Cell {
+		if index == maxSize {
+			return
+		}
 		m, _ := regexp.MatchString(RegexPatternRange, cell)
 		if !m {
-			return nil, errors.New(fmt.Sprintf("Cell Value Error At Sheet(%s)[%s]", sheet.SheetName, rangeRow.Axis()[index]))
+			return nil, errors.New(fmt.Sprintf("Cells Value Error At Sheet(%s)[%s]", sheet.SheetName, rangeRow.Axis()[index]))
 		}
 		ss := strings.Split(cell, ",")
 		value, _ := strconv.Atoi(ss[rangeIndex])
@@ -446,8 +466,7 @@ func parseRangeRow(sheet *excel.ExcelSheet, rangeRow *excel.ExcelRow, rangeIndex
 	return
 }
 
-func getRowData(keyRow *excel.ExcelRow, typeRow *excel.ExcelRow, valueRow *excel.ExcelRow,
-	selects []int) (dataRow []*data.KTValue) {
+func getRowData(keyRow *excel.ExcelRow, typeRow *excel.ExcelRow, valueRow *excel.ExcelRow, selects []int) (dataRow []*data.KTValue) {
 	dataRow = make([]*data.KTValue, len(selects), len(selects))
 	for index, rowIndex := range selects {
 		k, _ := keyRow.ValueAtIndex(rowIndex)

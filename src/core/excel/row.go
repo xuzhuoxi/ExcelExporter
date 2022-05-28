@@ -8,9 +8,9 @@ import (
 )
 
 type ExcelRow struct {
-	Index int
-	Cell  []string
+	Cell []string
 
+	Index int
 	Sheet *ExcelSheet
 }
 
