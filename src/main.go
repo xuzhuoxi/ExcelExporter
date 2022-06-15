@@ -51,5 +51,6 @@ func main() {
 	titleCtxArr := cmdParams.GenTitleContexts()
 	dataCtxArr := cmdParams.GenDataContexts()
 	constCtxArr := cmdParams.GenConstContexts()
-	core.Execute(s, titleCtxArr, dataCtxArr, constCtxArr)
+	sqlCtx := cmdParams.GenSqlContext()
+	core.Execute(s, titleCtxArr, dataCtxArr, constCtxArr, sqlCtx)
 }

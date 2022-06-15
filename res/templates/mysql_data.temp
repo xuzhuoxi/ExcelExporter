@@ -1,0 +1,4 @@
+
+UPDATE TABLE_NAME
+set column=value, column1=value, ...
+where someColumn=someValue

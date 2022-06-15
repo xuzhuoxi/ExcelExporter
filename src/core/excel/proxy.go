@@ -6,9 +6,10 @@ import (
 )
 
 type ExcelProxy struct {
-	Excels   []*excelize.File
-	Sheets   []*ExcelSheet
-	DataRows []*ExcelRow
+	ExcelPaths []string
+	Excels     []*excelize.File
+	Sheets     []*ExcelSheet
+	DataRows   []*ExcelRow
 }
 
 func (ep *ExcelProxy) GetSheet(sheet string) (es *ExcelSheet, err error) {
@@ -64,14 +65,16 @@ func (ep *ExcelProxy) MergedRowsByFilter(startRow int, filter func(row *ExcelRow
 
 // 加载excelPath指定的一个Excel文件。
 func (ep *ExcelProxy) LoadExcels(excelPath string, overwrite bool) error {
-	excels, err := LoadExcels(excelPath)
+	excels, paths, err := LoadExcels(excelPath)
 	if nil != err {
 		return err
 	}
 	if overwrite {
 		ep.Excels = excels
+		ep.ExcelPaths = paths
 	} else {
 		ep.Excels = append(ep.Excels, excels...)
+		ep.ExcelPaths = append(ep.ExcelPaths, paths...)
 	}
 	return nil
 }
@@ -87,12 +90,16 @@ func (ep *ExcelProxy) LoadExcel(excelPath string, overwrite bool) error {
 	if overwrite {
 		if nil == ep.Excels {
 			ep.Excels = []*excelize.File{excel}
+			ep.ExcelPaths = []string{excelPath}
 		} else {
 			ep.Excels = ep.Excels[:1]
 			ep.Excels[0] = excel
+			ep.ExcelPaths = ep.ExcelPaths[:1]
+			ep.ExcelPaths[0] = excelPath
 		}
 	} else {
 		ep.Excels = append(ep.Excels, excel)
+		ep.ExcelPaths = append(ep.ExcelPaths, excelPath)
 	}
 	return nil
 }
@@ -108,8 +115,8 @@ func (ep *ExcelProxy) LoadSheets(sheetPrefix string, colNickRow int, overwrite b
 	if 0 == len(ep.Excels) {
 		return nil
 	}
-	for _, excel := range ep.Excels {
-		sheets, err := LoadSheets(excel, sheetPrefix, colNickRow)
+	for index := range ep.Excels {
+		sheets, err := LoadSheets(ep.ExcelPaths[index], ep.Excels[index], sheetPrefix, colNickRow)
 		if nil != err {
 			return err
 		}

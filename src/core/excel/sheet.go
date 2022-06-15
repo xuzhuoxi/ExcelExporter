@@ -6,6 +6,7 @@ import (
 )
 
 type ExcelSheet struct {
+	FilePath   string //文件路径
 	SheetIndex int    // Sheet的索引
 	SheetName  string // Sheet的名称
 

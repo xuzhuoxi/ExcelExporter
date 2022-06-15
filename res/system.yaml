@@ -6,7 +6,7 @@ languages:
   # ActionScript3
   - name: 'as3'
     ext: 'as'
-    ref: './langs/as3.yaml'
+    ref: './lang/as3.yaml'
     temps_title:
       - './templates/as3_title.temp'
     temps_const:
@@ -14,7 +14,7 @@ languages:
   # C++
   - name: 'c++'
     ext: 'cpp'
-    ref: './langs/c++.yaml'
+    ref: './lang/c++.yaml'
     temps_title:
       - './templates/c++_title.temp'
     temps_const:
@@ -22,7 +22,7 @@ languages:
   # C#
   - name: 'c#'
     ext: 'cs'
-    ref: './langs/c#.yaml'
+    ref: './lang/c#.yaml'
     temps_title:
       - './templates/c#_title.temp'
     temps_const:
@@ -30,7 +30,7 @@ languages:
   # Golang
   - name: 'go'
     ext: 'go'
-    ref: './langs/go.yaml'
+    ref: './lang/go.yaml'
     temps_title:
       - './templates/go_title.temp'
     temps_const:
@@ -38,7 +38,7 @@ languages:
   # Java
   - name: 'java'
     ext: 'java'
-    ref: './langs/java.yaml'
+    ref: './lang/java.yaml'
     temps_title:
       - './templates/java_title.temp'
     temps_const:
@@ -46,11 +46,24 @@ languages:
   # TypeScript
   - name: 'ts'
     ext: 'ts'
-    ref: './langs/ts.yaml'
+    ref: './lang/ts.yaml'
     temps_title:
       - './templates/ts_title.temp'
     temps_const:
       - './templates/ts_const.temp'
+
+# 数据库相关配置
+# default: 默认使用的数据库
+# ref:字段定义路径，只支持相对路径
+databases:
+  default: mysql
+  list:
+    - name: 'mysql'
+      ref: './db/mysql.yaml'
+      temps_title:
+        - './templates/mysql_title.temp'
+      temps_data:
+        - './templates/mysql_data.temp'
 
 # 支持的数据字段格式
 # 其中string中的*代表字符数，范围[1,1024]。
@@ -88,3 +101,4 @@ datafield_formats:
 datafile_formats:
   - bin
   - json
+  - sql

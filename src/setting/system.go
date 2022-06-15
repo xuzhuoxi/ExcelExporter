@@ -3,6 +3,8 @@ package setting
 import (
 	"fmt"
 	"github.com/xuzhuoxi/infra-go/filex"
+	"gopkg.in/yaml.v2"
+	"os"
 )
 
 // 数据结构定义所支持的编程语言定义
@@ -54,9 +56,78 @@ func getMergedTempsPath(paths []string) string {
 	return rs
 }
 
+type Database struct {
+	Name       string   `yaml:"name"`
+	RefPath    string   `yaml:"ref"`
+	TempsTitle []string `yaml:"temps_title"`
+	TempsData  []string `yaml:"temps_data"`
+
+	DataTypes *SqlDataTypes
+}
+
+func (o *Database) UpgradePaths(envPath string) {
+	o.RefPath = filex.Combine(envPath, o.RefPath)
+	for index := range o.TempsTitle {
+		o.TempsTitle[index] = filex.Combine(envPath, o.TempsTitle[index])
+	}
+	for index := range o.TempsData {
+		o.TempsData[index] = filex.Combine(envPath, o.TempsData[index])
+	}
+}
+
+func (o *Database) GetDataTypes() (dbTypes *SqlDataTypes, err error) {
+	if nil != o.DataTypes {
+		return o.DataTypes, nil
+	}
+
+	str, err := os.ReadFile(o.RefPath)
+
+	if nil != err {
+		return nil, err
+	}
+	types := &SqlDataTypes{}
+	err = yaml.Unmarshal(str, types)
+	if nil != err {
+		return nil, err
+	}
+	o.DataTypes = types
+	return types, nil
+}
+
+type Databases struct {
+	Default      string      `yaml:"default"`
+	DatabaseList []*Database `yaml:"list"`
+}
+
+func (d *Databases) UpgradePaths(envPath string) {
+	for index := range d.DatabaseList {
+		d.DatabaseList[index].UpgradePaths(envPath)
+	}
+}
+
+func (d *Databases) GetDefaultDatabase() (db Database, exist bool) {
+	return d.FindDatabase(d.Default)
+}
+
+func (d *Databases) FindDatabase(name string) (db Database, exist bool) {
+	exist = false
+	if len(name) == 0 || len(d.DatabaseList) == 0 {
+		return
+	}
+
+	for index := range d.DatabaseList {
+		if d.DatabaseList[index].Name == name {
+			return *d.DatabaseList[index], true
+		}
+	}
+	return
+}
+
 type SystemSetting struct {
 	// 数据结构定义所支持的编程语言
 	Languages []*ProgramLanguage `yaml:"languages"`
+	// 数据库相关配置
+	Databases *Databases `yaml:"databases"`
 	// 支持的数据字段格式
 	// 其中string中的*代表字符数，范围[1,1024]。
 	// 浮点数最多支持6位小数，而且当数值越大，精度就越低，反之亦然
@@ -75,6 +146,7 @@ func (s *SystemSetting) UpgradeEnvPath(envPath string) {
 	for index := range s.Languages {
 		s.Languages[index].UpgradePaths(envPath)
 	}
+	s.Databases.UpgradePaths(envPath)
 }
 
 func (s *SystemSetting) FindProgramLanguage(lang string) (define *ProgramLanguage, ok bool) {
@@ -111,4 +183,8 @@ func (s *SystemSetting) CheckDataFileFormat(dataFileFormat string) bool {
 		}
 	}
 	return false
+}
+
+func (s *SystemSetting) GetDatabase() (db Database, ok bool) {
+	return s.Databases.GetDefaultDatabase()
 }

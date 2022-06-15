@@ -11,7 +11,6 @@ import (
 )
 
 const (
-	ExtXls  = "xls"
 	ExtXlsx = "xlsx"
 )
 
@@ -57,10 +56,10 @@ func ParseAxis(axis string) (cellIndex int, rowIndex int, err error) {
 
 // 加载路径下的Excel文件，多个路径用","分割
 // 支持文件夹路径
-func LoadExcels(path string) (excels []*excelize.File, err error) {
+func LoadExcels(path string) (excels []*excelize.File, excelPaths []string, err error) {
 	paths := strings.Split(strings.TrimSpace(path), ",")
 	if len(paths) == 0 {
-		return nil, errors.New("Path Empty:" + path)
+		return nil, nil, errors.New("Path Empty:" + path)
 	}
 	var filePaths []string
 
@@ -71,23 +70,24 @@ func LoadExcels(path string) (excels []*excelize.File, err error) {
 				return nil
 			}
 			name := info.Name()
-			if filex.CheckExt(name, ExtXls) || filex.CheckExt(name, ExtXlsx) {
+			if filex.CheckExt(name, ExtXlsx) {
 				filePaths = append(filePaths, path)
 			}
 			return nil
 		})
 	}
 	if len(filePaths) == 0 {
-		return nil, errors.New("Path Empty:" + path)
+		return nil, nil, errors.New("Path Empty:" + path)
 	}
 	for _, filePath := range filePaths {
 		excel, err := LoadExcel(filePath)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		excels = append(excels, excel)
+		excelPaths = append(excelPaths, filePath)
 	}
-	return excels, nil
+	return excels, excelPaths, nil
 }
 
 // 加载Excel文件，过滤无Sheet情况
@@ -104,7 +104,7 @@ func LoadExcel(filePath string) (excel *excelize.File, err error) {
 
 // 通过SheetPrefix作为限制加载Sheet, 使用""代表不限制
 // 指定NickRow所在行为别名,NickRow=0时，使用列号作为别名
-func LoadSheets(excelFile *excelize.File, sheetPrefix string, nickRow int) (sheets []*ExcelSheet, err error) {
+func LoadSheets(excelPath string, excelFile *excelize.File, sheetPrefix string, nickRow int) (sheets []*ExcelSheet, err error) {
 	var names []string
 	var indexes []int
 	for index, name := range excelFile.GetSheetMap() {
@@ -127,7 +127,7 @@ func LoadSheets(excelFile *excelize.File, sheetPrefix string, nickRow int) (shee
 			continue
 		}
 
-		sheet := &ExcelSheet{SheetIndex: indexes[i], SheetName: n, RowLength: rowLen}
+		sheet := &ExcelSheet{FilePath: excelPath, SheetIndex: indexes[i], SheetName: n, RowLength: rowLen}
 
 		maxCellLen := 0
 		for _, cells := range rows {

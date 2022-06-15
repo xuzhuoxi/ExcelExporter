@@ -45,6 +45,8 @@ func ParseFlag() (cfg *SysFlags, err error) {
 	ranges := flag.String("range", "", "Use Fields! ")
 	langRefs := flag.String("lang", "", "Use Languages! ")
 	dataFiles := flag.String("file", "", "Output Files! ")
+	sqlMerge := flag.Bool("sql_merge", false, "Sql Merge! ")
+
 	source := flag.String("source", "", "Source Redefine! ")
 	target := flag.String("target", "", "Target Redefine! ")
 	flag.Parse()
@@ -52,7 +54,7 @@ func ParseFlag() (cfg *SysFlags, err error) {
 	modesVal := strings.ToLower(*modes)
 	rangesVal := strings.ToLower(*ranges)
 	return &SysFlags{EnvPath: *envPath, Modes: modesVal, Ranges: rangesVal, LangRefs: *langRefs, DataFiles: *dataFiles,
-		Source: *source, Target: *target}, nil
+		SqlMerge: *sqlMerge, Source: *source, Target: *target}, nil
 }
 
 type SysFlags struct {
@@ -61,13 +63,14 @@ type SysFlags struct {
 	Ranges    string
 	LangRefs  string
 	DataFiles string
+	SqlMerge  bool
 	Source    string
 	Target    string
 }
 
 func (f *SysFlags) String() string {
-	return fmt.Sprintf("SysFlags(Modes=%s, Rangs=%s, LangRefs=%s, DataFiles=%s, Source=%s, Target=%s)",
-		f.Modes, f.Ranges, f.LangRefs, f.DataFiles, f.Source, f.Target)
+	return fmt.Sprintf("SysFlags(Modes=%s, Rangs=%s, LangRefs=%s, DataFiles=%s, SqlMerge=%v,  Source=%s, Target=%s)",
+		f.Modes, f.Ranges, f.LangRefs, f.DataFiles, f.SqlMerge, f.Source, f.Target)
 }
 
 func (f *SysFlags) GetCommandParams() *AppFlags {
@@ -83,7 +86,7 @@ func (f *SysFlags) GetCommandParams() *AppFlags {
 	langRefs := strings.Split(f.LangRefs, ParamsSep)
 	dataFiles := strings.Split(f.DataFiles, ParamsSep)
 	return &AppFlags{ModeNames: modeNames, ModeTypes: modeValues, RangeNames: rangeNames, RangeTypes: rangeValues,
-		LangRefs: langRefs, DataFiles: dataFiles}
+		LangRefs: langRefs, DataFiles: dataFiles, SqlMerge: f.SqlMerge}
 }
 
 func (f *SysFlags) parseModes() (names []string, types []core.ModeType) {
@@ -129,6 +132,7 @@ type AppFlags struct {
 	RangeTypes []core.FieldRangeType
 	LangRefs   []string
 	DataFiles  []string
+	SqlMerge   bool
 }
 
 func (o *AppFlags) CheckMode(mode core.ModeType) bool {
@@ -140,9 +144,27 @@ func (o *AppFlags) CheckMode(mode core.ModeType) bool {
 	return false
 }
 
+func (o *AppFlags) CheckRange(rangeType core.FieldRangeType) bool {
+	for _, m := range o.RangeTypes {
+		if m == rangeType {
+			return true
+		}
+	}
+	return false
+}
+
+func (o *AppFlags) CheckDataFile(dataFile string) bool {
+	for _, m := range o.DataFiles {
+		if m == dataFile {
+			return true
+		}
+	}
+	return false
+}
+
 func (o *AppFlags) String() string {
-	return fmt.Sprintf("AppFlags(ModeNames=%v, ModeTypes=%v, RangeNames=%v, RangeTypes=%v, LangRefs=%v, DataFiles=%v)",
-		o.ModeNames, o.ModeTypes, o.RangeNames, o.RangeTypes, o.LangRefs, o.DataFiles)
+	return fmt.Sprintf("AppFlags(ModeNames=%v, ModeTypes=%v, RangeNames=%v, RangeTypes=%v, LangRefs=%v, DataFiles=%v, SqlMerge=%v",
+		o.ModeNames, o.ModeTypes, o.RangeNames, o.RangeTypes, o.LangRefs, o.DataFiles, o.SqlMerge)
 }
 
 func (o *AppFlags) GenTitleContexts() (contexts []*core.TitleContext) {
@@ -179,6 +201,9 @@ func (o *AppFlags) GenDataContexts() (contexts []*core.DataContext) {
 	contexts = make([]*core.DataContext, 0, ln)
 	for fieldIdx := 0; fieldIdx < rangeLen; fieldIdx += 1 {
 		for fileIdx := 0; fileIdx < fileLen; fileIdx += 1 {
+			if o.DataFiles[fileIdx] == setting.FileNameSql {
+				continue
+			}
 			context := &core.DataContext{RangeName: o.RangeNames[fieldIdx], RangeType: o.RangeTypes[fieldIdx],
 				DataFileFormat: o.DataFiles[fileIdx]}
 			contexts = append(contexts, context)
@@ -210,4 +235,16 @@ func (o *AppFlags) GenConstContexts() (contexts []*core.ConstContext) {
 		}
 	}
 	return
+}
+
+func (o *AppFlags) GenSqlContext() (context *core.SqlContext) {
+	if !o.CheckRange(core.FieldRangeDatabase) || !o.CheckDataFile(setting.FileNameSql) {
+		return nil
+	}
+	titleOn := o.CheckMode(core.ModeTitle)
+	dataOn := o.CheckMode(core.ModeData)
+	if !titleOn && !dataOn {
+		return nil
+	}
+	return &core.SqlContext{TitleOn: titleOn, DataOn: dataOn, SqlMerge: o.SqlMerge}
 }

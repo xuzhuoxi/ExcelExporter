@@ -7,6 +7,19 @@ import (
 	"github.com/xuzhuoxi/ExcelExporter/src/setting"
 )
 
+type SqlContext struct {
+	// 表定义Sql是否启用
+	TitleOn bool
+	// 数据Sql是否启用
+	DataOn bool
+	// 合并Sql文件
+	SqlMerge bool
+}
+
+func (o SqlContext) String() string {
+	return fmt.Sprintf("SqlContext(TitleOn=%v, DataOn=%v, SqlMerge=%v)", o.TitleOn, o.DataOn, o.SqlMerge)
+}
+
 type TitleContext struct {
 	// 使用的字段索引名称
 	RangeName string
