@@ -26,9 +26,9 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 		return err
 	}
 
+	Logger.Infoln(fmt.Sprintf("[core.executeTitleContext][Start Execute TitleContext]: %s", titleCtx))
 	//prefix := Setting.Excel.Prefix.Data
 	prefix := Setting.Excel.TitleData.Prefix
-	Logger.Infoln(fmt.Sprintf("[core.executeTitleContext][Start Execute TitleContext]: %s", titleCtx))
 	for _, sheet := range excel.Sheets {
 		// 过滤Sheet的命名
 		if strings.Index(sheet.SheetName, prefix) != 0 {
@@ -83,7 +83,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 		filePath := filex.Combine(targetDir, fileName+"."+extendName)
 
 		// 创建模板数据代理
-		tempDataProxy := &TempDataProxy{Sheet: sheet, Excel: excel, TitleCtx: titleCtx, FileName: fileName, Index: selects, ClassName: className, Language: titleCtx.ProgramLanguage}
+		tempDataProxy := &TempTitleProxy{Sheet: sheet, Excel: excel, TitleCtx: titleCtx, FileName: fileName, Index: selects, ClassName: className, Language: titleCtx.ProgramLanguage}
 
 		//fileName, err := sheet.ValueAtAxis(outEle.ClassName)
 		buff := bytes.NewBuffer(nil)

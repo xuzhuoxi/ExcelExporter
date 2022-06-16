@@ -65,12 +65,5 @@ const (
 )
 
 var (
-	regFixedString = regexp.MustCompile(`string\(\d+\)`)
+	RegFixedString = regexp.MustCompile(`string\(\d+\)`)
 )
-
-func FormatStringField(fieldValue string) string {
-	if !regFixedString.MatchString(fieldValue) {
-		return fieldValue
-	}
-	return regFixedString.ReplaceAllString(fieldValue, "string")
-}

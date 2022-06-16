@@ -75,6 +75,8 @@ type TargetCfg struct {
 	Data OutputCfg `yaml:"data"`
 	// 常量目录
 	Const OutputCfg `yaml:"const"`
+	// Sql目录
+	Sql string `yaml:"sql"`
 }
 
 func (o *TargetCfg) UpgradeEnvPath(envPath string) {
@@ -94,6 +96,10 @@ func (o *TargetCfg) GetDataDir(fieldRangeName string) string {
 
 func (o *TargetCfg) GetConstDir(fieldRangeName string) string {
 	return filex.Combine(o.RootDir, o.Const.GetValue(fieldRangeName))
+}
+
+func (o *TargetCfg) GetSqlDir(fieldRangeName string) string {
+	return filex.Combine(o.RootDir, o.Sql)
 }
 
 func (o TargetCfg) String() string {

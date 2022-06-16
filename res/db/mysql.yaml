@@ -3,57 +3,85 @@ types:
   - name: 'bool'
     # Mysql中没有布尔类型，"BOOLEAN"与"BOOL"为"TINYINT"的同义词
     type: 'TINYINT(1)'
+    number: true
   - name: 'int8'
     type: 'TINYINT(1)'
+    number: true
   - name: 'int16'
     type: 'SMALLINT(2)'
+    number: true
   - name: 'int32'
     type: 'INT(4)'
+    number: true
   - name: 'int64'
     type: 'BIGINT(8)'
+    number: true
   - name: 'uint8'
     type: 'TINYINT(1) unsigned'
+    number: true
   - name: 'uint16'
     type: 'SMALLINT(2) unsigned'
+    number: true
   - name: 'uint32'
     type: 'INT(4) unsigned'
+    number: true
   - name: 'uint64'
     type: 'BIGINT(8) unsigned'
+    number: true
   - name: 'float32'
     type: 'FLOAT'
+    number: true
   - name: 'float64'
     type: 'DOUBLE'
+    number: true
   - name: 'string'
     type: 'VARCHAR'
+    number: true
   - name: 'string(*)'
     type: 'CHAR(*)'
+    number: false
   - name: 'json'
     type: 'VARCHAR'
+    number: false
   - name: '[]bool'
     type: 'VARCHAR'
+    number: false
   - name: '[]int8'
     type: 'VARCHAR'
+    number: false
   - name: '[]int16'
     type: 'VARCHAR'
+    number: false
   - name: '[]int32'
     type: 'VARCHAR'
+    number: false
   - name: '[]int64'
     type: 'VARCHAR'
+    number: false
   - name: '[]uint8'
     type: 'VARCHAR'
+    number: false
   - name: '[]uint16'
     type: 'VARCHAR'
+    number: false
   - name: '[]uint32'
     type: 'VARCHAR'
+    number: false
   - name: '[]uint64'
     type: 'VARCHAR'
+    number: false
   - name: '[]float32'
     type: 'VARCHAR'
+    number: false
   - name: '[]float64'
     type: 'VARCHAR'
+    number: false
   - name: '[]string'
     type: 'VARCHAR'
+    number: false
   - name: '[]string(*)'
     type: 'VARCHAR'
+    number: false
   - name: '[]json'
     type: 'VARCHAR'
+    number: false

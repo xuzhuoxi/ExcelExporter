@@ -21,6 +21,9 @@
       value: 'B1'
     - name: 'db'
       value: 'B1'
+  sql:
+    table: 'D1'
+    file: 'E1'
   # 数据控制列，决定数据范围
   control_row: 2
   # 字段别名行号，用于查找指定列，值为0时使用列号作为别名
@@ -98,6 +101,13 @@ const:
   remark_col: D
   # 数据的开始行号
   data_start_row: 3
+
+sql:
+  outputs:
+    - name: 'client'
+      value: 'A1'
+    - name: 'server'
+      value: 'B1'
 
 ## 要求输出的Sheet的名称前缀，只有带这个前缀的Sheet才参与处理
 #prefix:

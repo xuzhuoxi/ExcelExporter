@@ -32,6 +32,11 @@ func (o TitleDataOutputInfo) String() string {
 	return fmt.Sprintf("NameRow{Name=%s, Title=%s, Data=%s}", o.RangeName, o.TitleFileName, o.DataFileName)
 }
 
+type TitleDataSqlInfo struct {
+	TableNameAxis string `yaml:"table"`
+	FileNameAxis  string `yaml:"file"`
+}
+
 type TitleData struct {
 	// 启用前缀
 	Prefix string `yaml:"prefix"`
@@ -39,6 +44,8 @@ type TitleData struct {
 	Outputs []TitleDataOutputInfo `yaml:"outputs"`
 	// 表头导出类信息
 	Classes []NameValue `yaml:"classes"`
+	// 表头导出类信息
+	Sql TitleDataSqlInfo `yaml:"sql"`
 	// 数据控制列，决定数据范围
 	ControlRow int `yaml:"control_row"`
 	// 字段别名行号，用于查找指定列，值为0时使用列号作为别名
@@ -59,6 +66,10 @@ type TitleData struct {
 	FileKeys []NameRow `yaml:"file_keys"`
 	// 数据的开始行号
 	DataStartRow int `yaml:"data_start_row"`
+}
+
+func (td TitleData) GetSqlInfo() TitleDataSqlInfo {
+	return td.Sql
 }
 
 func (td TitleData) GetOutputInfo(rangeName string) (info TitleDataOutputInfo, ok bool) {

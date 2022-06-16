@@ -1,4 +1,11 @@
-
-UPDATE TABLE_NAME
-set column=value, column1=value, ...
-where someColumn=someValue
+{{- $proxy := .}}{{$fieldLen := $proxy.FieldLen}}{{$itemLen := $proxy.ItemLen -}}
+replace into {{$proxy.TableName}}(
+{{- range $fieldIdx, $realIdx := $proxy.FieldIndex}}{{$fieldIdx1 := Add $fieldIdx 1}}
+    {{- $proxy.GetFieldName $realIdx}}{{if lt $fieldIdx1 $fieldLen}},{{end}}
+{{- end}})
+values
+{{range $itemIdx, $item := $proxy.GetItems}}{{$itemIdx1 := Add $itemIdx 1}}(
+    {{- range $valueIdx, $itemValue := $item.GetValues}}{{$valueIdx1 := Add $valueIdx 1}}
+       {{- $itemValue -}}{{if lt $valueIdx1 $fieldLen}},{{end}}
+    {{- end}}){{if lt $itemIdx1 $itemLen}},{{end}}
+{{end}}

@@ -60,7 +60,7 @@ databases:
   list:
     - name: 'mysql'
       ref: './db/mysql.yaml'
-      temps_title:
+      temps_table:
         - './templates/mysql_title.temp'
       temps_data:
         - './templates/mysql_data.temp'

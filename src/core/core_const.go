@@ -67,7 +67,7 @@ func executeConstContext(excel *excel.ExcelProxy, constCtx *ConstContext) error 
 
 		// 创建模板数据代理
 		tempDataProxy := &TempConstProxy{Sheet: sheet, Excel: excel, ConstCtx: constCtx, FileName: fileName, ClassName: clsName, Language: constCtx.ProgramLanguage,
-			StartRow: Setting.Excel.Const.DataStartRow, EndRow: len(sheet.Rows)}
+			StartRow: Setting.Excel.Const.DataStartRow, EndRow: len(sheet.Rows) + 1}
 
 		buff := bytes.NewBuffer(nil)
 		err = temp.Execute(buff, tempDataProxy, false)

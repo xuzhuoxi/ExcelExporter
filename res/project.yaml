@@ -16,9 +16,9 @@ target:
   root: ./target
   # 定义目录
   title:
-    client: titles/client
-    server: titles/server
-    db: titles/db
+    client: title/client
+    server: title/server
+    db: title/db
   # 数据目录
   data:
     client: data/client
@@ -28,6 +28,8 @@ target:
   const:
     client: const/client
     server: const/server
+  # Sql目录
+  sql: sql
   # 编码格式(暂时不支持修改)
   encoding : utf-8
 

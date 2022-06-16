@@ -45,3 +45,8 @@
 	where someColumn=someValue
 	```
 8. 增加主键定义
+9. 由于数据库数据类型的限制
+
+10. EndRow改为不包含
+11. ValueAtAxis 可能会返回空值，应该补充检查
+12. Sql数据转义判断错误

@@ -59,7 +59,7 @@ func getMergedTempsPath(paths []string) string {
 type Database struct {
 	Name       string   `yaml:"name"`
 	RefPath    string   `yaml:"ref"`
-	TempsTitle []string `yaml:"temps_title"`
+	TempsTable []string `yaml:"temps_table"`
 	TempsData  []string `yaml:"temps_data"`
 
 	DataTypes *SqlDataTypes
@@ -67,12 +67,20 @@ type Database struct {
 
 func (o *Database) UpgradePaths(envPath string) {
 	o.RefPath = filex.Combine(envPath, o.RefPath)
-	for index := range o.TempsTitle {
-		o.TempsTitle[index] = filex.Combine(envPath, o.TempsTitle[index])
+	for index := range o.TempsTable {
+		o.TempsTable[index] = filex.Combine(envPath, o.TempsTable[index])
 	}
 	for index := range o.TempsData {
 		o.TempsData[index] = filex.Combine(envPath, o.TempsData[index])
 	}
+}
+
+func (o *Database) GetTempsTablePath() string {
+	return getMergedTempsPath(o.TempsTable)
+}
+
+func (o *Database) GetTempsDataPath() string {
+	return getMergedTempsPath(o.TempsData)
 }
 
 func (o *Database) GetDataTypes() (dbTypes *SqlDataTypes, err error) {

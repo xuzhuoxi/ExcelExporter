@@ -246,5 +246,6 @@ func (o *AppFlags) GenSqlContext() (context *core.SqlContext) {
 	if !titleOn && !dataOn {
 		return nil
 	}
-	return &core.SqlContext{TitleOn: titleOn, DataOn: dataOn, SqlMerge: o.SqlMerge}
+	return &core.SqlContext{RangeName: setting.FieldRangeNameDb, RangeType: core.FieldRangeDatabase,
+		TitleOn: titleOn, DataOn: dataOn, SqlMerge: o.SqlMerge}
 }

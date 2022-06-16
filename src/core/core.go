@@ -31,11 +31,15 @@ var (
 var (
 	TitleLanguageTemps = make(map[string]*temps.TemplateProxy)
 	ConstLanguageTemps = make(map[string]*temps.TemplateProxy)
+	SqlTableTemps      *temps.TemplateProxy
+	SqlDataTemps       *temps.TemplateProxy
 )
 
 func init() {
 	temps.RegisterFunc("ToLowerCamelCase", naming.ToLowerCamelCase)
 	temps.RegisterFunc("ToUpperCamelCase", naming.ToUpperCamelCase)
+
+	temps.RegisterFunc("Add", tools.Add)
 
 	temps.RegisterFunc("NowTime", tools.NowTime)
 	temps.RegisterFunc("NowTimeStr", tools.NowTimeStr)

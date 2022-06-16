@@ -30,7 +30,7 @@ func (es *ExcelSheet) String() string {
 	for _, r := range es.Rows {
 		strRows = strRows + "\t" + fmt.Sprint(r) + "\n"
 	}
-	return fmt.Sprintf("ExcelSheet{Index=%d, Name=%s, Axis=%s, Nick=%s, RowLen=%d, \nRow=\n%s}",
+	return fmt.Sprintf("ExcelSheet{SheetIndex=%d, Name=%s, Axis=%s, Nick=%s, RowLen=%d, \nRow=\n%s}",
 		es.SheetIndex, es.SheetName, fmt.Sprint(es.Axis), fmt.Sprint(es.Nick), es.RowLength, strRows)
 }
 
