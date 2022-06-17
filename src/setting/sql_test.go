@@ -13,7 +13,7 @@ func TestMysqlSetting(t *testing.T) {
 		t.Fatal(err)
 		return
 	}
-	mysql := &SqlDataTypes{}
+	mysql := &DatabaseCfg{}
 	err = yaml.Unmarshal(str, mysql)
 	if nil != err {
 		t.Fatal(err)

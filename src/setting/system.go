@@ -62,7 +62,7 @@ type Database struct {
 	TempsTable []string `yaml:"temps_table"`
 	TempsData  []string `yaml:"temps_data"`
 
-	DataTypes *SqlDataTypes
+	DataTypes *DatabaseCfg
 }
 
 func (o *Database) UpgradePaths(envPath string) {
@@ -83,7 +83,7 @@ func (o *Database) GetTempsDataPath() string {
 	return getMergedTempsPath(o.TempsData)
 }
 
-func (o *Database) GetDataTypes() (dbTypes *SqlDataTypes, err error) {
+func (o *Database) GetDataTypes() (dbTypes *DatabaseCfg, err error) {
 	if nil != o.DataTypes {
 		return o.DataTypes, nil
 	}
@@ -93,7 +93,7 @@ func (o *Database) GetDataTypes() (dbTypes *SqlDataTypes, err error) {
 	if nil != err {
 		return nil, err
 	}
-	types := &SqlDataTypes{}
+	types := &DatabaseCfg{}
 	err = yaml.Unmarshal(str, types)
 	if nil != err {
 		return nil, err

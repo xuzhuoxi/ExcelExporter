@@ -1,7 +1,8 @@
 {{- $proxy := .}}{{$fieldLen := $proxy.FieldLen}}{{$itemLen := $proxy.ItemLen -}}
-replace into {{$proxy.TableName}}(
-{{- range $fieldIdx, $realIdx := $proxy.FieldIndex}}{{$fieldIdx1 := Add $fieldIdx 1}}
-    {{- $proxy.GetFieldName $realIdx}}{{if lt $fieldIdx1 $fieldLen}},{{end}}
+TRUNCATE TABLE `{{$proxy.TableName}}`
+INSERT INTO `{{$proxy.TableName}}`(
+{{- range $fieldIdx, $fieldItem := $proxy.GetFieldItems}}{{$fieldIdx1 := Add $fieldIdx 1}}`
+    {{- $fieldItem.FieldName}}`{{if lt $fieldIdx1 $fieldLen}},{{end}}
 {{- end}})
 values
 {{range $itemIdx, $item := $proxy.GetItems}}{{$itemIdx1 := Add $itemIdx 1}}(

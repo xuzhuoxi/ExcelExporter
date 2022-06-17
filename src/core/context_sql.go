@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
 	"github.com/xuzhuoxi/ExcelExporter/src/setting"
+	"github.com/xuzhuoxi/infra-go/slicex"
 	"strings"
 )
 
@@ -26,11 +27,22 @@ func (o SqlContext) String() string {
 	return fmt.Sprintf("SqlContext(TitleOn=%v, DataOn=%v, SqlMerge=%v)", o.TitleOn, o.DataOn, o.SqlMerge)
 }
 
+// 字段定义
+type FieldItem struct {
+	FieldName string
+	FieldType string
+	DbField   setting.DbFieldType
+}
+
+func (i FieldItem) String() string {
+	return fmt.Sprintf("FieldItem{Name=%v, Type=%v, FieldType=%v}", i.FieldName, i.FieldType, i.DbField)
+}
+
 // 单条数据项
 type SqlItem struct {
 	excelRow   *excel.ExcelRow
 	selects    []int
-	fieldTypes []string
+	fieldItems []FieldItem
 }
 
 func (i *SqlItem) FieldLen() int {
@@ -46,25 +58,21 @@ func (i *SqlItem) GetValues() []string {
 	return rs
 }
 
-func (i *SqlItem) GetValue(selectIndex int) string {
-	index := i.selects[selectIndex]
+func (i *SqlItem) GetValue(localIndex int) string {
+	index := i.selects[localIndex]
 	value, _ := i.excelRow.ValueAtIndex(index)
 	return value
 }
 
-func (i *SqlItem) GetSqlValue(selectIndex int) string {
-	fieldType := i.fieldTypes[selectIndex]
-	db, _ := Setting.System.GetDatabase()
-	types, _ := db.GetDataTypes()
-	value := i.GetValue(selectIndex)
-	sqlDataType, _ := types.GetType(fieldType)
-	//fmt.Println("GetSqlValue:", selectIndex, sqlDataType.IsNumber, value)
-	if sqlDataType.IsNumber {
+func (i *SqlItem) GetSqlValue(localIndex int) string {
+	value := i.GetValue(localIndex)
+	fieldItem := i.fieldItems[localIndex]
+	if fieldItem.DbField.IsNumber {
 		return value
 	}
-	value = strings.ReplaceAll(value, `"`, `\"`)
-	value = fmt.Sprintf("\"%s\"", value)
-	//fmt.Println("更新:", selectIndex, sqlDataType.IsNumber, value)
+	value = strings.ReplaceAll(value, `'`, `''`)
+	value = fmt.Sprintf(`'%s'`, value)
+	//fmt.Println("更新:", localIndex, sqlDataType.IsNumber, value)
 	return value
 }
 
@@ -78,7 +86,7 @@ type TempSqlProxy struct {
 	StartRow   int
 	EndRow     int
 
-	fieldValue []string
+	fieldItems []FieldItem
 }
 
 func (o *TempSqlProxy) FieldLen() int {
@@ -97,14 +105,19 @@ func (o *TempSqlProxy) ValueAtAxis(axis string) string {
 	return value
 }
 
-func (o *TempSqlProxy) GetFieldName(index int) string {
-	nameRowIndex := Setting.Excel.TitleData.GetFileKeyRow(setting.FileNameSql) - 1
-	value, err := o.Sheet.GetRowAt(nameRowIndex).ValueAtIndex(index)
-	if err != nil {
-		Logger.Error(fmt.Sprintf("GetFieldName Error At %d", index))
-		return ""
-	}
-	return value
+func (o *TempSqlProxy) GetFieldItems() []FieldItem {
+	o.updateFieldItems()
+	return o.fieldItems
+}
+
+func (o *TempSqlProxy) GetFieldItem(realIndex int) FieldItem {
+	localIndex, _ := slicex.IndexInt(o.FieldIndex, realIndex)
+	return o.GetFieldItemLocal(localIndex)
+}
+
+func (o *TempSqlProxy) GetFieldItemLocal(localIndex int) FieldItem {
+	o.updateFieldItems()
+	return o.fieldItems[localIndex]
 }
 
 func (o *TempSqlProxy) GetItems() []SqlItem {
@@ -128,29 +141,32 @@ func (o *TempSqlProxy) GetItem(row int) (item SqlItem, err error) {
 		err = errors.New(fmt.Sprintf("Row[%d] out of range. ", row))
 		return
 	}
+	o.updateFieldItems()
 	excelRow := o.Sheet.GetRowAt(row - 1)
 	selects := o.FieldIndex
-	fieldTypes := o.getFieldTypes()
-	return SqlItem{excelRow: excelRow, selects: selects, fieldTypes: fieldTypes}, nil
+	return SqlItem{excelRow: excelRow, selects: selects, fieldItems: o.fieldItems}, nil
 }
 
 func (o *TempSqlProxy) checkItemRow(row int) bool {
 	return row >= o.StartRow && row < o.EndRow
 }
 
-func (o *TempSqlProxy) getFieldTypes() []string {
-	if nil != o.fieldValue {
-		return o.fieldValue
+func (o *TempSqlProxy) updateFieldItems() {
+	if nil != o.fieldItems {
+		return
 	}
-
-	row := o.Sheet.GetRowAt(Setting.Excel.TitleData.FieldFormatRow - 1)
-	rs := make([]string, len(o.FieldIndex))
-	for index := range rs {
-		fieldType, _ := row.ValueAtIndex(o.FieldIndex[index])
-		rs[index] = o.formatFieldType(fieldType)
+	sqlNameRow := o.Sheet.GetRowAt(Setting.Excel.TitleData.GetFileKeyRow(setting.FileNameSql) - 1)
+	formatRow := o.Sheet.GetRowAt(Setting.Excel.TitleData.FieldFormatRow - 1)
+	o.fieldItems = make([]FieldItem, len(o.FieldIndex))
+	db, _ := Setting.System.GetDatabase()
+	types, _ := db.GetDataTypes()
+	for index, realIndex := range o.FieldIndex {
+		fieldName, _ := sqlNameRow.ValueAtIndex(realIndex)
+		fieldType, _ := formatRow.ValueAtIndex(realIndex)
+		formattedType := o.formatFieldType(fieldType)
+		sqlDataType, _ := types.GetFieldType(formattedType)
+		o.fieldItems[index] = FieldItem{FieldName: fieldName, FieldType: fieldType, DbField: sqlDataType}
 	}
-	o.fieldValue = rs
-	return rs
 }
 
 func (o *TempSqlProxy) formatFieldType(fieldType string) string {

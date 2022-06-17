@@ -36,9 +36,9 @@ types:
     number: true
   - name: 'string'
     type: 'VARCHAR'
-    number: true
+    number: false
   - name: 'string(*)'
-    type: 'CHAR(*)'
+    type: 'VARCHAR'
     number: false
   - name: 'json'
     type: 'VARCHAR'

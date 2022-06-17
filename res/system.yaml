@@ -56,14 +56,14 @@ languages:
 # default: 默认使用的数据库
 # ref:字段定义路径，只支持相对路径
 databases:
-  default: mysql
+  default: 'mysql'
   list:
     - name: 'mysql'
       ref: './db/mysql.yaml'
       temps_table:
-        - './templates/mysql_title.temp'
+        - './db/mysql_table.temp'
       temps_data:
-        - './templates/mysql_data.temp'
+        - './db/mysql_data.temp'
 
 # 支持的数据字段格式
 # 其中string中的*代表字符数，范围[1,1024]。
