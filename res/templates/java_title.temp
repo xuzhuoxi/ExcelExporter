@@ -10,21 +10,22 @@ import xu.JsonReaderProxy;
  * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.ProgramLanguage}}
  */
  public class {{$clsName}} {
-{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+{{- range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
     // {{$proxy.GetTitleName $value}}
-     private {{$langDefine.Name}} {{ToLowerCamelCase $fieldName}};
-{{end}}
-{{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+    private {{$langDefine.LangTypeName}} {{ToLowerCamelCase $fieldName}};
+{{- end}}
+
+{{- range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
     /**
      * {{$proxy.GetTitleName $value}}
      *
      * @remark {{$proxy.GetTitleRemark $value}}
-     * @return {{$langDefine.Name}}
+     * @return {{$langDefine.LangTypeName}}
      */
-    public {{$langDefine.Name}} get{{ToUpperCamelCase $fieldName}}() {
+    public {{$langDefine.LangTypeName}} get{{ToUpperCamelCase $fieldName}}() {
         return this.{{ToLowerCamelCase $fieldName}};
     }
-{{end}}
+{{- end}}
 
     // Json数据解释
     public void parseJson(JsonReaderProxy proxy) {

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
 	"github.com/xuzhuoxi/ExcelExporter/src/setting"
+	"strings"
 )
 
 // 常量表上下文
@@ -61,9 +62,6 @@ func (o *TempConstProxy) GetItems() []ConstItem {
 		if nil != err {
 			continue
 		}
-		if len(item.Name) == 0 { //过滤名称为空 或 类型为空的行
-			continue
-		}
 		rs = append(rs, item)
 	}
 	return rs
@@ -76,10 +74,19 @@ func (o *TempConstProxy) GetItem(row int) (item ConstItem, err error) {
 		return
 	}
 	excelRow := o.Sheet.GetRowAt(row - 1)
-	name, _ := excelRow.ValueAtAxis(Setting.Excel.Const.NameCol)
+	name, err2 := excelRow.ValueAtAxis(Setting.Excel.Const.NameCol)
+	if nil != err2 {
+		err = err2
+		return
+	}
+	if len(strings.TrimSpace(name)) == 0 {
+		err = errors.New(fmt.Sprintf("Empty Row At %d. ", row))
+		return
+	}
 	remark, _ := excelRow.ValueAtAxis(Setting.Excel.Const.RemarkCol)
 	tp, _ := excelRow.ValueAtAxis(Setting.Excel.Const.TypeCol)
 	ld, ok := Setting.System.FindProgramLanguage(o.Language)
+	//fmt.Println("行:", o.Language, tp, ld, excelRow.Cell)
 	err = errors.New(fmt.Sprintf("Const Item Type Error At Row %d ", row))
 	if !ok {
 		return
@@ -92,7 +99,7 @@ func (o *TempConstProxy) GetItem(row int) (item ConstItem, err error) {
 	if tp == setting.FieldString {
 		value = fmt.Sprintf("\"%s\"", value)
 	}
-	return ConstItem{Name: name, Type: typeFormat.Name, Value: value, Remark: remark}, nil
+	return ConstItem{Name: name, Type: typeFormat.LangTypeName, Value: value, Remark: remark}, nil
 }
 
 func (o *TempConstProxy) CheckItemRow(row int) bool {

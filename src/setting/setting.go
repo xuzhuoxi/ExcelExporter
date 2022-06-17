@@ -48,6 +48,10 @@ func (s *Settings) InitLangSetting(lang string) error {
 	}
 	langSetting := &LangSetting{}
 	UnmarshalData(ref.RefPath, langSetting)
+
+	//// 以下打印用于测试语言配置的初始化信息
+	//fmt.Println("InitLangSetting", lang, langSetting)
+
 	ref.Setting = langSetting
 	return nil
 }

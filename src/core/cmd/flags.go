@@ -83,14 +83,14 @@ func (f *SysFlags) GetCommandParams() *AppFlags {
 		panic(errors.New("Command -range error! "))
 	}
 
-	langRefs := strings.Split(f.LangRefs, ParamsSep)
-	dataFiles := strings.Split(f.DataFiles, ParamsSep)
+	langRefs := f.split(f.LangRefs, ParamsSep)
+	dataFiles := f.split(f.DataFiles, ParamsSep)
 	return &AppFlags{ModeNames: modeNames, ModeTypes: modeValues, RangeNames: rangeNames, RangeTypes: rangeValues,
 		LangRefs: langRefs, DataFiles: dataFiles, SqlMerge: f.SqlMerge}
 }
 
 func (f *SysFlags) parseModes() (names []string, types []core.ModeType) {
-	modes := strings.Split(f.Modes, ParamsSep)
+	modes := f.split(f.Modes, ParamsSep)
 	if len(modes) == 0 {
 		return nil, nil
 	}
@@ -108,7 +108,7 @@ func (f *SysFlags) parseModes() (names []string, types []core.ModeType) {
 }
 
 func (f *SysFlags) parseFieldRanges() (names []string, types []core.FieldRangeType) {
-	ranges := strings.Split(f.Ranges, ParamsSep)
+	ranges := f.split(f.Ranges, ParamsSep)
 	if len(ranges) == 0 {
 		return nil, nil
 	}
@@ -123,6 +123,18 @@ func (f *SysFlags) parseFieldRanges() (names []string, types []core.FieldRangeTy
 		types = append(types, t)
 	}
 	return
+}
+
+func (f *SysFlags) split(value string, sep string) []string {
+	rs := strings.Split(value, sep)
+	for index := len(rs) - 1; index >= 0; index -= 1 {
+		v := strings.TrimSpace(rs[index])
+		if v == "" {
+			rs = append(rs[:index], rs[index:+1]...)
+		}
+		rs[index] = v
+	}
+	return rs
 }
 
 type AppFlags struct {

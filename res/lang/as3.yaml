@@ -1,313 +1,314 @@
-name: 'as3'
-bool:
-  name: 'Boolean'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readBoolean'
-      set: ''
-int8:
-  name: 'int'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readInt8'
-      set: ''
-int16:
-  name: 'int'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readInt16'
-      set: ''
-int32:
-  name: 'int'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readInt32'
-      set: ''
-int64:
-  name: 'int'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readInt64'
-      set: ''
-uint8:
-  name: 'uint'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readUInt8'
-      set: ''
-uint16:
-  name: 'uint'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readUInt16'
-      set: ''
-uint32:
-  name: 'uint'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readUInt32'
-      set: ''
-uint64:
-  name: 'uint'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readUInt64'
-      set: ''
-float32:
-  name: 'Number'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readFloat32'
-      set: ''
-float64:
-  name: 'Number'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readFloat64'
-      set: ''
-string:
-  name: 'String'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readString'
-      set: ''
-json:
-  name: 'String'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readString'
-      set: ''
-'[]bool':
-  name: 'Vector.<Boolean>'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readBooleanArray'
-      set: ''
-'[]int8':
-  name: 'Vector.<int>'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readInt8Array'
-      set: ''
-'[]int16':
-  name: 'Vector.<int>'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readInt16Array'
-      set: ''
-'[]int32':
-  name: 'Vector.<int>'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readInt32Array'
-      set: ''
-'[]int64':
-  name: 'Vector.<int>'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readInt64Array'
-      set: ''
-'[]uint8':
-  name: 'Vector.<uint>'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readUInt8Array'
-      set: ''
-'[]uint16':
-  name: 'Vector.<uint>'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readUInt16Array'
-      set: ''
-'[]uint32':
-  name: 'Vector.<uint>'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readUInt32Array'
-      set: ''
-'[]uint64':
-  name: 'Vector.<uint>'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readUInt64Array'
-      set: ''
-'[]float32':
-  name: 'Vector.<Number>'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readFloat32Array'
-      set: ''
-'[]float64':
-  name: 'Vector.<Number>'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readFloat64Array'
-      set: ''
-'[]string':
-  name: 'Vector.<String>'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readStringArray'
-      set: ''
-'[]json':
-  name: 'Vector.<String>'
-  operates:
-    - file_name: json
-      get: ''
-      set: ''
-    - file_name: yaml
-      get: ''
-      set: ''
-    - file_name: bin
-      get: 'readStringArray'
-      set: ''
+lang_name: 'as3'
+data_types:
+  - name: bool
+    lang: 'Boolean'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readBoolean'
+        set: ''
+  - name: int8
+    lang: 'int'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readInt8'
+        set: ''
+  - name: int16
+    lang: 'int'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readInt16'
+        set: ''
+  - name: int32
+    lang: 'int'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readInt32'
+        set: ''
+  - name: int64
+    lang: 'int'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readInt64'
+        set: ''
+  - name: uint8
+    lang: 'uint'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readUInt8'
+        set: ''
+  - name: uint16
+    lang: 'uint'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readUInt16'
+        set: ''
+  - name: uint32
+    lang: 'uint'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readUInt32'
+        set: ''
+  - name: uint64
+    lang: 'uint'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readUInt64'
+        set: ''
+  - name: float32
+    lang: 'Number'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readFloat32'
+        set: ''
+  - name: float64
+    lang: 'Number'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readFloat64'
+        set: ''
+  - name: string
+    lang: 'String'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readString'
+        set: ''
+  - name: json
+    lang: 'String'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readString'
+        set: ''
+  - name: '[]bool'
+    lang: 'Vector.<Boolean>'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readBooleanArray'
+        set: ''
+  - name: '[]int8'
+    lang: 'Vector.<int>'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readInt8Array'
+        set: ''
+  - name: '[]int16'
+    lang: 'Vector.<int>'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readInt16Array'
+        set: ''
+  - name: '[]int32'
+    lang: 'Vector.<int>'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readInt32Array'
+        set: ''
+  - name: '[]int64'
+    lang: 'Vector.<int>'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readInt64Array'
+        set: ''
+  - name: '[]uint8'
+    lang: 'Vector.<uint>'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readUInt8Array'
+        set: ''
+  - name: '[]uint16'
+    lang: 'Vector.<uint>'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readUInt16Array'
+        set: ''
+  - name: '[]uint32'
+    lang: 'Vector.<uint>'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readUInt32Array'
+        set: ''
+  - name: '[]uint64'
+    lang: 'Vector.<uint>'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readUInt64Array'
+        set: ''
+  - name: '[]float32'
+    lang: 'Vector.<Number>'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readFloat32Array'
+        set: ''
+  - name: '[]float64'
+    lang: 'Vector.<Number>'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readFloat64Array'
+        set: ''
+  - name: '[]string'
+    lang: 'Vector.<String>'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readStringArray'
+        set: ''
+  - name: '[]json'
+    lang: 'Vector.<String>'
+    operates:
+      - file_name: json
+        get: ''
+        set: ''
+      - file_name: yaml
+        get: ''
+        set: ''
+      - file_name: bin
+        get: 'readStringArray'
+        set: ''

@@ -61,25 +61,25 @@ func (o *TempTitleProxy) GetTitleRemark(index int) string {
 	return value
 }
 
-func (o *TempTitleProxy) GetTitleLangDefine(index int) setting.FieldOperate {
+func (o *TempTitleProxy) GetTitleLangDefine(index int) setting.LangDataType {
 	formatRowIndex := Setting.Excel.TitleData.FieldFormatRow - 1
 	value, err := o.Sheet.GetRowAt(formatRowIndex).ValueAtIndex(index)
 	if err != nil {
-		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error At %d: %v", index, err))
-		return setting.FieldOperate{}
+		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error1 At %d: %v", index, err))
+		return setting.LangDataType{}
 	}
 	ls, ok := Setting.System.FindProgramLanguage(o.Language)
 	if !ok {
 		err = errors.New(fmt.Sprintf("Find Program Language Fail At %d ", index))
-		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error At %d: %v", index, err))
-		return setting.FieldOperate{}
+		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error2 At %d: %v", index, err))
+		return setting.LangDataType{}
 	}
 	value = o.formatFieldType(value)
 	format, ok := ls.Setting.GetLangDefine(value)
 	if !ok {
 		err = errors.New(fmt.Sprintf("Get Lang Define Fail At %d, %s ", index, value))
-		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error At %d: %v", index, err))
-		return setting.FieldOperate{}
+		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error3 At %d: %v", index, err))
+		return setting.LangDataType{}
 	}
 	return format
 }

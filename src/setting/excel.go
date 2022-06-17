@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// 名称与号记录项
 type NameRow struct {
 	Name string `yaml:"name"`
 	Row  int    `yaml:"row"`
@@ -13,6 +14,7 @@ func (o NameRow) String() string {
 	return fmt.Sprintf("NameRow{Name=%s, Row=%d}", o.Name, o.Row)
 }
 
+// 名称与字符值记录项
 type NameValue struct {
 	Name  string `yaml:"name"`
 	Value string `yaml:"value"`
@@ -22,19 +24,26 @@ func (o NameValue) String() string {
 	return fmt.Sprintf("NameRow{Name=%s, NameValue=%s}", o.Name, o.Value)
 }
 
+// 导出标记
 type TitleDataOutputInfo struct {
-	RangeName     string `yaml:"range_name"`
+	// 导出范围名称[client, server, db]
+	RangeName string `yaml:"range_name"`
+	// 导出类名坐标
 	TitleFileName string `yaml:"title"`
-	DataFileName  string `yaml:"data"`
+	// 数据文件坐标
+	DataFileName string `yaml:"data"`
 }
 
 func (o TitleDataOutputInfo) String() string {
 	return fmt.Sprintf("NameRow{Name=%s, Title=%s, Data=%s}", o.RangeName, o.TitleFileName, o.DataFileName)
 }
 
+// Sql坐标信息
 type TitleDataSqlInfo struct {
+	// 表名坐标
 	TableNameAxis string `yaml:"table"`
-	FileNameAxis  string `yaml:"file"`
+	// 数据文件名坐标
+	FileNameAxis string `yaml:"file"`
 }
 
 type TitleData struct {
@@ -159,7 +168,7 @@ func (c Const) GetClassInfo(rangeName string) (info NameValue, ok bool) {
 	return NameValue{}, false
 }
 
-// 要求输出的Sheet
+// Excel相关配置环境
 type ExcelSetting struct {
 	TitleData TitleData `yaml:"title&data"`
 	Const     Const     `yaml:"const"`
