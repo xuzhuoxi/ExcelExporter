@@ -7,12 +7,9 @@ import (
 
 // 指定数据文件的字段读写方法
 type FileAttrOperation struct {
-	// 文件类型
-	FileName string `yaml:"file_name"`
-	// 读取方法
-	Get string `yaml:"get,omitempty"`
-	// 写入方法
-	Set string `yaml:"set,omitempty"`
+	FileName string `yaml:"file_name"`     // 数据文件类型
+	Get      string `yaml:"get,omitempty"` // 读取方法字符表达
+	Set      string `yaml:"set,omitempty"` // 写入方法字符表达
 }
 
 func (o *FileAttrOperation) String() string {
@@ -21,17 +18,13 @@ func (o *FileAttrOperation) String() string {
 
 // 字段
 type LangDataType struct {
-	FieldTypeName string              `yaml:"name"`
-	LangTypeName  string              `yaml:"lang"`
-	Operates      []FileAttrOperation `yaml:"operates"`
-}
-
-func (o LangDataType) GoString() string {
-	return fmt.Sprintf("{%v,%v}", o.FieldTypeName, o.LangTypeName)
+	FieldTypeName string              `yaml:"name"`     // 字段数据类型(Excel表上填的)
+	LangTypeName  string              `yaml:"lang"`     // 编程语言对应的数据类型
+	Operates      []FileAttrOperation `yaml:"operates"` // 针对不同数据文件的操作方法
 }
 
 func (o LangDataType) String() string {
-	return fmt.Sprintf("LangDataType{FieldTypeName=%s, Operates=%v}", o.FieldTypeName, o.Operates)
+	return fmt.Sprintf("{%v,%v}", o.FieldTypeName, o.LangTypeName)
 }
 
 func (o LangDataType) GetPropertyOperate(fileName string) (op FileAttrOperation, ok bool) {
@@ -57,17 +50,10 @@ func (o LangDataType) GetSetOperate(fileName string) string {
 	return ""
 }
 
-type LangTemp struct {
-	Path string `yaml:"path"`
-}
-
-func (o LangTemp) String() string {
-	return fmt.Sprintf("Temp{Path=%s}", o.Path)
-}
-
+// 编程语言配置
 type LangSetting struct {
-	LangName  string         `yaml:"lang_name"`
-	DataTypes []LangDataType `yaml:"data_types"`
+	LangName  string         `yaml:"lang_name"`  // 编程语言名称
+	DataTypes []LangDataType `yaml:"data_types"` // 编程语言数据类型配置
 }
 
 func (o *LangSetting) GetLangDefine(name string) (format LangDataType, ok bool) {
@@ -77,6 +63,11 @@ func (o *LangSetting) GetLangDefine(name string) (format LangDataType, ok bool) 
 		}
 	}
 	return
+}
+
+func (o *LangSetting) String() string {
+	return fmt.Sprintf("Lang(%s)[%v]", o.LangName, o.DataTypes)
+
 }
 
 func (o *LangSetting) getFormat(name string) (format LangDataType, ok bool) {
@@ -89,9 +80,4 @@ func (o *LangSetting) getFormat(name string) (format LangDataType, ok bool) {
 		fmt.Println(tag)
 	}
 	return
-}
-
-func (o *LangSetting) String() string {
-	return fmt.Sprintf("Lang(%s)[%v]", o.LangName, o.DataTypes)
-
 }

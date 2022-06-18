@@ -8,14 +8,15 @@ import (
 )
 
 // 数据结构定义所支持的编程语言定义
+// 编程语言描述
 type ProgramLanguage struct {
-	Name       string   `yaml:"name"`
-	ExtendName string   `yaml:"ext"`
-	RefPath    string   `yaml:"ref"`
-	TempsTitle []string `yaml:"temps_title"`
-	TempsConst []string `yaml:"temps_const"`
+	Name       string   `yaml:"name"`        // 编程语言名称
+	ExtendName string   `yaml:"ext"`         // 源代码文件扩展名
+	RefPath    string   `yaml:"ref"`         // 引用的配置路径
+	TempsTitle []string `yaml:"temps_title"` // 导出类使用的模板路径
+	TempsConst []string `yaml:"temps_const"` // 常量类使用的模板路径
 
-	Setting *LangSetting
+	Setting *LangSetting // 由RefPath加载进来的配置信息
 }
 
 func (o ProgramLanguage) String() string {
@@ -56,13 +57,14 @@ func getMergedTempsPath(paths []string) string {
 	return rs
 }
 
+// 数据库相关配置
 type Database struct {
-	Name       string   `yaml:"name"`
-	RefPath    string   `yaml:"ref"`
-	TempsTable []string `yaml:"temps_table"`
-	TempsData  []string `yaml:"temps_data"`
+	Name       string   `yaml:"name"`        // 数据库名称
+	RefPath    string   `yaml:"ref"`         // 数据库具体配置文件所在路径
+	TempsTable []string `yaml:"temps_table"` // 表结构sql生成模板列表
+	TempsData  []string `yaml:"temps_data"`  // 表数据sql生成模板列表
 
-	DataTypes *DatabaseCfg
+	DataTypes *DatabaseCfg // 由RefPath加载进来的配置信息
 }
 
 func (o *Database) UpgradePaths(envPath string) {
@@ -102,9 +104,10 @@ func (o *Database) GetDataTypes() (dbTypes *DatabaseCfg, err error) {
 	return types, nil
 }
 
+// 数据库相关配置
 type Databases struct {
-	Default      string      `yaml:"default"`
-	DatabaseList []*Database `yaml:"list"`
+	Default      string      `yaml:"default"` // 默认使用的数据库配置，必须为DatabaseList中的一个
+	DatabaseList []*Database `yaml:"list"`    // 不同数据库的配置
 }
 
 func (d *Databases) UpgradePaths(envPath string) {

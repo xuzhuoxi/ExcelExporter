@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/data"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
-	"github.com/xuzhuoxi/ExcelExporter/src/core/naming"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/temps"
-	"github.com/xuzhuoxi/ExcelExporter/src/core/tools"
 	"github.com/xuzhuoxi/ExcelExporter/src/setting"
 	"github.com/xuzhuoxi/infra-go/filex"
 	"github.com/xuzhuoxi/infra-go/logx"
@@ -36,23 +34,24 @@ var (
 )
 
 func init() {
-	temps.RegisterFunc("ToLowerCamelCase", naming.ToLowerCamelCase)
-	temps.RegisterFunc("ToUpperCamelCase", naming.ToUpperCamelCase)
-
-	temps.RegisterFunc("Add", tools.Add)
-
-	temps.RegisterFunc("NowTime", tools.NowTime)
-	temps.RegisterFunc("NowTimeStr", tools.NowTimeStr)
-	temps.RegisterFunc("NowTimeFormat", tools.NowTimeFormat)
-	temps.RegisterFunc("NowYear", tools.NowYear)
-	temps.RegisterFunc("NowMonth", tools.NowMonth)
-	temps.RegisterFunc("NowDay", tools.NowDay)
-	temps.RegisterFunc("NowWeekday", tools.NowWeekday)
-	temps.RegisterFunc("NowHour", tools.NowHour)
-	temps.RegisterFunc("NowMinute", tools.NowMinute)
-	temps.RegisterFunc("NowSecond", tools.NowSecond)
-	temps.RegisterFunc("NowUnix", tools.NowUnix)
-	temps.RegisterFunc("NowUnixNano", tools.NowUnixNano)
+	//temps.RegisterFunc("ToLowerCamelCase", naming.ToLowerCamelCase)
+	//temps.RegisterFunc("ToUpperCamelCase", naming.ToUpperCamelCase)
+	//
+	//temps.RegisterFunc("Add", tools.Add)
+	//temps.RegisterFunc("Sub", tools.Sub)
+	//
+	//temps.RegisterFunc("NowTime", tools.NowTime)
+	//temps.RegisterFunc("NowTimeStr", tools.NowTimeStr)
+	//temps.RegisterFunc("NowTimeFormat", tools.NowTimeFormat)
+	//temps.RegisterFunc("NowYear", tools.NowYear)
+	//temps.RegisterFunc("NowMonth", tools.NowMonth)
+	//temps.RegisterFunc("NowDay", tools.NowDay)
+	//temps.RegisterFunc("NowWeekday", tools.NowWeekday)
+	//temps.RegisterFunc("NowHour", tools.NowHour)
+	//temps.RegisterFunc("NowMinute", tools.NowMinute)
+	//temps.RegisterFunc("NowSecond", tools.NowSecond)
+	//temps.RegisterFunc("NowUnix", tools.NowUnix)
+	//temps.RegisterFunc("NowUnixNano", tools.NowUnixNano)
 }
 
 func SetLogger(logger logx.ILogger) {

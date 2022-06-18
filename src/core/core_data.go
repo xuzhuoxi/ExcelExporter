@@ -78,7 +78,7 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 
 		targetDir := Setting.Project.Target.GetDataDir(dataCtx.RangeName)
 		if !filex.IsExist(targetDir) {
-			os.MkdirAll(targetDir, os.ModePe)
+			os.MkdirAll(targetDir, os.ModePerm)
 		}
 		extendName := dataCtx.DataFileFormat
 		filePath := filex.Combine(targetDir, fileName+"."+extendName)

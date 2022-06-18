@@ -6,10 +6,10 @@ import (
 )
 
 type ExcelProxy struct {
-	ExcelPaths []string
-	Excels     []*excelize.File
-	Sheets     []*ExcelSheet
-	DataRows   []*ExcelRow
+	ExcelPaths []string         // Excel文件路径列表
+	Excels     []*excelize.File // Excel文件初始列表
+	Sheets     []*ExcelSheet    // 加载进来的Sheet列表
+	DataRows   []*ExcelRow      // 加载进来的行数据
 }
 
 func (ep *ExcelProxy) GetSheet(sheet string) (es *ExcelSheet, err error) {

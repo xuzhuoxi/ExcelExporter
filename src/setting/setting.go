@@ -20,9 +20,9 @@ var (
 )
 
 type Settings struct {
-	System  *SystemSetting
-	Project *ProjectSetting
-	Excel   *ExcelSetting
+	System  *SystemSetting  // 工具系统配置
+	Project *ProjectSetting // 项目配置
+	Excel   *ExcelSetting   // Excel表格相关配置
 }
 
 func (s *Settings) Init(envPath string) {

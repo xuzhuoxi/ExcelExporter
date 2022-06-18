@@ -6,8 +6,8 @@ import (
 
 // 名称与号记录项
 type NameRow struct {
-	Name string `yaml:"name"`
-	Row  int    `yaml:"row"`
+	Name string `yaml:"name"` // 名称(键)
+	Row  int    `yaml:"row"`  // Excel行呈
 }
 
 func (o NameRow) String() string {
@@ -16,8 +16,8 @@ func (o NameRow) String() string {
 
 // 名称与字符值记录项
 type NameValue struct {
-	Name  string `yaml:"name"`
-	Value string `yaml:"value"`
+	Name  string `yaml:"name"`  // 名称(键)
+	Value string `yaml:"value"` // 内容
 }
 
 func (o NameValue) String() string {
@@ -26,12 +26,9 @@ func (o NameValue) String() string {
 
 // 导出标记
 type TitleDataOutputInfo struct {
-	// 导出范围名称[client, server, db]
-	RangeName string `yaml:"range_name"`
-	// 导出类名坐标
-	TitleFileName string `yaml:"title"`
-	// 数据文件坐标
-	DataFileName string `yaml:"data"`
+	RangeName     string `yaml:"range_name"` // 导出范围名称[client, server, db]
+	TitleFileName string `yaml:"title"`      // 导出类名坐标(Excel坐标)
+	DataFileName  string `yaml:"data"`       // 数据文件坐标(Excel坐标)
 }
 
 func (o TitleDataOutputInfo) String() string {
@@ -40,10 +37,8 @@ func (o TitleDataOutputInfo) String() string {
 
 // Sql坐标信息
 type TitleDataSqlInfo struct {
-	// 表名坐标
-	TableNameAxis string `yaml:"table"`
-	// 数据文件名坐标
-	FileNameAxis string `yaml:"file"`
+	TableNameAxis string `yaml:"table"` // 表名坐标(Excel坐标)
+	FileNameAxis  string `yaml:"file"`  // 数据文件名坐标(Excel坐标)
 }
 
 type TitleData struct {
@@ -63,7 +58,10 @@ type TitleData struct {
 	NameRow int `yaml:"name_row"`
 	// 数据注释所在行号，与Excel行号一致
 	RemarkRow int `yaml:"remark_row"`
-	// 输出选择行号，内容格式: 'c,s,d'，c、s、d的格式只能是0或1，c指前端，s指后端，d指数据库，顺序不能颠倒。从1开始。
+	// 输出选择行号
+	// 内容格式: 'c,s,d'，c、s、d的格式只能是0或1，c指前端，s指后端，d指数据库
+	// 顺序不能颠倒
+	// sql脚本导出只针对d值
 	FieldRangeRow int `yaml:"field_range_row"`
 	//  数据格式行号，内容格式支持:
 	//  uint8,uint16,uint32,int8,int16,int32,float32,boolean,string,string(*),
@@ -132,22 +130,14 @@ func (td TitleData) GetFileKeyRow(name string) int {
 }
 
 type Const struct {
-	// 启用前缀
-	Prefix string `yaml:"prefix"`
-	// 导出命名
-	Outputs []NameValue `yaml:"outputs"`
-	// 常量导出类信息
-	Classes []NameValue `yaml:"classes"`
-	// 常量名
-	NameCol string `yaml:"name_col"`
-	// 常量值
-	ValueCol string `yaml:"value_col"`
-	// 常量值类型
-	TypeCol string `yaml:"type_col"`
-	// 注释
-	RemarkCol string `yaml:"remark_col"`
-	// 数据的开始行号
-	DataStartRow int `yaml:"data_start_row"`
+	Prefix       string      `yaml:"prefix"`         // 启用前缀
+	Outputs      []NameValue `yaml:"outputs"`        // 导出文件信息列表
+	Classes      []NameValue `yaml:"classes"`        // 导出类信息列表
+	NameCol      string      `yaml:"name_col"`       // 常量名 对应列号(Excel列号)
+	ValueCol     string      `yaml:"value_col"`      // 常量值 对应列号(Excel列号)
+	TypeCol      string      `yaml:"type_col"`       // 常量值类型 对应列号(Excel列号)
+	RemarkCol    string      `yaml:"remark_col"`     // 注释 对应列号(Excel列号)
+	DataStartRow int         `yaml:"data_start_row"` // 数据的开始行号(Excel列号)
 }
 
 func (c Const) GetOutputInfo(rangeName string) (v NameValue, ok bool) {
@@ -170,6 +160,6 @@ func (c Const) GetClassInfo(rangeName string) (info NameValue, ok bool) {
 
 // Excel相关配置环境
 type ExcelSetting struct {
-	TitleData TitleData `yaml:"title&data"`
-	Const     Const     `yaml:"const"`
+	TitleData TitleData `yaml:"title&data"` //数据表配置
+	Const     Const     `yaml:"const"`      // 常量表配置
 }

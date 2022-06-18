@@ -11,16 +11,11 @@ import (
 
 // Sql上下文
 type SqlContext struct {
-	// 使用的字段索引名称
-	RangeName string
-	// 使用的字段索引
-	RangeType FieldRangeType
-	// 表定义Sql是否启用
-	TitleOn bool
-	// 数据Sql是否启用
-	DataOn bool
-	// 合并Sql文件
-	SqlMerge bool
+	RangeName string         // 使用的字段索引名称
+	RangeType FieldRangeType // 使用的字段索引
+	TitleOn   bool           // 表定义Sql是否启用
+	DataOn    bool           // 数据Sql是否启用
+	SqlMerge  bool           // 合并Sql文件
 }
 
 func (o SqlContext) String() string {
@@ -29,8 +24,8 @@ func (o SqlContext) String() string {
 
 // 字段定义
 type FieldItem struct {
-	FieldName string
-	FieldType string
+	FieldName string // 字段名称
+	FieldType string // 字段类型(原始未标准化)
 	DbField   setting.DbFieldType
 }
 

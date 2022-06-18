@@ -58,14 +58,14 @@ func ParseFlag() (cfg *SysFlags, err error) {
 }
 
 type SysFlags struct {
-	EnvPath   string
-	Modes     string
-	Ranges    string
-	LangRefs  string
-	DataFiles string
-	SqlMerge  bool
-	Source    string
-	Target    string
+	EnvPath   string // 运行时指定的运行环境路径(支持绝对路径与相对路径，相对路径以执行文件为基准)(空字符串时默认使用执行文件目录)
+	Modes     string // 运行时使用的模式，支持多个，用英文逗号","分隔，支持参数请看src/setting/const.go文件中
+	Ranges    string // 运行时指定的字段范围，支持多个，用英文逗号","分隔，支持参数请看src/setting/const.go文件中
+	LangRefs  string // 运行时指定的编程语言，支持多个，用英文逗号","分隔，支持参数请看src/setting/const.go文件中
+	DataFiles string // 运行时指定的数据文件类型，支持多个，用英文逗号","分隔，支持参数请看src/setting/const.go文件中
+	SqlMerge  bool   // 是否使用sql文件合并，当DataFiles中包含sql时有效，为true时只产出一个sql文件
+	Source    string // 运行时指定的源目录(空字符串代表使用EvnPath文件的默认配置)
+	Target    string // 运行时指定的输出目录(空字符串代表使用EvnPath文件的默认配置)
 }
 
 func (f *SysFlags) String() string {
@@ -138,13 +138,13 @@ func (f *SysFlags) split(value string, sep string) []string {
 }
 
 type AppFlags struct {
-	ModeNames  []string
-	ModeTypes  []core.ModeType
-	RangeNames []string
-	RangeTypes []core.FieldRangeType
-	LangRefs   []string
-	DataFiles  []string
-	SqlMerge   bool
+	ModeNames  []string              // 运行时使用的模式列表(字符表达)
+	ModeTypes  []core.ModeType       // 运行时使用的模式列表(具体类型表达)
+	RangeNames []string              // 运行时指定的字段范围列表(字符表达)
+	RangeTypes []core.FieldRangeType // 运行时指定的字段范围列表(枚举表达)
+	LangRefs   []string              // 运行时指定的编程语言列表
+	DataFiles  []string              // 运行时指定的数据文件类型列表
+	SqlMerge   bool                  // 是否使用sql文件合并，当DataFiles中包含sql时有效，为true时只产出一个sql文件
 }
 
 func (o *AppFlags) CheckMode(mode core.ModeType) bool {
@@ -249,6 +249,7 @@ func (o *AppFlags) GenConstContexts() (contexts []*core.ConstContext) {
 	return
 }
 
+// 生成Sql导出相关
 func (o *AppFlags) GenSqlContext() (context *core.SqlContext) {
 	if !o.CheckRange(core.FieldRangeDatabase) || !o.CheckDataFile(setting.FileNameSql) {
 		return nil

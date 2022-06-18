@@ -6,12 +6,9 @@ import (
 
 // 数据导出上下文
 type DataContext struct {
-	// 使用的字段索引名称
-	RangeName string
-	// 使用的字段索引
-	RangeType FieldRangeType
-	// 输出的文件类型
-	DataFileFormat string
+	RangeName      string         // 使用的字段索引名称
+	RangeType      FieldRangeType // 使用的字段索引
+	DataFileFormat string         // 输出的文件类型
 }
 
 func (o DataContext) String() string {

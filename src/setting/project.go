@@ -6,16 +6,14 @@ import (
 	"strings"
 )
 
-type OutputCfg struct {
-	// 前端定义输出目录
-	Client string `yaml:"client"`
-	// 后端定义输出目录
-	Server string `yaml:"server"`
-	// 数据库定义输出目录
-	Db string `yaml:"db"`
+// 输出目录
+type OutDir struct {
+	Client string `yaml:"client"` // 前端定义输出目录
+	Server string `yaml:"server"` // 后端定义输出目录
+	Db     string `yaml:"db"`     // 数据库定义输出目录
 }
 
-func (o OutputCfg) GetValue(fieldRangeName string) string {
+func (o OutDir) GetValue(fieldRangeName string) string {
 	switch fieldRangeName {
 	case FieldRangeNameClient:
 		return o.Client
@@ -28,13 +26,11 @@ func (o OutputCfg) GetValue(fieldRangeName string) string {
 	}
 }
 
+// 数据源配置
 type SourceCfg struct {
-	// 目录路径或文件路径
-	Value []string `yaml:"value"`
-	// 编码格式(如果需要)
-	Encoding string `yaml:"encoding"`
-	// 文件扩展名
-	ExtName []string `yaml:"ext_name"`
+	Value    []string `yaml:"value"`    // 目录路径或文件路径
+	Encoding string   `yaml:"encoding"` // 编码格式(如果需要)
+	ExtName  []string `yaml:"ext_name"` // 支持文件扩展名
 }
 
 func (o *SourceCfg) UpgradeEnvPath(envPath string) {
@@ -66,17 +62,14 @@ func (o SourceCfg) String() string {
 	return fmt.Sprintf("IO{Path=%s, Encoding=%s}", o.Value, o.Encoding)
 }
 
+// 输出配置
 type TargetCfg struct {
-	// 根目录
-	RootDir string `yaml:"root"`
-	// 定义目录
-	Title OutputCfg `yaml:"title"`
-	// 数据目录
-	Data OutputCfg `yaml:"data"`
-	// 常量目录
-	Const OutputCfg `yaml:"const"`
-	// Sql目录
-	Sql string `yaml:"sql"`
+	RootDir  string `yaml:"root"`     // 输出根目录
+	Title    OutDir `yaml:"title"`    // (定义)导出类目录
+	Data     OutDir `yaml:"data"`     // 数据文件目录
+	Const    OutDir `yaml:"const"`    // 常量类目录
+	Sql      string `yaml:"sql"`      // Sql目录
+	Encoding string `yaml:"encoding"` // 字符文件编码，暂时未使用
 }
 
 func (o *TargetCfg) UpgradeEnvPath(envPath string) {
@@ -106,16 +99,12 @@ func (o TargetCfg) String() string {
 	return fmt.Sprintf("TargetCfg{RootDir=%s, Title=%v, Data=%v, Const=%v}", o.RootDir, o.Title, o.Data, o.Const)
 }
 
-// 缓冲区定义
+// 缓冲区定义(未使用)
 type ProjectBuff struct {
-	// 数据导出是否使用高位在前
-	IsBigEndian bool `yaml:"big_endian"`
-	// 每个token的最大缓冲区
-	TokenSize int `yaml:"token"`
-	// 每个item的最大缓冲区
-	ItemSize int `yaml:"item"`
-	// 每个sheet的最大缓冲区
-	SheetSize int `yaml:"sheet"`
+	IsBigEndian bool `yaml:"big_endian"` // 数据导出是否使用高位在前
+	TokenSize   int  `yaml:"token"`      // 每个token的最大缓冲区
+	ItemSize    int  `yaml:"item"`       // 每个item的最大缓冲区
+	SheetSize   int  `yaml:"sheet"`      // 每个sheet的最大缓冲区
 }
 
 func (b ProjectBuff) String() string {

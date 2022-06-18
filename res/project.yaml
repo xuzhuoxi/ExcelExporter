@@ -14,17 +14,17 @@ source:
 target:
   # 输出目录
   root: ./target
-  # 定义目录
+  # 定义)导出类目录
   title:
     client: title/client
     server: title/server
     db: title/db
-  # 数据目录
+  # 数据文件目录
   data:
     client: data/client
     server: data/server
     db: data/db
-  # 常量目录
+  # 常量类目录
   const:
     client: const/client
     server: const/server

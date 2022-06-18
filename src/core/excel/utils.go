@@ -19,7 +19,7 @@ func GetAxisName(col int) string {
 	return mathx.System10To26(col)
 }
 
-// A=》1，B=>2
+// A=>1，B=>2
 func GetColNum(axis string) int {
 	return mathx.System26To10(axis)
 }

@@ -8,10 +8,9 @@ import (
 )
 
 type ExcelRow struct {
-	Cell []string
-
-	Index int
-	Sheet *ExcelSheet
+	Cell  []string    // 行数据
+	Index int         // 行索引号
+	Sheet *ExcelSheet // 所在Sheet引用
 }
 
 func (er *ExcelRow) CellLength() int {

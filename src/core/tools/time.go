@@ -69,8 +69,3 @@ func NowUnix() int64 {
 func NowUnixNano() int64 {
 	return NowTime().UnixNano()
 }
-
-// 加法
-func Add(a int, b int) int {
-	return a + b
-}
