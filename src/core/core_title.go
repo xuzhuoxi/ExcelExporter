@@ -7,7 +7,6 @@ import (
 	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/temps"
 	"github.com/xuzhuoxi/infra-go/filex"
-	"io/fs"
 	"os"
 	"strings"
 )
@@ -77,7 +76,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 		}
 		targetDir := Setting.Project.Target.GetTitleDir(titleCtx.RangeName)
 		if !filex.IsExist(targetDir) {
-			os.MkdirAll(targetDir, fs.ModePerm)
+			os.MkdirAll(targetDir, os.ModePerm)
 		}
 		extendName := langDefine.ExtendName
 		filePath := filex.Combine(targetDir, fileName+"."+extendName)
@@ -92,7 +91,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Execute Template error: %s ", err))
 			return err
 		}
-		os.WriteFile(filePath, buff.Bytes(), fs.ModePerm)
+		filex.WriteFile(filePath, buff.Bytes(), os.ModePerm)
 		Logger.Infoln(fmt.Sprintf("[core.executeTitleContext] [%s]Generate file: %s", sheet.SheetName, filePath))
 	}
 	Logger.Infoln(fmt.Sprintf("[core.executeTitleContext][Finish Execute TitleContext]: %s", titleCtx))

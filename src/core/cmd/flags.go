@@ -45,7 +45,7 @@ func ParseFlag() (cfg *SysFlags, err error) {
 	ranges := flag.String("range", "", "Use Fields! ")
 	langRefs := flag.String("lang", "", "Use Languages! ")
 	dataFiles := flag.String("file", "", "Output Files! ")
-	sqlMerge := flag.Bool("sql_merge", false, "Sql Merge! ")
+	sqlMerge := flag.Bool("merge", false, "Merge Sql! ")
 
 	source := flag.String("source", "", "Source Redefine! ")
 	target := flag.String("target", "", "Target Redefine! ")

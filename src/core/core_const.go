@@ -7,7 +7,6 @@ import (
 	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/temps"
 	"github.com/xuzhuoxi/infra-go/filex"
-	"io/fs"
 	"os"
 	"strings"
 )
@@ -60,7 +59,7 @@ func executeConstContext(excel *excel.ExcelProxy, constCtx *ConstContext) error 
 		}
 		targetDir := Setting.Project.Target.GetConstDir(constCtx.RangeName)
 		if !filex.IsExist(targetDir) {
-			os.MkdirAll(targetDir, fs.ModePerm)
+			os.MkdirAll(targetDir, os.ModePerm)
 		}
 		extendName := langDefine.ExtendName
 		filePath := filex.Combine(targetDir, fileName+"."+extendName)
@@ -75,7 +74,7 @@ func executeConstContext(excel *excel.ExcelProxy, constCtx *ConstContext) error 
 			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Execute Template error: %s ", err))
 			return err
 		}
-		os.WriteFile(filePath, buff.Bytes(), fs.ModePerm)
+		filex.WriteFile(filePath, buff.Bytes(), os.ModePerm)
 		Logger.Infoln(fmt.Sprintf("[core.executeConstContext] Generate file : %s", filePath))
 	}
 	return nil

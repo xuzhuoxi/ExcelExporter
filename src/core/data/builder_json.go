@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"github.com/tidwall/sjson"
 	"github.com/xuzhuoxi/ExcelExporter/src/setting"
-	"os"
-	"io/fs"
+	"github.com/xuzhuoxi/infra-go/filex"
 )
 
 func newJsonDataBuilder() IDataBuilder {
@@ -38,7 +37,7 @@ func (b *jsonDataBuilder) WriteRow(ktvArr []*KTValue) error {
 }
 
 func (b *jsonDataBuilder) WriteDataToFile(filePath string) error {
-	return os.WriteFile(filePath, []byte(b.content), fs.ModePerm)
+	return filex.WriteFile(filePath, []byte(b.content), filex.ModePerm)
 }
 
 func (b *jsonDataBuilder) startNewRow() {

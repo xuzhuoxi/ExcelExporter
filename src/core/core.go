@@ -75,6 +75,7 @@ func Execute(setting *setting.Settings, titleCtx []*TitleContext, dataCtx []*Dat
 	Logger.Infof("[core.Execute] ConstCtx=%v", constCtx)
 	Logger.Infof("[core.Execute] SqlCtx=%v", sqlCtx)
 	execExcelFiles()
+	handleSqlMerge()
 }
 
 func execExcelFiles() {
@@ -175,6 +176,12 @@ func executeExcelFile(dataFilePath string) (err error) {
 	}
 
 	return
+}
+
+func handleSqlMerge() {
+	if sqlBuffMergeExist {
+		writeSqlMergeContext(SqlCtx)
+	}
 }
 
 func getControlSize(sheet *excel.ExcelSheet) (size int) {

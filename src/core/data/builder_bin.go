@@ -3,8 +3,7 @@ package data
 import (
 	"bytes"
 	"encoding/binary"
-	"os"
-	"io/fs"
+	"github.com/xuzhuoxi/infra-go/filex"
 )
 
 func newIBinDataBuilderDefault() IDataBuilder {
@@ -58,7 +57,7 @@ func (b *binaryDataBuilder) WriteRow(ktvArr []*KTValue) error {
 
 func (b *binaryDataBuilder) WriteDataToFile(filePath string) error {
 	data := append(b.title, b.content.Bytes()...)
-	return os.WriteFile(filePath, data, fs.ModePerm)
+	return filex.WriteFile(filePath, data, filex.ModePerm)
 }
 
 func (b *binaryDataBuilder) startNewRow() {

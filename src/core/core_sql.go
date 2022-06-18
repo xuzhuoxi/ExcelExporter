@@ -7,12 +7,28 @@ import (
 	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/temps"
 	"github.com/xuzhuoxi/infra-go/filex"
-	"io/fs"
 	"os"
 	"strings"
 )
 
+var (
+	sqlBuffMerge      = bytes.NewBuffer(nil)
+	sqlBuffMergeExist = false
+)
+
+func writeSqlMergeContext(sqlCtx *SqlContext) {
+	if nil != sqlBuffMerge && sqlBuffMergeExist {
+		targetDir := Setting.Project.Target.GetSqlDir(sqlCtx.RangeName)
+		fileName := "all_merge.sql"
+		filePath := filex.Combine(targetDir, fileName)
+		filex.WriteFile(filePath, sqlBuffMerge.Bytes(), os.ModePerm)
+	}
+}
+
 func executeSqlContext(excel *excel.ExcelProxy, sqlCtx *SqlContext) (err error) {
+	if !sqlCtx.TitleOn && !sqlCtx.DataOn {
+		return nil
+	}
 	Logger.Infoln(fmt.Sprintf("[core.executeSqlContext][Start Execute SqlContext]: %s", sqlCtx))
 	prefix := Setting.Excel.TitleData.Prefix
 	for _, sheet := range excel.Sheets {
@@ -36,7 +52,7 @@ func executeSqlContext(excel *excel.ExcelProxy, sqlCtx *SqlContext) (err error) 
 		}
 		targetDir := Setting.Project.Target.GetSqlDir(sqlCtx.RangeName)
 		if !filex.IsExist(targetDir) {
-			os.MkdirAll(targetDir, fs.ModePerm)
+			os.MkdirAll(targetDir, os.ModePerm)
 		}
 		sql := Setting.Excel.TitleData.GetSqlInfo()
 		tableName, _ := sheet.ValueAtAxis(sql.TableNameAxis)
@@ -45,10 +61,10 @@ func executeSqlContext(excel *excel.ExcelProxy, sqlCtx *SqlContext) (err error) 
 		tempSqlProxy := &TempSqlProxy{Sheet: sheet, Excel: excel, SqlCtx: sqlCtx,
 			TableName: tableName, FieldIndex: selects,
 			StartRow: startRow, EndRow: endRow}
-
 		execSqlTable(tempSqlProxy, sheet, sqlCtx, targetDir)
 		execSqlData(tempSqlProxy, sheet, sqlCtx, targetDir)
 	}
+
 	Logger.Infoln(fmt.Sprintf("[core.executeSqlContext][Finish Execute SqlContext]: %s", sqlCtx))
 	return nil
 }
@@ -70,15 +86,19 @@ func execSqlTable(sqlProxy *TempSqlProxy, sheet *excel.ExcelSheet, sqlCtx *SqlCo
 	if nil != err {
 		return err
 	}
-	extendName := "sql"
-	filePath := filex.Combine(targetDir, fileName+"_table."+extendName)
+	extendName := "table.sql"
+	filePath := filex.Combine(targetDir, fileName+"."+extendName)
 	buff := bytes.NewBuffer(nil)
 	err = temp.Execute(buff, sqlProxy, false)
 	if nil != err {
 		Logger.Warnln(fmt.Sprintf("[core.executeSqlContext] Execute Template error: %s ", err))
 		return err
 	}
-	os.WriteFile(filePath, buff.Bytes(), fs.ModePerm)
+	if sqlCtx.SqlMerge {
+		appendDataToBuffMerge(buff.Bytes())
+	} else {
+		filex.WriteFile(filePath, buff.Bytes(), os.ModePerm)
+	}
 	return nil
 }
 
@@ -99,16 +119,25 @@ func execSqlData(sqlProxy *TempSqlProxy, sheet *excel.ExcelSheet, sqlCtx *SqlCon
 	if nil != err {
 		return err
 	}
-	extendName := "sql"
-	filePath := filex.Combine(targetDir, fileName+"_data."+extendName)
+	extendName := "data.sql"
+	filePath := filex.Combine(targetDir, fileName+"."+extendName)
 	buff := bytes.NewBuffer(nil)
 	err = temp.Execute(buff, sqlProxy, false)
 	if nil != err {
 		Logger.Warnln(fmt.Sprintf("[core.executeSqlContext] Execute Template error: %s ", err))
 		return err
 	}
-	os.WriteFile(filePath, buff.Bytes(), fs.ModePerm)
+	if sqlCtx.SqlMerge {
+		appendDataToBuffMerge(buff.Bytes())
+	} else {
+		filex.WriteFile(filePath, buff.Bytes(), os.ModePerm)
+	}
 	return nil
+}
+
+func appendDataToBuffMerge(data []byte) {
+	sqlBuffMerge.Write(data)
+	sqlBuffMergeExist = true
 }
 
 func getSqlTableTemps() (t *temps.TemplateProxy, err error) {
