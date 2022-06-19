@@ -12,9 +12,9 @@ import (
 type ProgramLanguage struct {
 	Name       string   `yaml:"name"`        // 编程语言名称
 	ExtendName string   `yaml:"ext"`         // 源代码文件扩展名
-	RefPath    string   `yaml:"ref"`         // 引用的配置路径
-	TempsTitle []string `yaml:"temps_title"` // 导出类使用的模板路径
-	TempsConst []string `yaml:"temps_const"` // 常量类使用的模板路径
+	RefPath    string   `yaml:"ref"`         // 基础数据读写配置文件路径(相对于配置根目录相对路径)
+	TempsTitle []string `yaml:"temps_title"` // title导出类定义导出模板路径(相对于配置根目录相对路径)
+	TempsConst []string `yaml:"temps_const"` // 常量定义导出模板路径(相对于配置根目录相对路径)
 
 	Setting *LangSetting // 由RefPath加载进来的配置信息
 }
@@ -107,7 +107,7 @@ func (o *Database) GetDataTypes() (dbTypes *DatabaseCfg, err error) {
 // 数据库相关配置
 type Databases struct {
 	Default      string      `yaml:"default"` // 默认使用的数据库配置，必须为DatabaseList中的一个
-	DatabaseList []*Database `yaml:"list"`    // 不同数据库的配置
+	DatabaseList []*Database `yaml:"list"`    // 数据库的配置静静列表
 }
 
 func (d *Databases) UpgradePaths(envPath string) {

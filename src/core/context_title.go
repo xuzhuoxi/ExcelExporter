@@ -9,12 +9,9 @@ import (
 
 // 表头导出上下文
 type TitleContext struct {
-	// 使用的字段索引名称
-	RangeName string
-	// 使用的字段索引
-	RangeType FieldRangeType
-	// 使用的编程语言
-	ProgramLanguage string
+	RangeName       string         // 使用的字段索引名称
+	RangeType       FieldRangeType // 使用的字段索引
+	ProgramLanguage string         // 使用的编程语言
 }
 
 func (o TitleContext) String() string {
@@ -24,13 +21,13 @@ func (o TitleContext) String() string {
 
 // 数据表代理
 type TempTitleProxy struct {
-	Sheet     *excel.ExcelSheet
-	Excel     *excel.ExcelProxy
-	TitleCtx  *TitleContext
-	FileName  string
-	ClassName string
-	Index     []int
-	Language  string
+	Sheet      *excel.ExcelSheet // 当前执行的Sheet数据对象
+	Excel      *excel.ExcelProxy // 当前Excel代理，可能包含多个Excel
+	TitleCtx   *TitleContext     // 当前执行的表头上下文数据
+	FileName   string            // 表头导出类文件名
+	ClassName  string            // 表头导出类名
+	FieldIndex []int             // 当前选中的字段索引
+	Language   string            // 当前的选择的编程语言
 }
 
 func (o *TempTitleProxy) ValueAtAxis(axis string) string {
@@ -39,6 +36,10 @@ func (o *TempTitleProxy) ValueAtAxis(axis string) string {
 		return ""
 	}
 	return value
+}
+
+func (o *TempTitleProxy) FieldLen() int {
+	return len(o.FieldIndex)
 }
 
 func (o *TempTitleProxy) GetTitleName(index int) string {

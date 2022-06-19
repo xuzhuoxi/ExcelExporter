@@ -24,9 +24,9 @@ func (o SqlContext) String() string {
 
 // 字段定义
 type FieldItem struct {
-	FieldName string // 字段名称
-	FieldType string // 字段类型(原始未标准化)
-	DbField   setting.DbFieldType
+	FieldName string              // 字段名称
+	FieldType string              // 字段类型(原始未标准化)
+	DbField   setting.DbFieldType // 数据库字段描述
 }
 
 func (i FieldItem) String() string {
@@ -35,9 +35,9 @@ func (i FieldItem) String() string {
 
 // 单条数据项
 type SqlItem struct {
-	excelRow   *excel.ExcelRow
-	selects    []int
-	fieldItems []FieldItem
+	excelRow   *excel.ExcelRow // 数据行
+	selects    []int           // 数据行选择索引
+	fieldItems []FieldItem     // 数据行选择索引对应的字段定义
 }
 
 func (i *SqlItem) FieldLen() int {
@@ -73,15 +73,15 @@ func (i *SqlItem) GetSqlValue(localIndex int) string {
 
 // Sql模板代理
 type TempSqlProxy struct {
-	Sheet      *excel.ExcelSheet
-	Excel      *excel.ExcelProxy
-	SqlCtx     *SqlContext
-	TableName  string
-	FieldIndex []int
-	StartRow   int
-	EndRow     int
+	Sheet      *excel.ExcelSheet // 当前Sheet实例
+	Excel      *excel.ExcelProxy // Excel实例代理
+	SqlCtx     *SqlContext       // Sql上下文
+	TableName  string            // 数据库表名
+	FieldIndex []int             // 字段选择索引
+	StartRow   int               // 开始行号
+	EndRow     int               // 结束行号
 
-	fieldItems []FieldItem
+	fieldItems []FieldItem // 字段选择索引对应的字段定义
 }
 
 func (o *TempSqlProxy) FieldLen() int {

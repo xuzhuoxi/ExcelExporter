@@ -7,7 +7,7 @@ import (
 
 // 指定数据文件的字段读写方法
 type FileAttrOperation struct {
-	FileName string `yaml:"file_name"`     // 数据文件类型
+	FileName string `yaml:"file_name"`     // 数据文件类型(json，bin等)
 	Get      string `yaml:"get,omitempty"` // 读取方法字符表达
 	Set      string `yaml:"set,omitempty"` // 写入方法字符表达
 }

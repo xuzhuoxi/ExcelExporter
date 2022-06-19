@@ -8,49 +8,49 @@ languages:
     ext: 'as'
     ref: './lang/as3.yaml'
     temps_title:
-      - './templates/as3_title.temp'
+      - './template/as3_title.temp'
     temps_const:
-      - './templates/as3_const.temp'
+      - './template/as3_const.temp'
   # C++
   - name: 'c++'
     ext: 'cpp'
     ref: './lang/c++.yaml'
     temps_title:
-      - './templates/c++_title.temp'
+      - './template/c++_title.temp'
     temps_const:
-      - './templates/c++_const.temp'
+      - './template/c++_const.temp'
   # C#
   - name: 'c#'
     ext: 'cs'
     ref: './lang/c#.yaml'
     temps_title:
-      - './templates/c#_title.temp'
+      - './template/c#_title.temp'
     temps_const:
-      - './templates/c#_const.temp'
+      - './template/c#_const.temp'
   # Golang
   - name: 'go'
     ext: 'go'
     ref: './lang/go.yaml'
     temps_title:
-      - './templates/go_title.temp'
+      - './template/go_title.temp'
     temps_const:
-      - './templates/go_const.temp'
+      - './template/go_const.temp'
   # Java
   - name: 'java'
     ext: 'java'
     ref: './lang/java.yaml'
     temps_title:
-      - './templates/java_title.temp'
+      - './template/java_title.temp'
     temps_const:
-      - './templates/java_const.temp'
+      - './template/java_const.temp'
   # TypeScript
   - name: 'ts'
     ext: 'ts'
     ref: './lang/ts.yaml'
     temps_title:
-      - './templates/ts_title.temp'
+      - './template/ts_title.temp'
     temps_const:
-      - './templates/ts_const.temp'
+      - './template/ts_const.temp'
 
 # 数据库相关配置
 # default: 默认使用的数据库

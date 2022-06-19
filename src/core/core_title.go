@@ -82,7 +82,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 		filePath := filex.Combine(targetDir, fileName+"."+extendName)
 
 		// 创建模板数据代理
-		tempDataProxy := &TempTitleProxy{Sheet: sheet, Excel: excel, TitleCtx: titleCtx, FileName: fileName, Index: selects, ClassName: className, Language: titleCtx.ProgramLanguage}
+		tempDataProxy := &TempTitleProxy{Sheet: sheet, Excel: excel, TitleCtx: titleCtx, FileName: fileName, FieldIndex: selects, ClassName: className, Language: titleCtx.ProgramLanguage}
 
 		//fileName, err := sheet.ValueAtAxis(outEle.ClassName)
 		buff := bytes.NewBuffer(nil)

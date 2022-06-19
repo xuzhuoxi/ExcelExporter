@@ -15,13 +15,13 @@ namespace {MODULE}
     public class {{$clsName}}
     {
         // 以下为属性声明
-{{- range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+{{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
         // {{$proxy.GetTitleName $value}}
         [SerializeField] private {{$langDefine.LangTypeName}} {{ToLowerCamelCase $fieldName}};
 {{- end}}
 
         // 以下为Get方法
-{{- range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+{{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
         /**
          * {{$proxy.GetTitleName $value}}
          *
@@ -40,7 +40,7 @@ namespace {MODULE}
 
         // 二进制数据解释
 //		public void ParseBinary(proxy: xu.BinaryReaderProxy)
-//		{   {{range $index, $value := $proxy.Index}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+//		{   {{range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
             //this.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.GetGetOperate "bin"}}();{{end}}
 //		}
 

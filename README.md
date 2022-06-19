@@ -26,22 +26,11 @@ go 1.16.15
 	
 	Linux下执行[goxc_build.sh](/build/goxc_build.sh)
 
-## 配置结构说明
+## 配置环境说明
 
 <pre><code>.配置根目录
-├── langs: 编程语言相关配置
-│   ├── templates: 模板文件目录，只支持golang模板语法
-│  		├── as3_const.temp: ActionScript3语言下，常量定义模板
-│  		├── as3_title.temp: ActionScript3语言下，Title定义模板
-│  		├── c#_const.temp: C#语言下，常量定义模板
-│  		├── c#_title.temp: C#语言下，Title定义模板
-│  		├── go_const.temp: golang语言下，常量定义模板
-│  		├── go_title.temp: golang语言下，Title定义模板
-│  		├── java_const.temp: java语言下，常量定义模板
-│  		├── java_title.temp: java语言下，Title定义模板
-│  		├── ts_const.temp: TypeScript语言下，常量定义模板
-│  		├── ts_title.temp: TypeScript语言下，Title定义模板
-│  		├── ...: 其它语言下，常量定义模板与Title定义模板
+├── db: 数据库相关配置与sql模板
+├── lang: 编程语言相关配置
 │   ├── as3.yaml: 针对ActionScript3，不同数据文件下各基础数据类型的读写语法配置
 │   ├── c#.yaml: 针对c#，不同数据文件下各基础数据类型的读写语法配置
 │   ├── c++.yaml: 针对c++，不同数据文件下各基础数据类型的读写语法配置
@@ -57,28 +46,45 @@ go 1.16.15
 ├── excel.yaml: Excel的表头配置，包括数据表头配置、常量表头配置
 ├── project.yaml: 项目配置，包括数据源配置、数据输出配置、缓冲配置、大小端配置等
 ├── system.yaml: 应用配置，包括支持的编程语言配置(扩展名、读写配置、模板关联等)、数据字段类型配置、数据文件配置等
+│   templates: 模板文件目录，只支持golang模板语法
+│  	├── as3_const.temp: ActionScript3语言下，常量定义模板
+│  	├── as3_title.temp: ActionScript3语言下，Title定义模板
+│  	├── c#_const.temp: C#语言下，常量定义模板
+│  	├── c#_title.temp: C#语言下，Title定义模板
+│  	├── go_const.temp: golang语言下，常量定义模板
+│  	├── go_title.temp: golang语言下，Title定义模板
+│  	├── java_const.temp: java语言下，常量定义模板
+│  	├── java_title.temp: java语言下，Title定义模板
+│  	├── ts_const.temp: TypeScript语言下，常量定义模板
+│  	├── ts_title.temp: TypeScript语言下，Title定义模板
+│  	├── ...: 其它语言下，常量定义模板与Title定义模板
 </code></pre>
 
-### 字段数据类型关联配置
+### 应用环境配置说明
 
 - system.yaml
 
-	<pre><code>
-	.
-	├── languages: 支持的编程语言
-	│   ├── name: 语言名称
-	│   ├── ext: 语言源文件扩展名
-	│   ├── ref: 基础数据读写配置文件路径(相对于配置根目录相对路径)
-	│   ├── temps_title: title定义导出模板路径(相对于配置根目录相对路径)
+	<pre><code>.应用系统级配置
+	├── languages: 支持的编程语言配置
+	│   ├── name: 编程语言名称
+	│   ├── ext:  源代码文件扩展名
+	│   ├── ref:  基础数据读写配置文件路径(相对于配置根目录相对路径)
+	│   ├── temps_title: title导出类定义导出模板路径(相对于配置根目录相对路径)
 	│   ├── temps_const: 常量定义导出模板路径(相对于配置根目录相对路径)
-	├── datafield_formats: 支持的基础数据类型
-	├── datafile_formats: 支持的数据文件格式
+	├── database: 支持的数据库配置
+	│   ├── default: 默认使用的数据库配置，必须为DatabaseList中的一个
+	│   ├── list:    数据库的配置静静列表
+	│	    ├── name: 数据库名称
+	│	        ref:  数据库具体配置文件所在路径(相对于配置根目录相对路径)
+	│	        temps_table: 表结构sql生成模板列表
+	│	        temps_data:  表数据sql生成模板列表
+	├── datafield_formats: 支持的基础数据类型列表
+	├── datafile_formats:  支持的数据文件格式列表
 	</code></pre>
 
 - project.yaml
 
-	<pre><code>
-	.
+	<pre><code>.应用项目级配置
 	├── source: Excel源目录
 	│   ├── value: Excel源目录路径，支持多个，相对于配置根目录相对路径
 	│   ├── encoding: 编码格式(如果需要)
@@ -106,8 +112,7 @@ go 1.16.15
 
 - excel.yaml
 
-	<pre><code>
-	.
+	<pre><code>.应用Excel配置
 	├── title&data: 
 	│   ├── prefix: 启用前缀
 	│   ├── outputs: 导出命名设置
@@ -144,25 +149,26 @@ go 1.16.15
 	│   ├── data_start_row: 数据开始行号
 	</code></pre>
 
+#### 编程语言配置说明
+
 - 具体语言.yaml
 
-  配置文件位于[res/langs](/res/langs)目录中。
+  配置文件位于[res/lang](/res/lang)目录中。
 
-	<pre><code>
-	.
-	├── name: 当前语言名称
-	├── bool: bool数据类型
-	│   ├── name: 当前语言下数据类型表达
-	│   ├── operates: 操作
-	│  		├── file_name: 数据文件(json，bin等)
-	│  		    get: 获得数据的函数方法
-	│  		    set: 设置数据的函数方法
-	├── ...: 其它数据类型
+	<pre><code>.具体编程语言配置
+	├── lang_name: 当前语言名称
+	├── data_types: 数据库配置列表
+	│	├── name: 字段数据类型(Excel表上填的)
+	│       lang: 编程语言对应的数据类型
+	│       operates: 针对不同数据文件的操作方法
+	│  		├── file_name: 数据文件类型(json，bin等)
+	│  		    get: 读取方法字符表达
+	│  		    set: 写入方法字符表达
 	</code></pre>
 
 - 具体语言.temp
 
-  配置文件位于[res/langs/templates](/res/langs/templates)目录中。
+  配置文件位于[res/template](/res/template)目录中。
 
   golang语法支持下的模板文件，帮助可查看**[https://golang.google.cn/pkg/text/template/](https://golang.google.cn/pkg/text/template/)**
 
@@ -170,7 +176,7 @@ go 1.16.15
 
 程序只允许通过命令行运行
 
-支持的命令行参数包括：-env, -mode, -range, -lang, -file, -source, -target
+支持的命令行参数包括：-env, -mode, -range, -lang, -file, -merge, -source, -target
 
 - -env
 
@@ -210,6 +216,12 @@ go 1.16.15
     
   - 支持多值，可用英文逗号","分隔
 
+- -merge
+
+  导出sql时是不合并为一个文件，true代表合并，false代表不合并
+
+  - 支持值：true, false
+
 - -source
 
   运行时指定数据来源目录，用于覆盖配置文件project.yaml中source.value的值
@@ -221,10 +233,14 @@ go 1.16.15
   运行时指定数据来源目录，用于覆盖配置文件project.yaml中target.value的值
     
   可选项，对**表头导出**、**数据导出**、**常量表导出**有效
-    
+
 ## 功能说明
 
-三种导出功能：表头导出，常量表导出，数据导出
+- 三种基础导出功能：[**表头导出**]()，[**常量表导出**]()，[**数据导出**]()
+
+- 特殊导出功能：[**Sql导出**]()
+
+
 
 ### 表头导出
 
@@ -270,44 +286,31 @@ go 1.16.15
 
    可通过`{{.}}`、`{{$proxy := .}}`这类模板语法取得，结构定义为：
 
-	```
-	type TempDataProxy struct {
-		Sheet      *excel.ExcelSheet
-		Excel      *excel.ExcelProxy
-		TitleCtx   *TitleContext
-		FileName  string
-		ClassName string
-		Index     []int
-		Language  string
-	}```    
+	```golang
+	type TempTitleProxy struct {
+		Sheet      *excel.ExcelSheet // 当前执行的Sheet数据对象
+		Excel      *excel.ExcelProxy // 当前Excel代理，可能包含多个Excel
+		TitleCtx   *TitleContext     // 当前执行的表头上下文数据
+		FileName   string            // 表头导出类文件名
+		ClassName  string            // 表头导出类名
+		FieldIndex []int             // 当前选中的字段索引
+		Language   string            // 当前的选择的编程语言
+	}```
 
   - Excel:[*excel.ExcelProxy](/src/core/excel/proxy.go)
-	
-  	当前执行的Excel数据对象
-
+  	当前执行的Excel数据代理对象
   - Sheet:[*excel.ExcelSheet](/src/core/excel/sheet.go)
-	
   	当前执行的Sheet数据对象
-	
-  - TitleCtx:*TitleContext
-	
-  	当前执行的上下文数据
-
+  - TitleCtx:[*TitleContext](/src/core/core_title.go)
+  	当前执行的表头上下文数据
   - FileName:string
-	
-  	导出文件名称
-
+  	表头导出类文件名
   - ClassName:string
-	
-  	导出类名称
-
-  - Index:[]int
-	
+  	表头导出类名
+  - FieldIndex:[]int
   	当前选中的字段索引
-
   - Language:string
-	
-  	选择的编程语言		
+  	当前的选择的编程语言	
 
 2. [自定义函数](#自定义函数)
 
@@ -347,66 +350,64 @@ go 1.16.15
 
 1. 注入的数据对象为 [*TempConstProxy](/src/core/context.go)
 
-    可通过`{{.}}`、`{{$proxy := .}}`这类模板语法取得，结构定义为：
+   可通过`{{.}}`、`{{$proxy := .}}`这类模板语法取得，结构定义为：
 
-	```
+	```golang
 	type TempConstProxy struct {
-		Sheet     *excel.ExcelSheet
-		Excel     *excel.ExcelProxy
-		ConstCtx  *ConstContext
-		FileName  string
-		ClassName string
-		Language  string
-		StartRow  int
-		EndRow    int
+		Sheet     *excel.ExcelSheet // 当前执行的Sheet数据对象
+		Excel     *excel.ExcelProxy // 当前Excel代理，可能包含多个Excel
+		ConstCtx  *ConstContext     // 当前执行的上下文数据
+		FileName  string            // 导出文件名
+		ClassName string            // 导出常量类名
+		Language  string            // 导出对应的编程语言
+		StartRow  int               // 数据开始行号
+		EndRow    int               // 数据结束行号
 	}
 	``` 
-
   - Excel:[*excel.ExcelProxy](/src/core/excel/proxy.go)
-	
-  	当前执行的Excel数据对象
-
+  	当前执行的Excel数据代理对象
   - Sheet:[*excel.ExcelSheet](/src/core/excel/sheet.go)
-	
   	当前执行的Sheet数据对象
-	
-  - ConstCtx:*ConstContext
-	
+  - ConstCtx:[*ConstContext](/src/core/core_const.go)
   	当前执行的上下文数据
-
   - FileName:string
-	
   	导出文件名称
-
   - ClassName:string
-	
-  	常量类名称
-
-  - Index:[]int
-	
-  	当前选中的字段索引
-
+  	导出常量类名
   - Language:string
-	
-  	选择的编程语言	
-
+  	导出对应的编程语言
   - StartRow:int
-	
-  	常量数据开始行号
-
+  	数据开始行号
   - EndRow:int
-	
-  	常量数据结束行号	
+  	数据结束行号
 
 2. [自定义函数](#自定义函数)
 
 ### 数据导出
 
-支持的数据导出格式：bin(二进制), json。
+- 支持的数据导出格式：bin(二进制), json, sql。
+- yaml, toml, hcl, env, properties数据导出时，字段名称会**强制处理**为小写，本意要求**大小写相关**，默认不开放
+- 要开放yaml等数据导出，请修改system.yaml文件，在"datafiel_formats"列表中补充。
 
-sql导出**未实现**。
+### Sql导出
 
-yaml, toml, hcl, env, properties数据导出时，字段名称会**强制处理**为小写，本意要求**大小写相关**，固暂时不开放
+- **Sql导出依赖于表头导出与数据导出的设置。** 
+
+- 当以下三个条件**同时具备**时，进行sql导出。
+
+	1. -ragne中包含db项
+
+	2. -file中包含sql项
+
+	3. -mode中至少包含title或data其中之一。
+
+- 导出流程：
+
+	1. 遍历Excel文件及Sheet与[**表头导出**](#表头导出)和[**数据导出**](#数据导出)一致。
+
+	2. 设置-merge参数为true时，只产出一个sql文件(all_merge.sql)
+	
+	3. 关闭-merge参数或设置为false时，产出"文件名.talbe.sql"和"文件名.data.sql", table.sql文件为表结构更新脚本，data.sql为数据更新脚本。
 
 ### 模板定制
 
@@ -422,64 +423,56 @@ yaml, toml, hcl, env, properties数据导出时，字段名称会**强制处理*
 
 当返回值为2个时，第2个返回值类型必须是error。
 
-- [ToLowerCamelCase](/src/core/naming/NamingUtil.go)
-
+- [ToLowerCamelCase](/src/core/tools/naming.go)
   把字符串内容转化为**小驼峰**格式
 
-- [ToUpperCamelCase](/src/core/naming/NamingUtil.go)
-
+- [ToUpperCamelCase](/src/core/tools/naming.go)
   把字符串内容转化为**大驼峰**格式
 
-- [NowTime](/src/core/tools/time.go)
+- [Add](/src/core/tools/math.go)
+  加法
 
+- [Sub](/src/core/tools/math.go)
+  减法
+
+- [NowTime](/src/core/tools/time.go)
   取当前时间
 
 - [NowTimeStr](/src/core/tools/time.go)
-
   取当前时间默认格式字符串
 
 - [NowTimeFormat](/src/core/tools/time.go)
-
   取当前时间	
   2006-01-02 15**:**04**:**05 PM Mon Jan
   2006-01-_2 15**:**04**:**05 PM Mon Jan
 
 - [NowYear](/src/core/tools/time.go)
- 
   当前时间年份
 
 - [NowMonth](/src/core/tools/time.go)
-
   当前时间月份
   一月: 1
 
 - [NowDay](/src/core/tools/time.go)
-
   当前时间日期
 
 - [NowWeekday](/src/core/tools/time.go)
-
   当前时间星期几
   星期日： 0	
 
 - [NowHour](/src/core/tools/time.go)
-
   当前时间小时
 
 - [NowMinute](/src/core/tools/time.go)
-
   当前时间分钟
 
 - [NowSecond](/src/core/tools/time.go)
-
   当前时间秒
 
 - [NowUnix](/src/core/tools/time.go)
-
   当前时间秒戳（s）
 
 - [NowUnixNano](/src/core/tools/time.go)
-
   当前时间秒戳（ns）
 
 ## 依赖性

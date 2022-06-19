@@ -30,11 +30,11 @@ type ConstItem struct {
 
 // 常量表模板代理
 type TempConstProxy struct {
-	Sheet     *excel.ExcelSheet // 当前Sheet对象
+	Sheet     *excel.ExcelSheet // 当前执行的Sheet数据对象
 	Excel     *excel.ExcelProxy // 当前Excel代理，可能包含多个Excel
-	ConstCtx  *ConstContext     // 当前导出使用的上下文
+	ConstCtx  *ConstContext     // 当前执行的上下文数据
 	FileName  string            // 导出文件名
-	ClassName string            // 导出类名
+	ClassName string            // 导出常量类名
 	Language  string            // 导出对应的编程语言
 	StartRow  int               // 数据开始行号
 	EndRow    int               // 数据结束行号

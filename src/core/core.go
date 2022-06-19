@@ -33,27 +33,6 @@ var (
 	SqlDataTemps       *temps.TemplateProxy
 )
 
-func init() {
-	//temps.RegisterFunc("ToLowerCamelCase", naming.ToLowerCamelCase)
-	//temps.RegisterFunc("ToUpperCamelCase", naming.ToUpperCamelCase)
-	//
-	//temps.RegisterFunc("Add", tools.Add)
-	//temps.RegisterFunc("Sub", tools.Sub)
-	//
-	//temps.RegisterFunc("NowTime", tools.NowTime)
-	//temps.RegisterFunc("NowTimeStr", tools.NowTimeStr)
-	//temps.RegisterFunc("NowTimeFormat", tools.NowTimeFormat)
-	//temps.RegisterFunc("NowYear", tools.NowYear)
-	//temps.RegisterFunc("NowMonth", tools.NowMonth)
-	//temps.RegisterFunc("NowDay", tools.NowDay)
-	//temps.RegisterFunc("NowWeekday", tools.NowWeekday)
-	//temps.RegisterFunc("NowHour", tools.NowHour)
-	//temps.RegisterFunc("NowMinute", tools.NowMinute)
-	//temps.RegisterFunc("NowSecond", tools.NowSecond)
-	//temps.RegisterFunc("NowUnix", tools.NowUnix)
-	//temps.RegisterFunc("NowUnixNano", tools.NowUnixNano)
-}
-
 func SetLogger(logger logx.ILogger) {
 	if nil == logger {
 		logger = logx.NewLogger()
