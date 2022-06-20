@@ -48,13 +48,13 @@ func executeConstContext(excel *excel.ExcelProxy, constCtx *ConstContext) error 
 		}
 
 		fileName, err := sheet.ValueAtAxis(outEle.Value)
-		if nil != err {
-			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Get file name error: %s ", err))
+		if nil != err || strings.TrimSpace(fileName) == "" {
+			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Get FileName Error: {Err=%s,FileName=%s}", err, fileName))
 			return err
 		}
 		clsName, err := sheet.ValueAtAxis(clsEle.Value)
-		if nil != err {
-			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Get class name error: %s ", err))
+		if nil != err || strings.TrimSpace(clsName) == "" {
+			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Get ClassName Error: {Err=%s,FileName=%s}", err, clsName))
 			return err
 		}
 		targetDir := Setting.Project.Target.GetConstDir(constCtx.RangeName)

@@ -44,8 +44,8 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 		}
 
 		fileName, err := sheet.ValueAtAxis(outEle.DataFileName)
-		if nil != err {
-			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] GetDataFileName error: %s ", err))
+		if nil != err || strings.TrimSpace(fileName) == "" {
+			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] GetDataFileName Error: {Err=%s,FileName=%s}", err, fileName))
 			return err
 		}
 		//keyRowNum := Setting.Excel.Title.FileKeyRows.GetRowNum(dataCtx.DataFileFormat)

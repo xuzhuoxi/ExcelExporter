@@ -65,13 +65,13 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 		}
 
 		fileName, err := sheet.ValueAtAxis(outEle.TitleFileName)
-		if nil != err {
-			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] GetTitleFileName error: %s ", err))
+		if nil != err || strings.TrimSpace(fileName) == "" {
+			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] GetTitleFileName Error: {Err=%s,FileName=%s}", err, fileName))
 			return err
 		}
 		className, err := sheet.ValueAtAxis(clsEle.Value)
-		if nil != err {
-			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] GetTitleClassName error: %s ", err))
+		if nil != err || strings.TrimSpace(className) == "" {
+			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] GetTitleClassName Error: {Err=%s,ClassName=%s}", err, className))
 			return err
 		}
 		targetDir := Setting.Project.Target.GetTitleDir(titleCtx.RangeName)
@@ -83,8 +83,6 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 
 		// 创建模板数据代理
 		tempDataProxy := &TempTitleProxy{Sheet: sheet, Excel: excel, TitleCtx: titleCtx, FileName: fileName, FieldIndex: selects, ClassName: className, Language: titleCtx.ProgramLanguage}
-
-		//fileName, err := sheet.ValueAtAxis(outEle.ClassName)
 		buff := bytes.NewBuffer(nil)
 		err = temp.Execute(buff, tempDataProxy, false)
 		if nil != err {

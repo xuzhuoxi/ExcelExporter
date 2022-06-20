@@ -78,7 +78,7 @@ func execSqlTable(sqlProxy *TempSqlProxy, sheet *excel.ExcelSheet, sqlCtx *SqlCo
 	if nil != err {
 		return err
 	}
-	if len(fileName) == 0 {
+	if strings.TrimSpace(fileName) == "" {
 		err = errors.New(fmt.Sprintf("Table Name Empty At [%s]", sql.FileNameAxis))
 		return err
 	}
@@ -111,7 +111,7 @@ func execSqlData(sqlProxy *TempSqlProxy, sheet *excel.ExcelSheet, sqlCtx *SqlCon
 	if nil != err {
 		return err
 	}
-	if len(fileName) == 0 {
+	if strings.TrimSpace(fileName) == "" {
 		err = errors.New(fmt.Sprintf("Data File Name Empty At [%s]", sql.FileNameAxis))
 		return err
 	}
