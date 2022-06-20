@@ -28,6 +28,10 @@
 
 ### API Changes
 
+- func (o *TempConstProxy) GetItem(row int) (item ConstItem, err error)
+提前进行空行处理，避免调用FindProgramLanguage(o.Language)产生错误
+- 
+
 ## Library changes in v1.0.13
 
 ### library updated
