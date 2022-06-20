@@ -35,53 +35,53 @@ types:
     type: 'DOUBLE'
     number: true
   - name: 'string'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: 'string(*)'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: 'json'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: '[]bool'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: '[]int8'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: '[]int16'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: '[]int32'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: '[]int64'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: '[]uint8'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: '[]uint16'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: '[]uint32'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: '[]uint64'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: '[]float32'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: '[]float64'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: '[]string'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: '[]string(*)'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false
   - name: '[]json'
-    type: 'VARCHAR'
+    type: 'VARCHAR(256)'
     number: false

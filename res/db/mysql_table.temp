@@ -1,6 +1,21 @@
 {{- $proxy := .}}{{$fieldLen := $proxy.FieldLen -}}
-DROP TABLE `{{$proxy.TableName}}`
+DROP TABLE `{{$proxy.TableName}}`;
 CREATE TABLE `{{$proxy.TableName}}`(
-{{- range $fieldIdx, $fieldItem := $proxy.GetFieldItems}}{{$fieldIdx1 := Add $fieldIdx 1}}`
-    {{- $fieldItem.FieldName}}` {{$fieldItem.DbField.FieldType}}{{if lt $fieldIdx1 $fieldLen}},{{end}}
-{{- end}})
+{{- range $fieldIdx, $fieldItem := $proxy.GetFieldItems}}{{$fieldIdx1 := Add $fieldIdx 1 -}}
+    `{{- $fieldItem.FieldName}}` {{$fieldItem.DbField.FieldType}}
+    {{- if lt $fieldIdx1 $fieldLen -}}
+        ,
+    {{- else}}
+        {{- if gt $proxy.PrimaryKeyLen 0 -}}
+            , primary key(
+            {{- range $keyIndex, $keyFieldItem := $proxy.GetPrimaryKeys}}{{$keyIndex1 := Add $keyIndex 1 -}}
+                `{{- $keyFieldItem.FieldName}}`
+                {{- if lt $keyIndex1 $proxy.PrimaryKeyLen -}}
+                    ,
+                {{- end}}
+            {{- end -}}
+            )
+        {{- end -}}
+        );
+    {{- end}}
+{{- end}}

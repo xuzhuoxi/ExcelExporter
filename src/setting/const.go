@@ -3,6 +3,10 @@ package setting
 import "regexp"
 
 const (
+	ParamsSep = ","
+)
+
+const (
 	ModeNameTitle = "title"
 	ModeNameData  = "data"
 	ModeNameConst = "const"

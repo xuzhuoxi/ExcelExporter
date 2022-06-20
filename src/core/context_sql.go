@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
 	"github.com/xuzhuoxi/ExcelExporter/src/setting"
+	"github.com/xuzhuoxi/infra-go/mathx"
 	"github.com/xuzhuoxi/infra-go/slicex"
 	"strings"
 )
@@ -82,6 +83,7 @@ type TempSqlProxy struct {
 	EndRow     int               // 结束行号
 
 	fieldItems []FieldItem // 字段选择索引对应的字段定义
+	primaryKey []FieldItem // 主键信息
 }
 
 func (o *TempSqlProxy) FieldLen() int {
@@ -101,7 +103,7 @@ func (o *TempSqlProxy) ValueAtAxis(axis string) string {
 }
 
 func (o *TempSqlProxy) GetFieldItems() []FieldItem {
-	o.updateFieldItems()
+	o.initFieldItems()
 	return o.fieldItems
 }
 
@@ -111,7 +113,7 @@ func (o *TempSqlProxy) GetFieldItem(realIndex int) FieldItem {
 }
 
 func (o *TempSqlProxy) GetFieldItemLocal(localIndex int) FieldItem {
-	o.updateFieldItems()
+	o.initFieldItems()
 	return o.fieldItems[localIndex]
 }
 
@@ -131,12 +133,22 @@ func (o *TempSqlProxy) GetItems() []SqlItem {
 	return rs
 }
 
+func (o *TempSqlProxy) PrimaryKeyLen() int {
+	o.initFieldItems()
+	return len(o.primaryKey)
+}
+
+func (o *TempSqlProxy) GetPrimaryKeys() []FieldItem {
+	o.initFieldItems()
+	return o.primaryKey
+}
+
 func (o *TempSqlProxy) GetItem(row int) (item SqlItem, err error) {
 	if !o.checkItemRow(row) {
 		err = errors.New(fmt.Sprintf("Row[%d] out of range. ", row))
 		return
 	}
-	o.updateFieldItems()
+	o.initFieldItems()
 	excelRow := o.Sheet.GetRowAt(row - 1)
 	selects := o.FieldIndex
 	return SqlItem{excelRow: excelRow, selects: selects, fieldItems: o.fieldItems}, nil
@@ -146,7 +158,7 @@ func (o *TempSqlProxy) checkItemRow(row int) bool {
 	return row >= o.StartRow && row < o.EndRow
 }
 
-func (o *TempSqlProxy) updateFieldItems() {
+func (o *TempSqlProxy) initFieldItems() {
 	if nil != o.fieldItems {
 		return
 	}
@@ -162,6 +174,32 @@ func (o *TempSqlProxy) updateFieldItems() {
 		sqlDataType, _ := types.GetFieldType(formattedType)
 		o.fieldItems[index] = FieldItem{FieldName: fieldName, FieldType: fieldType, DbField: sqlDataType}
 	}
+	o.initPrimaryKey()
+}
+
+func (o *TempSqlProxy) initPrimaryKey() {
+	axis := Setting.Excel.TitleData.Sql.PrimaryKeyAxis
+	value, err := o.Sheet.ValueAtAxis(axis)
+	if nil != err {
+		return
+	}
+	value = strings.TrimSpace(value)
+	if "" == value {
+		return
+	}
+	arr := strings.Split(value, ",")
+	key := make([]FieldItem, len(arr))
+	for index := range arr {
+		fieldCol := mathx.System26To10(arr[index])
+		localIndex, _ := slicex.IndexInt(o.FieldIndex, fieldCol-1)
+		if -1 == localIndex {
+			Logger.Warnln(fmt.Sprintf("TempSqlProxy.initPrimaryKey: PrimaryKey Config Error At [%s:%s]", axis, value))
+			continue
+		}
+		fieldItem := o.GetFieldItemLocal(localIndex)
+		key[index] = fieldItem
+	}
+	o.primaryKey = key
 }
 
 func (o *TempSqlProxy) formatFieldType(fieldType string) string {

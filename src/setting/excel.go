@@ -37,8 +37,9 @@ func (o TitleDataOutputInfo) String() string {
 
 // Sql坐标信息
 type TitleDataSqlInfo struct {
-	TableNameAxis string `yaml:"table"` // 表名坐标(Excel坐标)
-	FileNameAxis  string `yaml:"file"`  // 数据文件名坐标(Excel坐标)
+	TableNameAxis  string `yaml:"table"` // 表名坐标(Excel坐标)
+	FileNameAxis   string `yaml:"file"`  // 数据文件名坐标(Excel坐标)
+	PrimaryKeyAxis string `yaml:"key"`   // 主键信息坐标,复合主键使用英文逗号","分隔
 }
 
 type TitleData struct {

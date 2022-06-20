@@ -1,7 +1,7 @@
 {{- $proxy := .}}{{$fieldLen := $proxy.FieldLen}}{{$itemLen := $proxy.ItemLen -}}
 {{- $notClear := and $proxy.SqlCtx.SqlMerge $proxy.SqlCtx.TitleOn -}}
 {{- if not $notClear -}}
-TRUNCATE TABLE `{{$proxy.TableName}}`
+TRUNCATE TABLE `{{$proxy.TableName}}`;
 {{- end -}}
 INSERT INTO `{{$proxy.TableName}}`(
 {{- range $fieldIdx, $fieldItem := $proxy.GetFieldItems}}{{$fieldIdx1 := Add $fieldIdx 1}}`
@@ -12,4 +12,4 @@ values
     {{- range $valueIdx, $itemValue := $item.GetValues}}{{$valueIdx1 := Add $valueIdx 1}}
        {{- $itemValue -}}{{if lt $valueIdx1 $fieldLen}},{{end}}
     {{- end}}){{if lt $itemIdx1 $itemLen}},{{end}}
-{{end}}
+{{end}};
