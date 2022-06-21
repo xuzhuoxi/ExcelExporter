@@ -34,7 +34,7 @@ func GenAxis(length int) []string {
 }
 
 // "A1" => 0, 0, nil
-func ParseAxis(axis string) (cellIndex int, rowIndex int, err error) {
+func ParseAxis(axis string) (colIndex int, rowIndex int, err error) {
 	Axis := strings.ToUpper(strings.TrimSpace(axis))
 	bs := []byte(Axis)
 	var c, r []byte

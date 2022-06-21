@@ -68,6 +68,8 @@ type TitleData struct {
 	//  uint8,uint16,uint32,int8,int16,int32,float32,boolean,string,string(*),
 	//  uint8[],uint16[],uint32[],int8[],int16[],int32[],float32[],boolean[],string[],string(*)[]
 	FieldFormatRow int `yaml:"field_format_row"`
+	// 数据库字段类型定制行号，0为不定制
+	SqlFieldFormatRow int `yaml:"sql_field_format_row"`
 	// 各语言使用的字段名称对应行号
 	FieldNames []NameRow `yaml:"field_names"`
 	// 数据文件使用的字段名称行号
@@ -128,6 +130,10 @@ func (td TitleData) GetFileKeyRow(name string) int {
 		return row.Row
 	}
 	return 0
+}
+
+func (td TitleData) IsCustomSqlFieldType() bool {
+	return td.SqlFieldFormatRow > 0
 }
 
 type Const struct {

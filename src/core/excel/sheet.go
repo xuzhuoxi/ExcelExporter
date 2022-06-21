@@ -89,3 +89,13 @@ func (es *ExcelSheet) ValueAtAxis(axis string) (value string, err error) {
 	}
 	return row.ValueAtIndex(cellIndex)
 }
+
+// Open to templates
+// 通过坐标取值，
+func (es *ExcelSheet) ValueAtIndex(colIndex int, rowIndex int) (value string, err error) {
+	row := es.Rows[rowIndex]
+	if colIndex >= row.CellLength() {
+		return "", nil
+	}
+	return row.ValueAtIndex(colIndex)
+}

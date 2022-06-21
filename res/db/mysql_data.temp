@@ -1,15 +1,16 @@
 {{- $proxy := .}}{{$fieldLen := $proxy.FieldLen}}{{$itemLen := $proxy.ItemLen -}}
-{{- $notClear := and $proxy.SqlCtx.SqlMerge $proxy.SqlCtx.TitleOn -}}
-{{- if not $notClear -}}
+{{- if $proxy.NeedTruncateData -}}
 TRUNCATE TABLE `{{$proxy.TableName}}`;
-{{- end -}}
+{{end -}}
 INSERT INTO `{{$proxy.TableName}}`(
-{{- range $fieldIdx, $fieldItem := $proxy.GetFieldItems}}{{$fieldIdx1 := Add $fieldIdx 1}}`
-    {{- $fieldItem.FieldName}}`{{if lt $fieldIdx1 $fieldLen}},{{end}}
-{{- end}})
-values
-{{range $itemIdx, $item := $proxy.GetItems}}{{$itemIdx1 := Add $itemIdx 1}}(
-    {{- range $valueIdx, $itemValue := $item.GetValues}}{{$valueIdx1 := Add $valueIdx 1}}
-       {{- $itemValue -}}{{if lt $valueIdx1 $fieldLen}},{{end}}
-    {{- end}}){{if lt $itemIdx1 $itemLen}},{{end}}
-{{end}};
+{{- range $fieldIdx, $fieldItem := $proxy.GetFieldItems}}{{$fieldIdx1 := Add $fieldIdx 1 -}}
+    `{{- $fieldItem.FieldName}}`{{if lt $fieldIdx1 $fieldLen}},{{else}}){{end}}
+{{- end}}
+VALUES
+{{range $itemIdx, $item := $proxy.GetItems}}{{$itemIdx1 := Add $itemIdx 1 -}}
+    (
+    {{- range $valueIdx, $itemValue := $item.GetValues}}{{$valueIdx1 := Add $valueIdx 1 -}}
+       {{$itemValue}}{{if lt $valueIdx1 $fieldLen}},{{end}}
+    {{- end -}}
+    ){{if lt $itemIdx1 $itemLen}},{{else}};{{end}}
+{{end}}

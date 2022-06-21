@@ -2,7 +2,7 @@
 DROP TABLE `{{$proxy.TableName}}`;
 CREATE TABLE `{{$proxy.TableName}}`(
 {{- range $fieldIdx, $fieldItem := $proxy.GetFieldItems}}{{$fieldIdx1 := Add $fieldIdx 1 -}}
-    `{{- $fieldItem.FieldName}}` {{$fieldItem.DbField.FieldType}}
+    `{{- $fieldItem.FieldName}}` {{$fieldItem.SqlFieldType}}
     {{- if lt $fieldIdx1 $fieldLen -}}
         ,
     {{- else}}

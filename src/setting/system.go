@@ -64,7 +64,7 @@ type Database struct {
 	TempsTable []string `yaml:"temps_table"` // 表结构sql生成模板列表
 	TempsData  []string `yaml:"temps_data"`  // 表数据sql生成模板列表
 
-	DataTypes *DatabaseCfg // 由RefPath加载进来的配置信息
+	Extend *DatabaseExtend // 由RefPath加载进来的配置信息
 }
 
 func (o *Database) UpgradePaths(envPath string) {
@@ -85,9 +85,9 @@ func (o *Database) GetTempsDataPath() string {
 	return getMergedTempsPath(o.TempsData)
 }
 
-func (o *Database) GetDataTypes() (dbTypes *DatabaseCfg, err error) {
-	if nil != o.DataTypes {
-		return o.DataTypes, nil
+func (o *Database) GetDatabaseExtend() (dbTypes *DatabaseExtend, err error) {
+	if nil != o.Extend {
+		return o.Extend, nil
 	}
 
 	str, err := os.ReadFile(o.RefPath)
@@ -95,12 +95,12 @@ func (o *Database) GetDataTypes() (dbTypes *DatabaseCfg, err error) {
 	if nil != err {
 		return nil, err
 	}
-	types := &DatabaseCfg{}
+	types := &DatabaseExtend{}
 	err = yaml.Unmarshal(str, types)
 	if nil != err {
 		return nil, err
 	}
-	o.DataTypes = types
+	o.Extend = types
 	return types, nil
 }
 

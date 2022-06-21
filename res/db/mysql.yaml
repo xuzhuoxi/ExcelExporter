@@ -1,87 +1,117 @@
 name: 'mysql'
+scale_char: 1
+scale_varchar: 2
 types:
   - name: 'bool'
     # Mysql中没有布尔类型，"BOOLEAN"与"BOOL"为"TINYINT"的同义词
     type: 'TINYINT(1)'
     number: true
+    array: false
   - name: 'int8'
     type: 'TINYINT(1)'
     number: true
+    array: false
   - name: 'int16'
     type: 'SMALLINT(2)'
     number: true
+    array: false
   - name: 'int32'
     type: 'INT(4)'
     number: true
+    array: false
   - name: 'int64'
     type: 'BIGINT(8)'
     number: true
+    array: false
   - name: 'uint8'
     type: 'TINYINT(1) unsigned'
     number: true
+    array: false
   - name: 'uint16'
     type: 'SMALLINT(2) unsigned'
     number: true
+    array: false
   - name: 'uint32'
     type: 'INT(4) unsigned'
     number: true
+    array: false
   - name: 'uint64'
     type: 'BIGINT(8) unsigned'
     number: true
+    array: false
   - name: 'float32'
     type: 'FLOAT'
     number: true
+    array: false
   - name: 'float64'
     type: 'DOUBLE'
     number: true
+    array: false
   - name: 'string'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(*)'
     number: false
+    array: false
   - name: 'string(*)'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(*)'
     number: false
+    array: true
   - name: 'json'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(512)'
     number: false
+    array: true
   - name: '[]bool'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(*)'
     number: false
+    array: true
   - name: '[]int8'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(*)'
     number: false
+    array: true
   - name: '[]int16'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(*)'
     number: false
+    array: true
   - name: '[]int32'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(*)'
     number: false
+    array: true
   - name: '[]int64'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(*)'
     number: false
+    array: true
   - name: '[]uint8'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(*)'
     number: false
+    array: true
   - name: '[]uint16'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(*)'
     number: false
+    array: true
   - name: '[]uint32'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(*)'
     number: false
+    array: true
   - name: '[]uint64'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(*)'
     number: false
+    array: true
   - name: '[]float32'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(*)'
     number: false
+    array: true
   - name: '[]float64'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(*)'
     number: false
+    array: true
   - name: '[]string'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(1024)'
     number: false
+    array: true
   - name: '[]string(*)'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(1024)'
     number: false
+    array: true
   - name: '[]json'
-    type: 'VARCHAR(256)'
+    type: 'VARCHAR(1024)'
     number: false
+    array: true

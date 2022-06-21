@@ -9,17 +9,3 @@
 
 6. C++表头模板未实现， C++常量模板未实现。
 
-8. 增加主键定义
-
-	- 创建表：
-	
-	```
-	CREATE TABLE table_name
-	(column1 datatype, column2 datatype,
-	column3 datatype, column4 datatype,
-	...	, primary key( column1, column2, ...))
-	```
-
-9. 由于数据库数据类型的限制
-
-10. 字符串长度设定问题。
