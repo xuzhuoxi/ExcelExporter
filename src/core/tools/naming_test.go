@@ -19,6 +19,6 @@ var (
 func TestClearUnderScore(t *testing.T) {
 	for _, naming := range namings {
 		//ClearUnderScore(naming)
-		fmt.Println(naming, ClearUnderScore(naming))
+		fmt.Println(naming, ClearUnderscore(naming))
 	}
 }

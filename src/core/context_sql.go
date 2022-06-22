@@ -141,9 +141,9 @@ func (i *SqlItem) GetSqlValue(localIndex int) string {
 
 // Sql模板代理
 type TempSqlProxy struct {
-	Sheet      *excel.ExcelSheet // 当前Sheet实例
-	Excel      *excel.ExcelProxy // Excel实例代理
-	SqlCtx     *SqlContext       // Sql上下文
+	Sheet      *excel.ExcelSheet // 当前执行的Sheet数据对象
+	Excel      *excel.ExcelProxy // 当前执行的Excel数据代理对象
+	SqlCtx     *SqlContext       // 当前执行的Sql上下文
 	TableName  string            // 数据库表名
 	FieldIndex []int             // 字段选择索引
 	StartRow   int               // 开始行号

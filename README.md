@@ -127,6 +127,7 @@ go 1.16.15
 	│   ├── remark_row: 数据注释所在行号
 	│   ├── field_range_row: 输出选择行号，内容格式: 'c,s,d'，c指前端，s指后端，d指数据库，(01)
 	│   ├── field_format_row: 字段数据格式行号
+	│   ├── sql_field_format_row: 数据库字段类型定制行号，0为不定制
 	│   ├── field_names: Title定义文件字段名称配置 
 	│  		├── name: 语言名称
 	│  		    row: 语言属性所在的行号
@@ -151,7 +152,7 @@ go 1.16.15
 
 #### 编程语言配置说明
 
-- 具体语言.yaml
+- 具体语言.yaml(如[go.yaml](/res/lang/go.yaml))
 
   配置文件位于[res/lang](/res/lang)目录中。
 
@@ -166,11 +167,34 @@ go 1.16.15
 	│  		    set: 写入方法字符表达
 	</code></pre>
 
-- 具体语言.temp
+- 模板文件.temp(如[go_titel.temp](/res/template/go_titel.temp)、[go_const.temp](/res/template/go_const.temp))
 
-  配置文件位于[res/template](/res/template)目录中。
+  模板文件位于[res/template](/res/template)目录中。
 
-  golang语法支持下的模板文件，帮助可查看**[https://golang.google.cn/pkg/text/template/](https://golang.google.cn/pkg/text/template/)**
+  golang语法支持下的模板文件，帮助可查看[**https://golang.google.cn/pkg/text/template/**](https://golang.google.cn/pkg/text/template/)
+
+#### 数据库配置说明
+
+- 数据库.yaml(如[mysql.yaml](/res/db/mysql.yaml))
+
+  配置文件位于[res/db](/res/db)目录中。
+
+	<pre><code>.具体数据配置
+	├── db_name: 数据库名称
+	├── scale_char: Char字符比例
+	├── scale_varchar: archar字符比例
+	├── types: 数据库数据类型描述列表
+	│	├── name: 字段名称(标准化后，如string(5)=>string(*))
+	│       type: 对应数据的字段数据类型
+	│       number: 是否为数值类型
+	│       array: 是否为数组类型
+	</code></pre>
+
+- 模板文件.temp(如[mysql_table.temp](/res/db/mysql_table.temp)、[mysql_data.temp](/res/db/mysql_data.temp))
+
+  模板文件位于[/res/db](/res/db)目录中。
+
+  golang语法支持下的模板文件，帮助可查看[**https://golang.google.cn/pkg/text/template/**](https://golang.google.cn/pkg/text/template/)
 
 ## 运行
 
@@ -240,8 +264,6 @@ go 1.16.15
 
 - 特殊导出功能：[**Sql导出**]()
 
-
-
 ### 表头导出
 
 把Excel文件中的表头信息导出为对应语言的数据结构或类
@@ -282,7 +304,7 @@ go 1.16.15
 
 #### 表头模板说明
 
-1. 注入的数据对象为 [*TempDataProxy](/src/core/context.go)
+1. 注入的数据对象为 [*TempTitelProxy](/src/core/context_title.go)
 
    可通过`{{.}}`、`{{$proxy := .}}`这类模板语法取得，结构定义为：
 
@@ -301,7 +323,7 @@ go 1.16.15
   	当前执行的Excel数据代理对象
   - Sheet:[*excel.ExcelSheet](/src/core/excel/sheet.go)
   	当前执行的Sheet数据对象
-  - TitleCtx:[*TitleContext](/src/core/core_title.go)
+  - TitleCtx:[*TitleContext](/src/core/context_title.go)
   	当前执行的表头上下文数据
   - FileName:string
   	表头导出类文件名
@@ -348,7 +370,7 @@ go 1.16.15
 
 #### 注入到常量模板中的数据及函数
 
-1. 注入的数据对象为 [*TempConstProxy](/src/core/context.go)
+1. 注入的数据对象为[*TempConstProxy](/src/core/context_const.go)
 
    可通过`{{.}}`、`{{$proxy := .}}`这类模板语法取得，结构定义为：
 
@@ -368,7 +390,7 @@ go 1.16.15
   	当前执行的Excel数据代理对象
   - Sheet:[*excel.ExcelSheet](/src/core/excel/sheet.go)
   	当前执行的Sheet数据对象
-  - ConstCtx:[*ConstContext](/src/core/core_const.go)
+  - ConstCtx:[*ConstContext](/src/core/context_const.go)
   	当前执行的上下文数据
   - FileName:string
   	导出文件名称
@@ -408,6 +430,41 @@ go 1.16.15
 	2. 设置-merge参数为true时，只产出一个sql文件(all_merge.sql)
 	
 	3. 关闭-merge参数或设置为false时，产出"文件名.talbe.sql"和"文件名.data.sql", table.sql文件为表结构更新脚本，data.sql为数据更新脚本。
+
+#### 注入到常量模板中的数据及函数
+ 
+1. 注入的数据对象为[*TempSqlProxy](/src/core/context_sql.go)
+
+  可通过`{{.}}`、`{{$proxy := .}}`这类模板语法取得，结构定义为：
+
+	```golang
+	type TempSqlProxy struct {
+		Sheet      *excel.ExcelSheet // 当前执行的Sheet数据对象
+		Excel      *excel.ExcelProxy // 当前执行的Excel数据代理对象
+		SqlCtx     *SqlContext       // 当前执行的Sql上下文
+		TableName  string            // 数据库表名
+		FieldIndex []int             // 字段选择索引
+		StartRow   int               // 开始行号
+		EndRow     int               // 结束行号
+	}
+	``` 
+
+  - Excel:[*excel.ExcelProxy](/src/core/excel/proxy.go)
+  	当前执行的Excel数据代理对象
+  - Sheet:[*excel.ExcelSheet](/src/core/excel/sheet.go)
+  	当前执行的Sheet数据对象
+  - SqlCtx:[*SqlContext](/src/core/context_sql.go)
+  	当前执行的Sql上下文
+  - TableName:string
+  	数据库表名
+  - FieldIndex:string
+  	字段选择索引
+  - StartRow:string
+  	开始行号
+  - EndRow:int
+    结束行号
+
+2. [自定义函数](#自定义函数)
 
 ### 模板定制
 

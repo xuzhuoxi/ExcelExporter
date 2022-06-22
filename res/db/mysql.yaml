@@ -1,6 +1,10 @@
-name: 'mysql'
+# 数据库名称
+db_name: 'mysql'
+# Char字符比例
 scale_char: 1
+# Varchar字符比例
 scale_varchar: 2
+# 数据库数据类型描述列表
 types:
   - name: 'bool'
     # Mysql中没有布尔类型，"BOOLEAN"与"BOOL"为"TINYINT"的同义词

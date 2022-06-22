@@ -31,7 +31,7 @@ func (t DbFieldType) String() string {
 
 // 数据库配置
 type DatabaseExtend struct {
-	DatabaseName string        `yaml:"name"`          // 数据库名称
+	DatabaseName string        `yaml:"db_name"`       // 数据库名称
 	ScaleChar    float64       `yaml:"scale_char"`    // Char字符比例
 	ScaleVarchar float64       `yaml:"scale_varchar"` // Varchar字符比例
 	FieldTypes   []DbFieldType `yaml:"types"`         // 数据库数据类型描述列表
