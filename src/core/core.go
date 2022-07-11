@@ -82,7 +82,7 @@ func execExcelFiles() {
 }
 
 func loadExcelFilesFromFolder(folderPath string) {
-	filex.WaldAllFiles(folderPath, func(filePath string, fileInfo os.FileInfo, err error) error {
+	filex.WalkAllFiles(folderPath, func(filePath string, fileInfo os.FileInfo, err error) error {
 		loadExcelFile(filePath, fileInfo)
 		return nil
 	})
