@@ -1,30 +1,25 @@
-# ExcelExporter
+# ExcelExporter  
+A tool for exporting Excel data.  
+Export Excel data according to templates. Supports **multiple data formats** and **any programming language**. **Multi-OS** support.  
 
-A tool for exporting Excel data.
+## Compatibility  
+go 1.16.15  
 
-## Compatibility
+## How to get  
+The executable file can be obtained by downloading the executable file or downloading the source code and compiling  
 
-go 1.16.15
+- Execution file [download link](https://github.com/xuzhuoxi/ExcelExporter/releases).  
+- Download source code to compile through github  
 
-## How to get
-
-The executable file can be obtained by downloading the executable file or downloading the source code and compiling
-
-- Execution file [download link](https://github.com/xuzhuoxi/ExcelExporter/releases).
-
-- Download source code to compile through github
-
-1. Execute the code.
+1. Execute the code.  
 
 ````
 go get -u github.com/xuzhuoxi/ExcelExporter
 ````
 
-2. Compile the project.
-
-Execute [goxc_build.bat](/build/goxc_build.bat) under Windows
-
-Execute [goxc_build.sh](/build/goxc_build.sh) under Linux
+2. Compile the project.  
+Execute [goxc_build.bat](/build/goxc_build.bat) under Windows  
+Execute [goxc_build.sh](/build/goxc_build.sh) under Linux  
 
 ## Configuration environment description
 
@@ -150,11 +145,10 @@ Execute [goxc_build.sh](/build/goxc_build.sh) under Linux
 │ ├── data_start_row: data start row number
 </code></pre>
 
-#### Programming language configuration instructions
+#### Programming language configuration instructions  
 
-- Specific language.yaml (eg [go.yaml](/res/lang/go.yaml))
-
-  The configuration files are located in the [res/lang] (/res/lang) directory.
+- Specific language.yaml (eg [go.yaml](/res/lang/go.yaml))  
+  The configuration files are located in the [res/lang] (/res/lang) directory.  
 
 <pre><code>. Specific programming language configuration
 ├── lang_name: current language name
@@ -167,17 +161,14 @@ Execute [goxc_build.sh](/build/goxc_build.sh) under Linux
 │ set: write method character expression
 </code></pre>
 
-- Template file .temp (eg [go_titel.temp](/res/template/go_titel.temp), [go_const.temp](/res/template/go_const.temp))
+- Template file .temp (eg [go_titel.temp](/res/template/go_titel.temp), [go_const.temp](/res/template/go_const.temp))  
+  Template files are located in the [res/template] (/res/template) directory.  
+  Template files supported by golang syntax, help can be viewed [**https://golang.google.cn/pkg/text/template/**](https://golang.google.cn/pkg/text/template/ )  
 
-  Template files are located in the [res/template] (/res/template) directory.
+#### Database configuration instructions  
 
-  Template files supported by golang syntax, help can be viewed [**https://golang.google.cn/pkg/text/template/**](https://golang.google.cn/pkg/text/template/ )
-
-#### Database configuration instructions
-
-- Database.yaml (eg [mysql.yaml](/res/db/mysql.yaml))
-
-  The configuration files are located in the [res/db] (/res/db) directory.
+- Database.yaml (eg [mysql.yaml](/res/db/mysql.yaml))  
+  The configuration files are located in the [res/db] (/res/db) directory.  
 
 <pre><code>. Specific data configuration
 ├── db_name: database name
@@ -190,4 +181,298 @@ Execute [goxc_build.sh](/build/goxc_build.sh) under Linux
 │ array: whether it is an array type
 </code></pre>
 
--
+- Template file.temp (eg [mysql_table.temp](/res/db/mysql_table.temp), [mysql_data.temp](/res/db/mysql_data.temp))  
+   Template files are located in the [/res/db](/res/db) directory.  
+   Template files supported by golang syntax, help can be viewed [**https://golang.google.cn/pkg/text/template/**](https://golang.google.cn/pkg/text/template/ )  
+   
+## Run
+
+The program is only allowed to run via the command line  
+
+Supported command line parameters include: -env, -mode, -range, -lang, -file, -merge, -source, -target  
+
+- -env  
+  Re-specify the running environment, which refers to the configuration root directory.  
+
+- -mode  
+  The running mode supports **header export**, **data export**, **constant table export**  
+  - Supported values: title, data, const  
+  title is the header export, data is the data export, const is the constant table export  
+  - Supports multiple values, which can be separated by English commas ","  
+
+- -range  
+  The field range selected at runtime is valid for **header export** and **data export**  
+  - Supported values: client, server, db  
+  - Supports multiple values, which can be separated by English commas ","  
+  
+- -lang  
+  The programming language selected at runtime is only valid for **header export**  
+  - Supported values: go, as3, ts, java, c#  
+  - Supports multiple values, which can be separated by English commas ","  
+  
+- -file  
+  The data file type of the running output, valid for **data export**  
+  - Supported values: bin, sql, json, yaml, toml, hcl, env, properties  
+  - Supports multiple values, which can be separated by English commas ","  
+
+- -merge  
+  When exporting sql, it is not merged into one file, true means merged, false means not merged  
+  - Supported values: true, false  
+
+- -source  
+  Specify the data source directory at runtime to override the value of source.value in the configuration file project.yaml  
+  Optional, valid for **header export**, **data export**, **constant table export**  
+
+- -target  
+  Specify the data source directory at runtime to override the value of target.value in the configuration file project.yaml  
+  Optional, valid for **header export**, **data export**, **constant table export**  
+
+## Function Description
+
+- Three basic export functions: [**Header Export**](#Header Export), [**Constant Table Export**](#Constant Table Export), [**Data Export**](#Data Export)  
+- Special export function: [**Sql export**](#Sql export)  
+
+### Header export  
+Export the header information in the Excel file as a data structure or class of the corresponding language  
+
+#### Header export process  
+
+1. Traverse every matching Excel file in the source directory.  
+  - The source directory is given by the soruce.value list in project.yaml.  
+  - The source directory can be re-specified by the -source parameter.  
+  - Match according to the soruce.ext_name list in project.yaml.  
+
+2. Traverse the matched Sheets in the Excel file.  
+  - Match according to the title&data.prefix attribute in excel.yaml.  
+
+3. Select the corresponding field list according to the -range parameter.  
+  - The -range parameter supports three types: client, server, and db. For details, please [view]().  
+
+4. According to the -lang parameter, select the configuration and export template corresponding to the language.  
+  - The -lang parameter supports go, as3, ts, java, c#, please [view]() for details.  
+
+5. Field list => fields or properties of a data structure or class.  
+
+6. The corresponding files are all generated into the target directory.  
+  - The target root directory is given by the target.root list in project.yaml.  
+  - The target.title in project.yaml in the header output directory is given as the relative path of target.root.  
+  - The source directory can be re-specified by the -target parameter.  
+  - According to the content of the -range parameter, the files are generated into the directories corresponding to target.title.client, target.title.server, and target.title.database in project.yaml.  
+
+#### Header Template Description  
+
+1. The injected data object is [\*TempTitelProxy](/src/core/context_title.go)
+It can be obtained through template syntax such as `{{.}}`, `{{$proxy := .}}`, and the structure is defined as:  
+
+```golang
+  type TempTitleProxy struct {
+    Sheet *excel.ExcelSheet // currently executed Sheet data object
+    Excel *excel.ExcelProxy // current Excel proxy, may contain multiple Excel
+    TitleCtx *TitleContext // currently executed header context data
+    FileName string // header export class file name
+    ClassName string // header export class name
+    FieldIndex []int // currently selected field index
+    Language string // currently selected programming language
+  }
+```
+
+  - Excel:[\*excel.ExcelProxy](/src/core/excel/proxy.go)  
+    The currently executing Excel data proxy object  
+  - Sheet:[\*excel.ExcelSheet](/src/core/excel/sheet.go)  
+    Currently executing Sheet data object  
+  - TitleCtx:[\*TitleContext](/src/core/context_title.go)  
+    Header context data of the current execution  
+  - FileName: string  
+    header export class file name  
+  - ClassName: string  
+    header export class name  
+  - FieldIndex: []int  
+    The currently selected field index  
+  - Language: string  
+    The current programming language of choice  
+
+2. [Custom function](#Custom function)  
+
+### Constant table export  
+
+1. Traverse every matching Excel file in the source directory.  
+  - The source directory is given by the soruce.value list in project.yaml.  
+  - The source directory can be re-specified by the -source parameter.  
+  - Match according to the soruce.ext_name list in project.yaml.  
+
+2. Traverse the matched Sheets in the Excel file.  
+  - Match according to the const.prefix property in excel.yaml.  
+  - According to the name_col, value_col, type_col, and remark_col in excel.yaml, locate the name, value, type, and comment of the constant.  
+  - According to the data_start_row in excel.yaml, start to describe the data positively, until it ends with a blank row.  
+
+4. According to the -lang parameter, select the configuration and export template corresponding to the language.  
+  - The -lang parameter supports go, as3, ts, java, c#, please [view]() for details.  
+
+6. The corresponding files are all generated into the target directory.  
+  - The target root directory is given by the target.root list in project.yaml.  
+  - given by target.const in project.yaml in the constant table output directory, it is the relative path of target.root.  
+  - The source directory can be re-specified by the -target parameter.  
+  - According to the content of the -range parameter, the files are generated into the directories corresponding to target.const.client and target.const.server in project.yaml respectively.  
+
+#### Data and functions injected into constant templates  
+
+1. The injected data object is [\*TempConstProxy](/src/core/context_const.go)
+It can be obtained through template syntax such as `{{.}}`, `{{$proxy := .}}`, and the structure is defined as:  
+
+```golang
+  type TempConstProxy struct {
+    Sheet *excel.ExcelSheet // currently executed Sheet data object
+    Excel *excel.ExcelProxy // current Excel proxy, may contain multiple Excel
+    ConstCtx *ConstContext // currently executed context data
+    FileName string // export file name
+    ClassName string // export constant class name
+    Language string // export the corresponding programming language
+    StartRow int // Data start row number
+    EndRow int // data end row number
+  }
+```
+
+  - Excel:[\*excel.ExcelProxy](/src/core/excel/proxy.go)  
+    The currently executing Excel data proxy object  
+  - Sheet:[\*excel.ExcelSheet](/src/core/excel/sheet.go)  
+    Currently executing Sheet data object  
+  - ConstCtx:[\*ConstContext](/src/core/context_const.go)  
+    context data for the current execution  
+  - FileName: string  
+    export file name  
+  - ClassName: string  
+    export constant class name  
+  - Language: string  
+    Export the corresponding programming language  
+  - StartRow:int  
+    Data start line number  
+  - EndRow:int  
+    Data end line number  
+
+2. [Custom function](#Custom function)  
+
+### Data output  
+- Supported data export formats: bin (binary), json, sql.  
+- When yaml, toml, hcl, env, properties data is exported, the field name will be **forced** to be lowercase, the original intention requires **case dependent**, not open by default  
+- To enable data export such as yaml, please modify the system.yaml file and add it to the "datafiel_formats" list.  
+
+### Sql export  
+
+- **Sql export depends on the settings of header export and data export. **  
+
+- When the following three conditions **consist at the same time**, perform sql export.  
+  1. -ragne contains the db item  
+  2. -file contains sql items  
+  3. -mode contains at least one of title or data.  
+
+- Export process:  
+  1. Traversing Excel files and Sheets is consistent with [**Table Header Export**](#Table Header Export) and [**Data Export**](#Data Export).  
+  2. When the -merge parameter is set to true, only one sql file (all_merge.sql) will be produced  
+  3. When the -merge parameter is turned off or set to false, "filename.talbe.sql" and "filename.data.sql" will be generated. The table.sql file is the table structure update script, and data.sql is the data update script.  
+
+#### Data and functions injected into constant templates  
+
+1. The injected data object is [\*TempSqlProxy](/src/core/context_sql.go)
+It can be obtained through template syntax such as `{{.}}`, `{{$proxy := .}}`, and the structure is defined as:  
+
+```golang
+  type TempSqlProxy struct {
+    Sheet *excel.ExcelSheet // currently executed Sheet data object
+    Excel *excel.ExcelProxy // currently executing Excel data proxy object
+    SqlCtx *SqlContext // currently executed Sql context
+    TableName string // database table name
+    FieldIndex []int // field selection index
+    StartRow int // start row number
+    EndRow int // end row number
+  }
+```
+
+  - Excel:[\*excel.ExcelProxy](/src/core/excel/proxy.go)  
+    The currently executing Excel data proxy object  
+  - Sheet:[\*excel.ExcelSheet](/src/core/excel/sheet.go)  
+    Currently executing Sheet data object  
+  - SqlCtx:[\*SqlContext](/src/core/context_sql.go)  
+    The currently executing Sql context  
+  - TableName: string  
+    database table name  
+  - FieldIndex: string  
+    field selection index  
+  - StartRow: string  
+    start line number  
+  - EndRow:int  
+    end line number  
+
+2. [Custom function](#Custom function)  
+
+### Template customization  
+The template file format is a go language template, and the document description address is as follows:  
+[https://golang.google.cn/pkg/text/template/](https://golang.google.cn/pkg/text/template/)  
+
+#### Custom Functions  
+Custom functions are valid for all templates  
+**Note**: The return value of the custom function must be 1 or 2, which is an official requirement.  
+When there are 2 return values, the type of the second return value must be error.  
+
+- [ToLowerCamelCase](/src/core/tools/naming.go)  
+  Convert the string content to **small camelcase** format  
+
+- [ToUpperCamelCase](/src/core/tools/naming.go)  
+  Convert string content to **big camelcase** format  
+
+- [Add](/src/core/tools/math.go)  
+  addition  
+
+- [Sub](/src/core/tools/math.go)  
+  subtraction  
+
+- [NowTime](/src/core/tools/time.go)  
+  get current time  
+
+- [NowTimeStr](/src/core/tools/time.go)  
+  Get the current time default format string  
+
+- [NowTimeFormat](/src/core/tools/time.go)  
+  get current time  
+  2006-01-02 15**:**04**:**05 PM Mon Jan  
+  2006-01-\_2 15**:**04**:**05 PM Mon Jan  
+
+- [NowYear](/src/core/tools/time.go)  
+  current time year  
+
+- [NowMonth](/src/core/tools/time.go)  
+  current time month  
+  January: 1  
+
+- [NowDay](/src/core/tools/time.go)  
+  current date  
+
+- [NowWeekday](/src/core/tools/time.go)  
+  current time day of the week  
+  Sunday: 0  
+
+- [NowHour](/src/core/tools/time.go)  
+  current time hour  
+
+- [NowMinute](/src/core/tools/time.go)  
+  current time in minutes  
+
+- [NowSecond](/src/core/tools/time.go)  
+  current time in seconds  
+
+- [NowUnix](/src/core/tools/time.go)  
+  current timestamp (s)  
+
+- [NowUnixNano](/src/core/tools/time.go)  
+  Current timestamp (ns)  
+
+## Dependencies  
+- infra-go (library dependency) [https://github.com/xuzhuoxi/infra-go](https://github.com/xuzhuoxi/infra-go)  
+- excelize (library dependency) [https://github.com/360EntSecGroup-Skylar/excelize](https://github.com/360EntSecGroup-Skylar/excelize)  
+- goxc (compilation dependencies) [https://github.com/laher/goxc](https://github.com/laher/goxc)  
+
+## Contact Me 
+xuzhuoxi  
+<xuzhuoxi@gmail.com> or <mailxuzhuoxi@163.com>  
+
+## Open Source License  
+ExcelExporter source code is open source based on [MIT license](/LICENSE).  
