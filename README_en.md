@@ -2,6 +2,8 @@
 A tool for exporting Excel data.  
 Export Excel data according to templates. Supports **multiple data formats** and **any programming language**. **Multi-OS** support.  
 
+[中文](README.md) | English 
+
 ## Compatibility  
 go 1.16.15  
 
