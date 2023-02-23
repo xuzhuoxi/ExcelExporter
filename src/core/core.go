@@ -173,7 +173,7 @@ func getControlSize(sheet *excel.ExcelSheet) (size int) {
 	return len(controlRow.Cell)
 }
 
-func parseRangeRow(sheet *excel.ExcelSheet, rangeRow *excel.ExcelRow, rangeIndex uint, maxSize int) (selects []int, err error) {
+func parseRangeRow(sheet *excel.ExcelSheet, rangeRow *excel.ExcelRow, rangeIndex uint, startIndex int, maxSize int) (selects []int, err error) {
 	cellLen := rangeRow.CellLength()
 	if maxSize > cellLen {
 		return nil, errors.New(fmt.Sprintf("Range Row Lack At (%s)[%s]", sheet.SheetName, rangeRow.Axis()[cellLen]))
@@ -181,6 +181,9 @@ func parseRangeRow(sheet *excel.ExcelSheet, rangeRow *excel.ExcelRow, rangeIndex
 	for index, cell := range rangeRow.Cell {
 		if index == maxSize {
 			return
+		}
+		if index < startIndex {
+			continue
 		}
 		m, _ := regexp.MatchString(RegexPatternRange, cell)
 		if !m {

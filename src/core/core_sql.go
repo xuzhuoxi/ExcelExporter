@@ -31,6 +31,8 @@ func executeSqlContext(excel *excel.ExcelProxy, sqlCtx *SqlContext) (err error) 
 	}
 	Logger.Infoln(fmt.Sprintf("[core.executeSqlContext][Start Execute SqlContext]: %s", sqlCtx))
 	prefix := Setting.Excel.TitleData.Prefix
+	dataStartRow := Setting.Excel.TitleData.DataStartRow()
+	dataStartColIndex := Setting.Excel.TitleData.DataStartColIndex()
 	for _, sheet := range excel.Sheets {
 		// 过滤Sheet的命名
 		if strings.Index(sheet.SheetName, prefix) != 0 {
@@ -42,7 +44,7 @@ func executeSqlContext(excel *excel.ExcelProxy, sqlCtx *SqlContext) (err error) 
 			Logger.Warnln(fmt.Sprintf("[core.executeSqlContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
 			continue
 		}
-		selects, err := parseRangeRow(sheet, fieldRangeRow, uint(sqlCtx.RangeType)-1, size)
+		selects, err := parseRangeRow(sheet, fieldRangeRow, uint(sqlCtx.RangeType)-1, dataStartColIndex, size)
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[core.executeSqlContext] Parse file type error: %s ", err))
 			return err
@@ -56,11 +58,10 @@ func executeSqlContext(excel *excel.ExcelProxy, sqlCtx *SqlContext) (err error) 
 		}
 		sql := Setting.Excel.TitleData.GetSqlInfo()
 		tableName, _ := sheet.ValueAtAxis(sql.TableNameAxis)
-		startRow := Setting.Excel.TitleData.DataStartRow
-		endRow := getSqlDataEndRow(sheet, startRow)
+		endRow := getSqlDataEndRow(sheet, dataStartRow)
 		tempSqlProxy := &TempSqlProxy{Sheet: sheet, Excel: excel, SqlCtx: sqlCtx,
 			TableName: tableName, FieldIndex: selects,
-			StartRow: startRow, EndRow: endRow}
+			StartRow: dataStartRow, EndRow: endRow, StartColIndex: dataStartColIndex}
 		execSqlTable(tempSqlProxy, sheet, sqlCtx, targetDir)
 		execSqlData(tempSqlProxy, sheet, sqlCtx, targetDir)
 	}

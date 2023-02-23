@@ -28,6 +28,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 	Logger.Infoln(fmt.Sprintf("[core.executeTitleContext][Start Execute TitleContext]: %s", titleCtx))
 	//prefix := Setting.Excel.Prefix.Data
 	prefix := Setting.Excel.TitleData.Prefix
+	dataStartColIndex := Setting.Excel.TitleData.DataStartColIndex()
 	for _, sheet := range excel.Sheets {
 		// 过滤Sheet的命名
 		if strings.Index(sheet.SheetName, prefix) != 0 {
@@ -55,7 +56,7 @@ func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error 
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
 			continue
 		}
-		selects, err := parseRangeRow(sheet, fieldRangeRow, uint(titleCtx.RangeType)-1, size)
+		selects, err := parseRangeRow(sheet, fieldRangeRow, uint(titleCtx.RangeType)-1, dataStartColIndex, size)
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Parse file type error: %s ", err))
 			return err

@@ -14,6 +14,8 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 	//prefix := Setting.Excel.Prefix.Data
 	prefix := Setting.Excel.TitleData.Prefix
 	Logger.Infoln(fmt.Sprintf("[core.executeDataContext][Start Execute DataContext]: %s", dataCtx))
+	dataStartRow := Setting.Excel.TitleData.DataStartRow()
+	dataStartColIndex := Setting.Excel.TitleData.DataStartColIndex()
 	for _, sheet := range excel.Sheets {
 		// 过滤Sheet的命名
 		if strings.Index(sheet.SheetName, prefix) != 0 {
@@ -34,7 +36,7 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
 			continue
 		}
-		selects, err := parseRangeRow(sheet, fieldRangeRow, uint(dataCtx.RangeType)-1, size)
+		selects, err := parseRangeRow(sheet, fieldRangeRow, uint(dataCtx.RangeType)-1, dataStartColIndex, size)
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[core.executeDataContext] Parse file type error: %s ", err))
 			return err
@@ -58,7 +60,7 @@ func executeDataContext(excel *excel.ExcelProxy, dataCtx *DataContext) error {
 		//typeRow := sheet.GetRowAt(Setting.Excel.Title.FieldFormatRow - 1)
 		typeRow := sheet.GetRowAt(Setting.Excel.TitleData.FieldFormatRow - 1)
 		//startRow := Setting.Excel.Data.StartRow
-		startRow := Setting.Excel.TitleData.DataStartRow
+		startRow := dataStartRow
 		builder := data.GenBuilder(dataCtx.DataFileFormat)
 		builder.StartWriteData()
 		for startRow > 0 {

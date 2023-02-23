@@ -33,8 +33,8 @@ func GenAxis(length int) []string {
 	return rs
 }
 
-// "A1" => 0, 0, nil
-func ParseAxis(axis string) (colIndex int, rowIndex int, err error) {
+// "A1" => "A", 1, nil
+func SplitAxis(axis string) (colName string, rowNum int, err error) {
 	Axis := strings.ToUpper(strings.TrimSpace(axis))
 	bs := []byte(Axis)
 	var c, r []byte
@@ -44,13 +44,20 @@ func ParseAxis(axis string) (colIndex int, rowIndex int, err error) {
 		}
 	}
 	if nil == c && nil == r {
-		return 0, 0, errors.New("Axis Error:" + axis)
+		return "", 0, errors.New("Axis Error:" + axis)
 	}
-	colNum := mathx.System26To10(string(c))
-	rowNum, err := strconv.Atoi(string(r))
+	colName = string(c)
+	rowNum, err = strconv.Atoi(string(r))
+	return
+}
+
+// "A1" => 0, 0, nil
+func ParseAxisIndex(axis string) (colIndex int, rowIndex int, err error) {
+	colName, rowNum, err := SplitAxis(axis)
 	if nil != err {
 		return 0, 0, err
 	}
+	colNum := mathx.System26To10(colName)
 	return colNum - 1, rowNum - 1, nil
 }
 

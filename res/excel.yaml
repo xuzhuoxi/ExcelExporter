@@ -81,8 +81,8 @@
       row: 7
     - name: 'properties'
       row: 7
-  # 数据的开始行号
-  data_start_row: 8
+  # 数据的开始单元
+  data_start: 'A8'
 
 const:
   # 启用前缀

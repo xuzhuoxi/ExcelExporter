@@ -79,7 +79,7 @@ func (es *ExcelSheet) GetRowsByFilter(startIndex int, filter func(row *ExcelRow)
 // Open to templates
 // 通过坐标取值，坐标格式：B4
 func (es *ExcelSheet) ValueAtAxis(axis string) (value string, err error) {
-	cellIndex, rowIndex, err := ParseAxis(axis)
+	cellIndex, rowIndex, err := ParseAxisIndex(axis)
 	if nil != err {
 		return "", err
 	}

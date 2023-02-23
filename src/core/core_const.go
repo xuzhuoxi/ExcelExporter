@@ -65,8 +65,11 @@ func executeConstContext(excel *excel.ExcelProxy, constCtx *ConstContext) error 
 		filePath := filex.Combine(targetDir, fileName+"."+extendName)
 
 		// 创建模板数据代理
-		tempDataProxy := &TempConstProxy{Sheet: sheet, Excel: excel, ConstCtx: constCtx, FileName: fileName, ClassName: clsName, Language: constCtx.ProgramLanguage,
-			StartRow: Setting.Excel.Const.DataStartRow, EndRow: len(sheet.Rows) + 1}
+		startRow := Setting.Excel.Const.DataStartRow
+		endRow := len(sheet.Rows) + 1
+		tempDataProxy := &TempConstProxy{Sheet: sheet, Excel: excel, ConstCtx: constCtx,
+			FileName: fileName, ClassName: clsName, Language: constCtx.ProgramLanguage,
+			StartRow: startRow, EndRow: endRow}
 
 		buff := bytes.NewBuffer(nil)
 		err = temp.Execute(buff, tempDataProxy, false)

@@ -2,6 +2,7 @@ package setting
 
 import (
 	"fmt"
+	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
 )
 
 // 名称与号记录项
@@ -74,8 +75,22 @@ type TitleData struct {
 	FieldNames []NameRow `yaml:"field_names"`
 	// 数据文件使用的字段名称行号
 	FileKeys []NameRow `yaml:"file_keys"`
+	//// 数据的开始行号
+	//DataStartRow int `yaml:"data_start_row"`
 	// 数据的开始行号
-	DataStartRow int `yaml:"data_start_row"`
+	DataStart string `yaml:"data_start"`
+}
+
+// 数据开始行号
+func (td TitleData) DataStartRow() int {
+	_, row, _ := excel.SplitAxis(td.DataStart)
+	return row
+}
+
+// 数据开始列号索引
+func (td TitleData) DataStartColIndex() int {
+	colIndex, _, _ := excel.ParseAxisIndex(td.DataStart)
+	return colIndex
 }
 
 func (td TitleData) GetSqlInfo() TitleDataSqlInfo {
