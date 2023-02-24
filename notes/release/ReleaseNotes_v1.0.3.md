@@ -5,7 +5,6 @@
 - yaml, toml, hcl, env, properties数据导出时，key会转为**小写**，本意要求**大小写相关**。
 - project.yaml中encoding与buff相关的配置未实现。
 - C++表头模板未实现， C++常量模板未实现。
-- sql导出未支持主键设置
 
 ### Improvements
 
@@ -38,7 +37,7 @@
 - 新增func (es *ExcelSheet) ValueAtIndex(colIndex int, rowIndex int) (value string, err error)
 用于根据行列号取数据的功能
 
-## Library changes in v1.0.13
+## Library changes in v1.0.3
 
 ### library updated
 
