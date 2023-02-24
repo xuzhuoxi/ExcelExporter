@@ -143,7 +143,7 @@ Linux下执行[goxc_build.sh](/build/goxc_build.sh)
   │   ├── value_col: 常量值列号
   │   ├── type_col: 常量值类型列号
   │   ├── remark_col: 注释列号
-  │   ├── data_start_row: 数据开始行号
+  │   ├── data_start: 数据开始行列号
   </code></pre>
 
 #### 编程语言配置说明  

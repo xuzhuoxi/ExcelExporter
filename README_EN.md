@@ -144,7 +144,7 @@ Execute [goxc_build.sh](/build/goxc_build.sh) under Linux
 │ ├── value_col: constant value column number
 │ ├── type_col: constant value type column number
 │ ├── remark_col: remark column number
-│ ├── data_start_row: data start row number
+│ ├── data_start: data start col-row name
 </code></pre>
 
 #### Programming language configuration instructions  
