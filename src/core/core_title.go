@@ -11,89 +11,98 @@ import (
 	"strings"
 )
 
-func executeTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error {
+func execExcelTitleContext(excel *excel.ExcelProxy, titleCtx *TitleContext) error {
+	sheets := excel.GetSheets(titleCtx.EnablePrefix)
+	if len(sheets) == 0 {
+		return nil
+	}
+	logPrefix := "core.execExcelTitleContext"
+	Logger.Infoln(fmt.Sprintf("[%s][--Start TitleContext]: %s", logPrefix, titleCtx))
+	for _, sheet := range sheets {
+		err := execSheetTitleContext(excel, sheet, titleCtx)
+		if nil != err {
+			return err
+		}
+	}
+	Logger.Infoln(fmt.Sprintf("[%s][--Finish TitleContext]: %s", logPrefix, titleCtx))
+	return nil
+}
+
+func execSheetTitleContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, titleCtx *TitleContext) error {
+	// 过滤Sheet的命名
+	if strings.Index(sheet.SheetName, titleCtx.EnablePrefix) != 0 {
+		return nil
+	}
+	logPrefix := "core.execSheetTitleContext"
 	lang := titleCtx.ProgramLanguage
 	temp, err := getTitleLanguageTemp(lang)
 	if nil != err {
+		err = errors.New(fmt.Sprintf("[%s] Get lang[%s] temp fail: %s", logPrefix, lang, err))
 		return err
 	}
 
-	langDefine, ok := Setting.System.FindProgramLanguage(titleCtx.ProgramLanguage)
+	langDefine, ok := Setting.System.FindProgramLanguage(lang)
 	if !ok {
-		err = errors.New(fmt.Sprintf("-lang error at %s", titleCtx.ProgramLanguage))
-		Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] %s ", err))
+		err = errors.New(fmt.Sprintf("[%s] -lang error at %s: lang undefined!", logPrefix, lang))
 		return err
 	}
 
-	Logger.Infoln(fmt.Sprintf("[core.executeTitleContext][Start Execute TitleContext]: %s", titleCtx))
-	//prefix := Setting.Excel.Prefix.Data
-	prefix := Setting.Excel.TitleData.Prefix
-	dataStartColIndex := Setting.Excel.TitleData.DataStartColIndex()
-	for _, sheet := range excel.Sheets {
-		// 过滤Sheet的命名
-		if strings.Index(sheet.SheetName, prefix) != 0 {
-			continue
-		}
-
-		outEle, ok := Setting.Excel.TitleData.GetOutputInfo(titleCtx.RangeName)
-		if !ok {
-			err = errors.New(fmt.Sprintf("-field error at \"%s\": output file name!", titleCtx.RangeName))
-			//Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Error At %s ", err))
-			return err
-		}
-
-		clsEle, ok := Setting.Excel.TitleData.GetClassInfo(titleCtx.RangeName)
-		if !ok {
-			err = errors.New(fmt.Sprintf("-field error at \"%s\": output class name!", titleCtx.RangeName))
-			//Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Error At %s ", err))
-			return err
-		}
-
-		//fieldRangeRow := sheet.GetRowAt(Setting.Excel.Title.FieldRangeRow - 1)
-		size := getControlSize(sheet)
-		fieldRangeRow := sheet.GetRowAt(Setting.Excel.TitleData.FieldRangeRow - 1)
-		if nil == fieldRangeRow || fieldRangeRow.Empty() {
-			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Sheet execute pass at '%s' with filed type empty! ", sheet.SheetName))
-			continue
-		}
-		selects, err := parseRangeRow(sheet, fieldRangeRow, uint(titleCtx.RangeType)-1, dataStartColIndex, size)
-		if nil != err {
-			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Parse file type error: %s ", err))
-			return err
-		}
-		if len(selects) == 0 {
-			continue
-		}
-
-		fileName, err := sheet.ValueAtAxis(outEle.TitleFileName)
-		if nil != err || strings.TrimSpace(fileName) == "" {
-			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] GetTitleFileName Error: {Err=%s,FileName=%s}", err, fileName))
-			return err
-		}
-		className, err := sheet.ValueAtAxis(clsEle.Value)
-		if nil != err || strings.TrimSpace(className) == "" {
-			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] GetTitleClassName Error: {Err=%s,ClassName=%s}", err, className))
-			return err
-		}
-		targetDir := Setting.Project.Target.GetTitleDir(titleCtx.RangeName)
-		if !filex.IsExist(targetDir) {
-			os.MkdirAll(targetDir, os.ModePerm)
-		}
-		extendName := langDefine.ExtendName
-		filePath := filex.Combine(targetDir, fileName+"."+extendName)
-
-		// 创建模板数据代理
-		tempDataProxy := &TempTitleProxy{Sheet: sheet, Excel: excel, TitleCtx: titleCtx, FileName: fileName, FieldIndex: selects, ClassName: className, Language: titleCtx.ProgramLanguage}
-		buff := bytes.NewBuffer(nil)
-		err = temp.Execute(buff, tempDataProxy, false)
-		if nil != err {
-			Logger.Warnln(fmt.Sprintf("[core.executeTitleContext] Execute Template error: %s ", err))
-			return err
-		}
-		filex.WriteFile(filePath, buff.Bytes(), os.ModePerm)
-		Logger.Infoln(fmt.Sprintf("[core.executeTitleContext] [%s]Generate file: %s", sheet.SheetName, filePath))
+	//Logger.Infoln(fmt.Sprintf("[%s][SheetName=%s, FileName=%s]", logPrefix, sheet.SheetName, sheet.FileName()))
+	outEle, ok := Setting.Excel.TitleData.GetOutputInfo(titleCtx.RangeName)
+	if !ok {
+		err = errors.New(fmt.Sprintf("[%s] -field error at \"%s\": output file name!", logPrefix, titleCtx.RangeName))
+		return err
 	}
-	Logger.Infoln(fmt.Sprintf("[core.executeTitleContext][Finish Execute TitleContext]: %s", titleCtx))
+
+	size := getControlSize(sheet)
+	fieldRangeRow := sheet.GetRowAt(Setting.Excel.TitleData.FieldRangeRow - 1)
+	if nil == fieldRangeRow || fieldRangeRow.Empty() {
+		Logger.Warnln(fmt.Sprintf("[%s] Ignore execution for filed type empty!", logPrefix))
+		return nil
+	}
+	selects, _, err := parseRangeRow(sheet, fieldRangeRow, uint(titleCtx.RangeType)-1, titleCtx.StartColIndex, size)
+	if nil != err {
+		err = errors.New(fmt.Sprintf("[%s] Parse Range Row error: %s ", logPrefix, err))
+		return err
+	}
+	if len(selects) == 0 {
+		return nil
+	}
+
+	fileName, err := sheet.ValueAtAxis(outEle.TitleFileAxis)
+	if nil != err || strings.TrimSpace(fileName) == "" {
+		err = errors.New(fmt.Sprintf("[%s] GetTitleFileName Error: {Err=%s,FileName=%s}", logPrefix, err, fileName))
+		return err
+	}
+	clsName, err := sheet.ValueAtAxis(outEle.ClassAxis)
+	if nil != err || strings.TrimSpace(clsName) == "" {
+		err = errors.New(fmt.Sprintf("[%s] GetTitleClassName Error: {Err=%s,ClassName=%s}", logPrefix, err, clsName))
+		return err
+	}
+	namespace, err := sheet.ValueAtAxis(outEle.NamespaceAxis)
+	if nil != err || strings.TrimSpace(namespace) == "" {
+		err = errors.New(fmt.Sprintf("[%s] GetTitleNamespace Error: {Err=%s,Namespace=%s}", logPrefix, err, namespace))
+		return err
+	}
+	targetDir := Setting.Project.Target.GetTitleDir(titleCtx.RangeName)
+	if !filex.IsExist(targetDir) {
+		os.MkdirAll(targetDir, os.ModePerm)
+	}
+	extendName := langDefine.ExtendName
+	filePath := filex.Combine(targetDir, fileName+"."+extendName)
+
+	// 创建模板数据代理
+	tempDataProxy := &TempTitleProxy{Sheet: sheet, Excel: excel, TitleCtx: titleCtx,
+		FileName: fileName, FieldIndex: selects, ClassName: clsName, Namespace: namespace,
+		Language: titleCtx.ProgramLanguage}
+	buff := bytes.NewBuffer(nil)
+	err = temp.Execute(buff, tempDataProxy, false)
+	if nil != err {
+		err = errors.New(fmt.Sprintf("[%s] Execute Template error: %s ", logPrefix, err))
+		return err
+	}
+	filex.WriteFile(filePath, buff.Bytes(), os.ModePerm)
+	Logger.Infoln(fmt.Sprintf("[%s] Generate file: %s", logPrefix, filePath))
 	return nil
 }
 

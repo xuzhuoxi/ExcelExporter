@@ -15,15 +15,19 @@ import (
 
 // Sql上下文
 type SqlContext struct {
-	RangeName string         // 使用的字段索引名称
-	RangeType FieldRangeType // 使用的字段索引
-	TitleOn   bool           // 表定义Sql是否启用
-	DataOn    bool           // 数据Sql是否启用
-	SqlMerge  bool           // 合并Sql文件
+	EnablePrefix  string         // 开启前缀
+	RangeName     string         // 使用的字段索引名称
+	RangeType     FieldRangeType // 使用的字段索引
+	TitleOn       bool           // 表定义Sql是否启用
+	DataOn        bool           // 数据Sql是否启用
+	SqlMerge      bool           // 合并Sql文件
+	StartRowNum   int            // 数据开始行号
+	StartColIndex int            // 数据开始列索引
 }
 
 func (o SqlContext) String() string {
-	return fmt.Sprintf("SqlContext(TitleOn=%v, DataOn=%v, SqlMerge=%v)", o.TitleOn, o.DataOn, o.SqlMerge)
+	return fmt.Sprintf("SqlContext(Prefix=%s, TitleOn=%v, DataOn=%v, SqlMerge=%v, StartRowNum=%d, StartColIndex=%d)",
+		o.EnablePrefix, o.TitleOn, o.DataOn, o.SqlMerge, o.StartRowNum, o.StartColIndex)
 }
 
 // 字段定义

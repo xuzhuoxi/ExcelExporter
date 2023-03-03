@@ -3,6 +3,8 @@ package data
 import (
 	"bytes"
 	"encoding/binary"
+	"errors"
+	"fmt"
 	"github.com/xuzhuoxi/infra-go/filex"
 	"os"
 )
@@ -49,7 +51,7 @@ func (b *binaryDataBuilder) WriteRow(ktvArr []*KTValue) error {
 	for _, ktv := range ktvArr {
 		err := b.writeCell(ktv)
 		if nil != err {
-			return err
+			return errors.New(fmt.Sprintf("[%s]{%s}", ktv.Loc, err))
 		}
 	}
 	b.startNewRow()

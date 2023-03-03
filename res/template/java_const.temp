@@ -1,10 +1,13 @@
-{{$proxy := .}}{{$clsName := $proxy.ClassName}}package 可修改包名;
+{{- $proxy := .}}{{$clsName := $proxy.ClassName -}}
+package {{$proxy.Namespace}};
 
 /**
  * @author ${AUTHOR}
  * Created on ${DATE}.
  */
-public class {{$clsName}} { {{range $index, $value := $proxy.GetItems}}
+public class {{$clsName}} { 
+	{{- range $index, $value := $proxy.GetItems}}
     // {{$value.Remark}}
-    public static const {{$value.Type}} {{$value.Name}} = {{$value.Value}};{{end}}
+    public static const {{$value.Type}} {{$value.Name}} = {{$value.Value}};
+	{{- end}}
 }

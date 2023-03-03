@@ -1,10 +1,10 @@
+{{- $proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx}}{{$clsName := $proxy.ClassName}}{{$lang := $proxy.Language -}}
 using System;
 using UnityEngine;
-{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx}}{{$clsName := $proxy.ClassName}}{{$lang := $proxy.Language}}
 /**
  * C#定义
  */
-namespace {MODULE}
+namespace {{$proxy.Namespace}}
 {
     /**
      * @author {AUTHOR}

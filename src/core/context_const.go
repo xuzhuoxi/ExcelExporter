@@ -10,14 +10,15 @@ import (
 
 // 常量表上下文
 type ConstContext struct {
+	EnablePrefix    string         // 开启前缀
 	RangeName       string         // 使用的字段索引名称
 	RangeType       FieldRangeType // 使用的字段索引
 	ProgramLanguage string         // 使用的编程语言
 }
 
 func (o ConstContext) String() string {
-	return fmt.Sprintf("ConstContext(RangeName=%s, RangeType=%v, ProgramLanguage=%s)",
-		o.RangeName, o.RangeType, o.ProgramLanguage)
+	return fmt.Sprintf("ConstContext(Prefix=%s, RangeName=%s, RangeType=%v, ProgramLanguage=%s)",
+		o.EnablePrefix, o.RangeName, o.RangeType, o.ProgramLanguage)
 }
 
 // 常量数据
@@ -35,6 +36,7 @@ type TempConstProxy struct {
 	ConstCtx  *ConstContext     // 当前执行的上下文数据
 	FileName  string            // 导出文件名
 	ClassName string            // 导出常量类名
+	Namespace string            // 导出类名的命名空间名称
 	Language  string            // 导出对应的编程语言
 	StartRow  int               // 数据开始行号
 	EndRow    int               // 数据结束行号

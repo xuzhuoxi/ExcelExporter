@@ -2,6 +2,7 @@ package excel
 
 import (
 	"fmt"
+	"github.com/xuzhuoxi/infra-go/filex"
 	"github.com/xuzhuoxi/infra-go/mathx"
 )
 
@@ -15,6 +16,11 @@ type ExcelSheet struct {
 
 	RowLength int         // 行数
 	Rows      []*ExcelRow // 全部行内容
+}
+
+func (es *ExcelSheet) FileName() string {
+	_, fileName := filex.Split(es.FilePath)
+	return fileName
 }
 
 func (es *ExcelSheet) AxisLength() int {

@@ -8,7 +8,7 @@
 
 ### Improvements
 
-- excel配置：数据表头配置中的"data_start_row"修改为"data_start"，使用行列号进行配置。。
+- excel配置：数据表头配置中的"data_start_row"修改为"data_start"，使用行列号进行配置。
 
 ### Fixes
 

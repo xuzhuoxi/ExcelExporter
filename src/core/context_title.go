@@ -9,14 +9,16 @@ import (
 
 // 表头导出上下文
 type TitleContext struct {
+	EnablePrefix    string         // 开启前缀
 	RangeName       string         // 使用的字段索引名称
 	RangeType       FieldRangeType // 使用的字段索引
 	ProgramLanguage string         // 使用的编程语言
+	StartColIndex   int            // 开始列索引
 }
 
 func (o TitleContext) String() string {
-	return fmt.Sprintf("TitleContent(RangeName=%s, RangeType=%v, ProgramLanguage=%s)",
-		o.RangeName, o.RangeType, o.ProgramLanguage)
+	return fmt.Sprintf("TitleContent(Prefix=%s, RangeName=%s, RangeType=%v, ProgramLanguage=%s, StartColIndex=%d)",
+		o.EnablePrefix, o.RangeName, o.RangeType, o.ProgramLanguage, o.StartColIndex)
 }
 
 // 数据表代理
@@ -26,6 +28,7 @@ type TempTitleProxy struct {
 	TitleCtx   *TitleContext     // 当前执行的表头上下文数据
 	FileName   string            // 表头导出类文件名
 	ClassName  string            // 表头导出类名
+	Namespace  string            // 表头导出类命名空间
 	FieldIndex []int             // 当前选中的字段索引
 	Language   string            // 当前的选择的编程语言
 }

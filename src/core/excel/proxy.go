@@ -3,6 +3,8 @@ package excel
 import (
 	"errors"
 	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/xuzhuoxi/infra-go/slicex"
+	"strings"
 )
 
 type ExcelProxy struct {
@@ -12,13 +14,32 @@ type ExcelProxy struct {
 	DataRows   []*ExcelRow      // 加载进来的行数据
 }
 
-func (ep *ExcelProxy) GetSheet(sheet string) (es *ExcelSheet, err error) {
+func (ep *ExcelProxy) GetExcelByPath(filePath string) *excelize.File {
+	index, ok := slicex.IndexString(ep.ExcelPaths, filePath)
+	if !ok {
+		return nil
+	}
+	return ep.Excels[index]
+}
+
+func (ep *ExcelProxy) GetSheets(prefix string) (sheets []*ExcelSheet) {
+	for _, sheet := range ep.Sheets {
+		// 过滤Sheet的命名
+		if strings.Index(sheet.SheetName, prefix) != 0 {
+			continue
+		}
+		sheets = append(sheets, sheet)
+	}
+	return
+}
+
+func (ep *ExcelProxy) GetSheet(sheetName string) (es *ExcelSheet, err error) {
 	for _, s := range ep.Sheets {
-		if s.SheetName == sheet {
+		if s.SheetName == sheetName {
 			return s, nil
 		}
 	}
-	return nil, errors.New("No Sheet is " + sheet)
+	return nil, errors.New("No Sheet is " + sheetName)
 }
 
 // Open to templates
@@ -106,7 +127,15 @@ func (ep *ExcelProxy) LoadExcel(excelPath string, overwrite bool) error {
 
 // 从已经加载好的Excel中加载Sheets
 // sheetPrefix用于限制
-func (ep *ExcelProxy) LoadSheets(sheetPrefix string, colNickRow int, overwrite bool) error {
+func (ep *ExcelProxy) LoadSheetsByPrefix(sheetPrefix string, colNickRow int, overwrite bool) error {
+	if len(sheetPrefix) == 0 {
+		return ep.LoadSheetsByPrefixes(nil, colNickRow, overwrite)
+	} else {
+		return ep.LoadSheetsByPrefixes([]string{sheetPrefix}, colNickRow, overwrite)
+	}
+}
+
+func (ep *ExcelProxy) LoadSheetsByPrefixes(sheetPrefix []string, colNickRow int, overwrite bool) error {
 	if overwrite {
 		if nil != ep.Sheets {
 			ep.Sheets = ep.Sheets[:0]
@@ -116,7 +145,7 @@ func (ep *ExcelProxy) LoadSheets(sheetPrefix string, colNickRow int, overwrite b
 		return nil
 	}
 	for index := range ep.Excels {
-		sheets, err := LoadSheets(ep.ExcelPaths[index], ep.Excels[index], sheetPrefix, colNickRow)
+		sheets, err := LoadSheetsByPrefixes(ep.ExcelPaths[index], ep.Excels[index], sheetPrefix, colNickRow)
 		if nil != err {
 			return err
 		}

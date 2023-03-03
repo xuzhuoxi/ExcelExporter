@@ -11,6 +11,7 @@ type KTValue struct {
 	Key   string // 键
 	Type  string // 类型
 	Value string // 字符串值
+	Loc   string // 坐标
 
 	cacheValue interface{}
 	cacheErr   error

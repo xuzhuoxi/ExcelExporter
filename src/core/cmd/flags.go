@@ -179,7 +179,7 @@ func (o *AppFlags) String() string {
 		o.ModeNames, o.ModeTypes, o.RangeNames, o.RangeTypes, o.LangRefs, o.DataFiles, o.SqlMerge)
 }
 
-func (o *AppFlags) GenTitleContexts() (contexts []*core.TitleContext) {
+func (o *AppFlags) GenTitleContexts(prefix string, startRowNum int, startColIndex int) (contexts []*core.TitleContext) {
 	if !o.CheckMode(core.ModeTitle) {
 		return nil
 	}
@@ -192,15 +192,17 @@ func (o *AppFlags) GenTitleContexts() (contexts []*core.TitleContext) {
 	contexts = make([]*core.TitleContext, 0, ln)
 	for fieldIdx := 0; fieldIdx < rangeLen; fieldIdx += 1 {
 		for langIdx := 0; langIdx < langLen; langIdx += 1 {
-			context := &core.TitleContext{RangeName: o.RangeNames[fieldIdx], RangeType: o.RangeTypes[fieldIdx],
-				ProgramLanguage: o.LangRefs[langIdx]}
+			context := &core.TitleContext{EnablePrefix: prefix,
+				RangeName: o.RangeNames[fieldIdx], RangeType: o.RangeTypes[fieldIdx],
+				ProgramLanguage: o.LangRefs[langIdx],
+				StartColIndex:   startColIndex}
 			contexts = append(contexts, context)
 		}
 	}
 	return
 }
 
-func (o *AppFlags) GenDataContexts() (contexts []*core.DataContext) {
+func (o *AppFlags) GenDataContexts(prefix string, startRowNum int, startColIndex int) (contexts []*core.DataContext) {
 	if !o.CheckMode(core.ModeData) {
 		return nil
 	}
@@ -216,15 +218,17 @@ func (o *AppFlags) GenDataContexts() (contexts []*core.DataContext) {
 			if o.DataFiles[fileIdx] == setting.FileNameSql {
 				continue
 			}
-			context := &core.DataContext{RangeName: o.RangeNames[fieldIdx], RangeType: o.RangeTypes[fieldIdx],
-				DataFileFormat: o.DataFiles[fileIdx]}
+			context := &core.DataContext{EnablePrefix: prefix,
+				RangeName: o.RangeNames[fieldIdx], RangeType: o.RangeTypes[fieldIdx],
+				DataFileFormat: o.DataFiles[fileIdx],
+				StartRowNum:    startRowNum, StartColIndex: startColIndex}
 			contexts = append(contexts, context)
 		}
 	}
 	return
 }
 
-func (o *AppFlags) GenConstContexts() (contexts []*core.ConstContext) {
+func (o *AppFlags) GenConstContexts(prefix string) (contexts []*core.ConstContext) {
 	if !o.CheckMode(core.ModeConst) {
 		return nil
 	}
@@ -241,7 +245,8 @@ func (o *AppFlags) GenConstContexts() (contexts []*core.ConstContext) {
 			if rangeName != setting.FieldRangeNameClient && rangeName != setting.FieldRangeNameServer {
 				continue
 			}
-			context := &core.ConstContext{RangeName: o.RangeNames[fieldIdx], RangeType: o.RangeTypes[fieldIdx],
+			context := &core.ConstContext{EnablePrefix: prefix,
+				RangeName: o.RangeNames[fieldIdx], RangeType: o.RangeTypes[fieldIdx],
 				ProgramLanguage: o.LangRefs[langIdx]}
 			contexts = append(contexts, context)
 		}
@@ -250,7 +255,7 @@ func (o *AppFlags) GenConstContexts() (contexts []*core.ConstContext) {
 }
 
 // 生成Sql导出相关
-func (o *AppFlags) GenSqlContext() (context *core.SqlContext) {
+func (o *AppFlags) GenSqlContext(prefix string, startRowNum int, startColIndex int) (context *core.SqlContext) {
 	if !o.CheckRange(core.FieldRangeDatabase) || !o.CheckDataFile(setting.FileNameSql) {
 		return nil
 	}
@@ -259,6 +264,8 @@ func (o *AppFlags) GenSqlContext() (context *core.SqlContext) {
 	if !titleOn && !dataOn {
 		return nil
 	}
-	return &core.SqlContext{RangeName: setting.FieldRangeNameDb, RangeType: core.FieldRangeDatabase,
-		TitleOn: titleOn, DataOn: dataOn, SqlMerge: o.SqlMerge}
+	return &core.SqlContext{EnablePrefix: prefix,
+		RangeName: setting.FieldRangeNameDb, RangeType: core.FieldRangeDatabase,
+		TitleOn: titleOn, DataOn: dataOn, SqlMerge: o.SqlMerge,
+		StartRowNum: startRowNum, StartColIndex: startColIndex}
 }

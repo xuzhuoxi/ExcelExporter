@@ -16,7 +16,7 @@ func TestLoadExcel(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	err = excelProxy.LoadSheets("Const_", 0, true)
+	err = excelProxy.LoadSheetsByPrefix("Const_", 0, true)
 	if nil != err {
 		fmt.Println(err)
 		return
@@ -41,7 +41,7 @@ func TestLoadExcel(t *testing.T) {
 //		fmt.Println(err)
 //		return
 //	}
-//	excel.LoadSheets("Const_", 2)
+//	excel.LoadSheetsByPrefixes("Const_", 2)
 //	for _, s := range excel.Sheets {
 //		fmt.Println(*s)
 //	}

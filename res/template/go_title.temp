@@ -1,5 +1,5 @@
-package {module}
-{{$proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx}}{{$clsName := $proxy.ClassName}}{{$lang := $proxy.Language}}
+{{- $proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx}}{{$clsName := $proxy.ClassName}}{{$lang := $proxy.Language -}}
+package {{$proxy.Namespace}}
 /**
  * @author {AUTHOR}
  * Created on {NowTimeStr} .

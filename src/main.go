@@ -53,10 +53,17 @@ func main() {
 	initAndFixLangs()
 	checkAndFixDataFiles()
 
-	titleCtxArr := cmdParams.GenTitleContexts()
-	dataCtxArr := cmdParams.GenDataContexts()
-	constCtxArr := cmdParams.GenConstContexts()
-	sqlCtx := cmdParams.GenSqlContext()
+	startRowNum := s.Excel.TitleData.DataStartRow()
+	startColIndex := s.Excel.TitleData.DataStartColIndex()
+	titlePrefix := s.Excel.TitleData.Prefix
+	dataPrefix := titlePrefix
+	constPrefix := s.Excel.Const.Prefix
+	sqlPrefix := titlePrefix
+
+	titleCtxArr := cmdParams.GenTitleContexts(titlePrefix, startRowNum, startColIndex)
+	dataCtxArr := cmdParams.GenDataContexts(dataPrefix, startRowNum, startColIndex)
+	constCtxArr := cmdParams.GenConstContexts(constPrefix)
+	sqlCtx := cmdParams.GenSqlContext(sqlPrefix, startRowNum, startColIndex)
 	core.Execute(s, titleCtxArr, dataCtxArr, constCtxArr, sqlCtx)
 }
 

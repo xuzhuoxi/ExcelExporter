@@ -2,34 +2,32 @@
 'title&data':
   # 启用前缀
   prefix: Data_
-  # 导出命名
+  # 导出配置
   outputs:
     - range_name: 'client'
-      title: 'B1'
-      data: 'C1'
+      title_file: 'B1'
+      data_file: 'C1'
+      class: 'B1'
+      namespace: 'D1'
     - range_name: 'server'
-      title: 'B1'
-      data: 'C1'
+      title_file: 'B1'
+      data_file: 'C1'
+      class: 'B1'
+      namespace: 'D1'
     - range_name: 'db'
-      title: 'B1'
-      data: 'C1'
-  # 表头导出类信息
-  classes:
-    - name: 'client'
-      value: 'B1'
-    - name: 'server'
-      value: 'B1'
-    - name: 'db'
-      value: 'B1'
+      title_file: 'B1'
+      data_file: 'C1'
+      class: 'B1'
+      namespace: 'D1'
   sql:
     # 表名坐标
-    table: 'D1'
+    table: 'E1'
     # sql文件名前缀坐标
-    file: 'E1'
+    file: 'F1'
     # 主键信息坐标
-    key: 'F1'
+    key: 'G1'
   # 数据控制列，决定数据范围
-  control_row: 2
+  control_row: 4
   # 字段别名行号，用于查找指定列，值为0时使用列号作为别名
   nick_row: 0
   # 数据名称所在行号，与Excel行号一致
@@ -87,18 +85,16 @@
 const:
   # 启用前缀
   prefix: Const_
-  # 导出文件命名
+  # 导出信息配置
   outputs:
-    - name: 'client'
-      value: 'A1'
-    - name: 'server'
-      value: 'B1'
-  # 常量导出类信息
-  classes:
-    - name: 'client'
-      value: 'A1'
-    - name: 'server'
-      value: 'B1'
+    - range_name: 'client'
+      file: 'A1'
+      class: 'A1'
+      namespace: 'C1'
+    - range_name: 'server'
+      file: 'B1'
+      class: 'B1'
+      namespace: 'C1'
   # 常量名
   name_col: A
   # 常量值

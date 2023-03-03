@@ -1,9 +1,11 @@
-{{$proxy := .}}{{$clsName := $proxy.ClassName}}package 可修改包名 {
-    public class {{$clsName}}
-    {   {{range $index, $value := $proxy.GetItems}}
+{{- $proxy := .}}{{$clsName := $proxy.ClassName -}}
+package {{$proxy.Namespace}} {
+    public class {{$clsName}}{   
+		{{- range $index, $value := $proxy.GetItems}}
          /// <summary>
          /// {{$value.Remark}}
          /// </summary>
-         public static const {{$value.Name}} : {{$value.Type}} = {{$value.Value}};{{end}}
+         public static const {{$value.Name}} : {{$value.Type}} = {{$value.Value}};
+		 {{- end}}
     }
 }

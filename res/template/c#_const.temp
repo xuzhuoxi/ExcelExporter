@@ -1,10 +1,12 @@
-{{$proxy := .}}{{$clsName := $proxy.ClassName}}namespace {包名}
+{{- $proxy := .}}{{$clsName := $proxy.ClassName -}}
+namespace {{$proxy.Namespace}}
 {
     public static class {{$clsName}}
-    {   {{$proxy := .}}{{range $index, $value := $proxy.GetItems}}
+    {   {{range $index, $value := $proxy.GetItems}}
         /// <summary>
         /// {{$value.Remark}}
         /// </summary>
-        public const {{$value.Type}} {{$value.Name}} = {{$value.Value}};{{end}}
+        public const {{$value.Type}} {{$value.Name}} = {{$value.Value}};
+		{{- end}}
     }
 }

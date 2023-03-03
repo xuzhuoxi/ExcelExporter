@@ -1,7 +1,8 @@
-{{$proxy := .}}{{$clsName := $proxy.ClassName}}package 可修改包名
-
+{{- $proxy := .}}{{$clsName := $proxy.ClassName -}}
+package {{$proxy.Namespace}}
 const (
-    {{range $index, $value := $proxy.GetItems}}
+    {{- range $index, $value := $proxy.GetItems}}
     // {{$value.Remark}}
-    {{$value.Name}} {{$value.Type}} = {{$value.Value}}{{end}}
+    {{$value.Name}} {{$value.Type}} = {{$value.Value}}
+	{{- end}}
 )

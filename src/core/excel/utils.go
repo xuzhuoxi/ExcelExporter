@@ -111,13 +111,21 @@ func LoadExcel(filePath string) (excel *excelize.File, err error) {
 
 // 通过SheetPrefix作为限制加载Sheet, 使用""代表不限制
 // 指定NickRow所在行为别名,NickRow=0时，使用列号作为别名
-func LoadSheets(excelPath string, excelFile *excelize.File, sheetPrefix string, nickRow int) (sheets []*ExcelSheet, err error) {
+func LoadSheetsByPrefixes(excelPath string, excelFile *excelize.File, sheetPrefixes []string, nickRow int) (sheets []*ExcelSheet, err error) {
 	var names []string
 	var indexes []int
 	for index, name := range excelFile.GetSheetMap() {
-		if strings.Index(name, sheetPrefix) == 0 {
+		if len(sheetPrefixes) == 0 {
 			names = append(names, name)
 			indexes = append(indexes, index)
+			break
+		}
+		for _, prefix := range sheetPrefixes {
+			if strings.Index(name, prefix) == 0 {
+				names = append(names, name)
+				indexes = append(indexes, index)
+				break
+			}
 		}
 	}
 	if len(names) == 0 {

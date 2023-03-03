@@ -11,75 +11,88 @@ import (
 	"strings"
 )
 
-func executeConstContext(excel *excel.ExcelProxy, constCtx *ConstContext) error {
+func execExcelConstContext(excel *excel.ExcelProxy, constCtx *ConstContext) error {
+	sheets := excel.GetSheets(constCtx.EnablePrefix)
+	if len(sheets) == 0 {
+		return nil
+	}
+	logPrefix := "core.execExcelConstContext"
+	Logger.Infoln(fmt.Sprintf("[%s][--Start ConstContext]: %s", logPrefix, constCtx))
+	for _, sheet := range sheets {
+		err := execSheetConstContext(excel, sheet, constCtx)
+		if nil != err {
+			return err
+		}
+	}
+	Logger.Infoln(fmt.Sprintf("[%s][--Finish ConstContext]: %s", logPrefix, constCtx))
+	return nil
+}
+
+func execSheetConstContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, constCtx *ConstContext) error {
+	// 过滤Sheet的命名
+	if strings.Index(sheet.SheetName, constCtx.EnablePrefix) != 0 {
+		return nil
+	}
+	logPrefix := "core.execSheetConstContext"
 	lang := constCtx.ProgramLanguage
 	temp, err := getConstLanguageTemp(lang)
 	if nil != err {
+		err = errors.New(fmt.Sprintf("[%s] Get lang[%s] temp fail: %s", logPrefix, lang, err))
 		return err
 	}
 	langDefine, ok := Setting.System.FindProgramLanguage(lang)
 	if !ok {
-		err := errors.New(fmt.Sprintf("-lang error at %s", lang))
-		Logger.Warnln(fmt.Sprintf("[core.executeConstContext] %s ", err))
+		err = errors.New(fmt.Sprintf("[%s] -lang error at %s: lang undefined!", logPrefix, lang))
 		return err
 	}
-	prefix := Setting.Excel.Const.Prefix
-	for _, sheet := range excel.Sheets {
-		// 过滤Sheet的命名
-		if strings.Index(sheet.SheetName, prefix) != 0 {
-			continue
-		}
-		Logger.Infoln(fmt.Sprintf("[core.executeConstContext] Sheet[%s]", sheet.SheetName))
-		outEle, ok := Setting.Excel.Const.GetOutputInfo(constCtx.RangeName)
-		if !ok {
-			err := errors.New(fmt.Sprintf("-field error at \"%s\": output file name!", constCtx.RangeName))
-			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Error at %s ", err))
-			return err
-		}
-		if outEle.Value == "" {
-			continue
-		}
 
-		clsEle, ok := Setting.Excel.Const.GetClassInfo(constCtx.RangeName)
-		if !ok {
-			err := errors.New(fmt.Sprintf("-field error at \"%s\": output class name!", constCtx.RangeName))
-			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Error at %s ", err))
-			return err
-		}
-
-		fileName, err := sheet.ValueAtAxis(outEle.Value)
-		if nil != err || strings.TrimSpace(fileName) == "" {
-			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Get FileName Error: {Err=%s,FileName=%s}", err, fileName))
-			return err
-		}
-		clsName, err := sheet.ValueAtAxis(clsEle.Value)
-		if nil != err || strings.TrimSpace(clsName) == "" {
-			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Get ClassName Error: {Err=%s,FileName=%s}", err, clsName))
-			return err
-		}
-		targetDir := Setting.Project.Target.GetConstDir(constCtx.RangeName)
-		if !filex.IsExist(targetDir) {
-			os.MkdirAll(targetDir, os.ModePerm)
-		}
-		extendName := langDefine.ExtendName
-		filePath := filex.Combine(targetDir, fileName+"."+extendName)
-
-		// 创建模板数据代理
-		startRow := Setting.Excel.Const.DataStartRow
-		endRow := len(sheet.Rows) + 1
-		tempDataProxy := &TempConstProxy{Sheet: sheet, Excel: excel, ConstCtx: constCtx,
-			FileName: fileName, ClassName: clsName, Language: constCtx.ProgramLanguage,
-			StartRow: startRow, EndRow: endRow}
-
-		buff := bytes.NewBuffer(nil)
-		err = temp.Execute(buff, tempDataProxy, false)
-		if nil != err {
-			Logger.Warnln(fmt.Sprintf("[core.executeConstContext] Execute Template error: %s ", err))
-			return err
-		}
-		filex.WriteFile(filePath, buff.Bytes(), os.ModePerm)
-		Logger.Infoln(fmt.Sprintf("[core.executeConstContext] Generate file : %s", filePath))
+	//Logger.Infoln(fmt.Sprintf("[%s][SheetName=%s, Context=%s]", logPrefix, sheet.SheetName, constCtx))
+	outEle, ok := Setting.Excel.Const.GetOutputInfo(constCtx.RangeName)
+	if !ok {
+		err = errors.New(fmt.Sprintf("[%s] -field error at \"%s\": output file name!", logPrefix, constCtx.RangeName))
+		return err
 	}
+	if outEle.FileAxis == "" {
+		return nil
+	}
+	fileName, err := sheet.ValueAtAxis(outEle.FileAxis)
+	if nil != err || strings.TrimSpace(fileName) == "" {
+		err = errors.New(fmt.Sprintf("[%s] GetTitleFileName Error: {Err=%s,FileName=%s}", logPrefix, err, fileName))
+		return err
+	}
+	clsName, err := sheet.ValueAtAxis(outEle.ClassAxis)
+	if nil != err || strings.TrimSpace(clsName) == "" {
+		err = errors.New(fmt.Sprintf("[%s] GetTitleClassName Error: {Err=%s,ClassName=%s}", logPrefix, err, clsName))
+		return err
+	}
+	namespace, err := sheet.ValueAtAxis(outEle.NamespaceAxis)
+	if nil != err || strings.TrimSpace(namespace) == "" {
+		err = errors.New(fmt.Sprintf("[%s] GetTitleClassName Error: {Err=%s,ClassName=%s}", logPrefix, err, namespace))
+		return err
+	}
+	targetDir := Setting.Project.Target.GetConstDir(constCtx.RangeName)
+	if !filex.IsExist(targetDir) {
+		os.MkdirAll(targetDir, os.ModePerm)
+	}
+	extendName := langDefine.ExtendName
+	filePath := filex.Combine(targetDir, fileName+"."+extendName)
+
+	// 创建模板数据代理
+	startRow := Setting.Excel.Const.DataStartRow
+	endRow := len(sheet.Rows) + 1
+	tempDataProxy := &TempConstProxy{Sheet: sheet, Excel: excel, ConstCtx: constCtx,
+		FileName: fileName, ClassName: clsName, Namespace: namespace,
+		Language: constCtx.ProgramLanguage,
+		StartRow: startRow, EndRow: endRow}
+
+	buff := bytes.NewBuffer(nil)
+	err = temp.Execute(buff, tempDataProxy, false)
+	if nil != err {
+		err = errors.New(fmt.Sprintf("[%s] Execute Template error: %s ", logPrefix, err))
+		return err
+	}
+	filex.WriteFile(filePath, buff.Bytes(), os.ModePerm)
+	Logger.Infoln(fmt.Sprintf("[%s] Generate file : %s", logPrefix, filePath))
 	return nil
 }
 
@@ -96,5 +109,5 @@ func getConstLanguageTemp(lang string) (t *temps.TemplateProxy, err error) {
 
 		return temp, nil
 	}
-	return nil, errors.New(fmt.Sprintf("Undefined Program Lanaguage for Const: %s", lang))
+	return nil, errors.New(fmt.Sprintf("[core.getConstLanguageTemp] Undefined Program Lanaguage for Const: %s", lang))
 }

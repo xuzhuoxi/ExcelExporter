@@ -1,6 +1,7 @@
 package data
 
 import (
+	"errors"
 	"fmt"
 	"github.com/spf13/viper"
 )
@@ -33,7 +34,7 @@ func (b *viperDataBuilder) WriteRow(ktvArr []*KTValue) error {
 	for _, ktv := range ktvArr {
 		err := b.writeCell(ktv)
 		if nil != err {
-			return err
+			return errors.New(fmt.Sprintf("[%s]{%s}", ktv.Loc, err))
 		}
 	}
 	b.startNewRow()
