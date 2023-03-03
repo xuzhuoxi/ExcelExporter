@@ -20,12 +20,16 @@ go get -u github.com/xuzhuoxi/ExcelExporter
 
 2. 编译工程。 
 Windows下执行[goxc_build.bat](/build/goxc_build.bat)  
-Linux下执行[goxc_build.sh](/build/goxc_build.sh)  
+Linux或MacOS下执行[goxc_build.sh](/build/goxc_build.sh)  
 
 ## 配置环境说明
 
 <pre><code>.配置根目录
 ├── db: 数据库相关配置与sql模板
+│   ├── mysql.yaml: mysql信息配置
+│   ├── mysql_table.temp: mysql建表模板
+│   ├── mysql_data.temp: mysql插入数据模板
+│   ├── ...: 其它扩充
 ├── lang: 编程语言相关配置
 │   ├── as3.yaml: 针对ActionScript3，不同数据文件下各基础数据类型的读写语法配置
 │   ├── c#.yaml: 针对c#，不同数据文件下各基础数据类型的读写语法配置
@@ -42,19 +46,20 @@ Linux下执行[goxc_build.sh](/build/goxc_build.sh)
 ├── excel.yaml: Excel的表头配置，包括数据表头配置、常量表头配置
 ├── project.yaml: 项目配置，包括数据源配置、数据输出配置、缓冲配置、大小端配置等
 ├── system.yaml: 应用配置，包括支持的编程语言配置(扩展名、读写配置、模板关联等)、数据字段类型配置、数据文件配置等
-│   templates: 模板文件目录，只支持golang模板语法
-│    ├── as3_const.temp: ActionScript3语言下，常量定义模板
-│    ├── as3_title.temp: ActionScript3语言下，Title定义模板
-│    ├── c#_const.temp: C#语言下，常量定义模板
-│    ├── c#_title.temp: C#语言下，Title定义模板
-│    ├── go_const.temp: golang语言下，常量定义模板
-│    ├── go_title.temp: golang语言下，Title定义模板
-│    ├── java_const.temp: java语言下，常量定义模板
-│    ├── java_title.temp: java语言下，Title定义模板
-│    ├── ts_const.temp: TypeScript语言下，常量定义模板
-│    ├── ts_title.temp: TypeScript语言下，Title定义模板
-│    ├── ...: 其它语言下，常量定义模板与Title定义模板
+├── templates: 模板文件目录，只支持golang模板语法
+│   ├── as3_const.temp: ActionScript3语言下，常量定义模板
+│   ├── as3_title.temp: ActionScript3语言下，Title定义模板
+│   ├── c#_const.temp: C#语言下，常量定义模板
+│   ├── c#_title.temp: C#语言下，Title定义模板
+│   ├── go_const.temp: golang语言下，常量定义模板
+│   ├── go_title.temp: golang语言下，Title定义模板
+│   ├── java_const.temp: java语言下，常量定义模板
+│   ├── java_title.temp: java语言下，Title定义模板
+│   ├── ts_const.temp: TypeScript语言下，常量定义模板
+│   ├── ts_title.temp: TypeScript语言下，Title定义模板
+│   ├── ...: 其它语言下，常量定义模板与Title定义模板
 </code></pre>
+
 
 ### 应用环境配置说明
 
@@ -113,11 +118,10 @@ Linux下执行[goxc_build.sh](/build/goxc_build.sh)
   │   ├── prefix: 启用前缀
   │   ├── outputs: 导出命名设置
   │      ├── range_name：字段域名称(client|server|db)
-  │      ├── title: Title定义文件的名称所在坐标
-  │      ├── data： 数据文件的名称
-  │   ├── classes: 表头导出类信息
-  │      ├── name：字段域名称(client|server|db)
-  │      ├── value: 导出类所在坐标
+  │      ├── title_file: 导出类文件名坐标(Excel坐标，如"A1")
+  │      ├── data_file： 导出数据文件名坐标(Excel坐标，如"A1")
+  │      ├── class： 导出类名坐标(Excel坐标，如"A1")
+  │      ├── namespace： 导出类命名空间坐标(Excel坐标，如"A1")
   │   ├── nick_row: 字段别名行号，用于查找指定列，值为0时使用列号作为别名
   │   ├── name_row: 数据名称所在行号
   │   ├── remark_row: 数据注释所在行号
@@ -134,11 +138,10 @@ Linux下执行[goxc_build.sh](/build/goxc_build.sh)
   ├── const: 
   │   ├── prefix: 启用前缀
   │   ├── outputs: 导出类名配置
-  │      ├── name: 字段域(client|server)
-  │          value: 坐标(如： "A1")
-  │   ├── classes: 常量导出类信息
-  │      ├── name：字段域名称(client|server|db)
-  │      ├── value: 导出类所在坐标
+  │      ├── range_name: 字段域(client|server)
+  │          file: 导出类文件名坐标(Excel坐标，如"A1")
+  │          class: 导出类名坐标(Excel坐标，如"A1")
+  │          namespace: 导出类命名空间坐标(Excel坐标，如"A1")
   │   ├── name_col: 常量名列号
   │   ├── value_col: 常量值列号
   │   ├── type_col: 常量值类型列号
@@ -238,27 +241,27 @@ Linux下执行[goxc_build.sh](/build/goxc_build.sh)
 
 #### 表头导出流程
 
-1. 遍历源目录中每一个符合的Excel文件。  
-  - 源目录由project.yaml中的soruce.value列表给出。  
-  - 可以通过-source参数重新指定源目录。  
-  - 根据project.yaml中soruce.ext_name列表进行匹配。  
+1. 遍历源目录中每一个符合的Excel文件。
+    + 源目录由project.yaml中的soruce.value列表给出。  
+    + 可以通过-source参数重新指定源目录。  
+    + 根据project.yaml中soruce.ext_name列表进行匹配。  
 
-2. 遍历Excel文件中匹配的的Sheet。  
-  - 根据excel.yaml中的title&data.prefix属性进行匹配。  
+2. 遍历Excel文件中匹配的的Sheet。
+    + 根据excel.yaml中的title&data.prefix属性进行匹配。  
 
-3. 根据-range参数选择对应字段列表。  
-  - -range参数支持client,server,db三种类型，详细请[查看]()。  
+3. 根据-range参数选择对应字段列表。
+    + -range参数支持client,server,db三种类型，详细请[查看]()。  
 
-4. 根据-lang参数，选择对应语言的配置及导出模板。  
-  - -lang参数支持go, as3, ts, java, c#，详细请[查看]()。  
+4. 根据-lang参数，选择对应语言的配置及导出模板。
+    + -lang参数支持go, as3, ts, java, c#，详细请[查看]()。  
 
-5. 字段列表 => 数据结构或类的字段或属性。  
+5. 字段列表 => 数据结构或类的字段或属性。
 
 6. 相应文件全生成到目标目录中。  
-  - 目标根目录由project.yaml中的target.root列表给出。  
-  - 表头输出目录中project.yaml中的target.title给出，为target.root的相对路径。  
-  - 可以通过-target参数重新指定源目录。  
-  - 根据-range参数的内容，文件分别生成到project.yaml中target.title.client、target.title.server、target.title.database对应的目录中去。  
+    + 目标根目录由project.yaml中的target.root列表给出。  
+    + 表头输出目录中project.yaml中的target.title给出，为target.root的相对路径。  
+    + 可以通过-target参数重新指定源目录。  
+    + 根据-range参数的内容，文件分别生成到project.yaml中target.title.client、target.title.server、target.title.database对应的目录中去。  
 
 #### 表头模板说明
 
@@ -267,13 +270,14 @@ Linux下执行[goxc_build.sh](/build/goxc_build.sh)
 
 ```golang
   type TempTitleProxy struct {
-    Sheet      *excel.ExcelSheet // 当前执行的Sheet数据对象
-    Excel      *excel.ExcelProxy // 当前Excel代理，可能包含多个Excel
-    TitleCtx   *TitleContext     // 当前执行的表头上下文数据
-    FileName   string            // 表头导出类文件名
-    ClassName  string            // 表头导出类名
-    FieldIndex []int             // 当前选中的字段索引
-    Language   string            // 当前的选择的编程语言
+	Sheet      *excel.ExcelSheet // 当前执行的Sheet数据对象
+	Excel      *excel.ExcelProxy // 当前Excel代理，可能包含多个Excel
+	TitleCtx   *TitleContext     // 当前执行的表头上下文数据
+	FileName   string            // 表头导出类文件名
+	ClassName  string            // 表头导出类名
+	Namespace  string            // 表头导出类命名空间
+	FieldIndex []int             // 当前选中的字段索引
+	Language   string            // 当前的选择的编程语言
   }
 ```
 
@@ -287,6 +291,8 @@ Linux下执行[goxc_build.sh](/build/goxc_build.sh)
     表头导出类文件名  
   - ClassName:string  
     表头导出类名  
+  - Namespace: string  
+    表头导出类命名空间  
   - FieldIndex:[]int  
     当前选中的字段索引  
   - Language:string  
@@ -296,24 +302,24 @@ Linux下执行[goxc_build.sh](/build/goxc_build.sh)
 
 ### 常量表导出
 
-1. 遍历源目录中每一个符合的Excel文件。  
-  - 源目录由project.yaml中的soruce.value列表给出。  
-  - 可以通过-source参数重新指定源目录。  
-  - 根据project.yaml中soruce.ext_name列表进行匹配。  
+1. 遍历源目录中每一个符合的Excel文件。
+    + 源目录由project.yaml中的soruce.value列表给出。  
+    + 可以通过-source参数重新指定源目录。  
+    + 根据project.yaml中soruce.ext_name列表进行匹配。  
 
-2. 遍历Excel文件中匹配的的Sheet。  
-  - 根据excel.yaml中的const.prefix属性进行匹配。  
-  - 根据excel.yaml中的name_col、value_col、type_col、remark_col, 定位常量的名称、值、类型、注释。  
-  - 根据excel.yaml中的data_start_row开始向正描述数据，直到遇到空行结束。   
+2. 遍历Excel文件中匹配的的Sheet。
+    + 根据excel.yaml中的const.prefix属性进行匹配。  
+    + 根据excel.yaml中的name_col、value_col、type_col、remark_col, 定位常量的名称、值、类型、注释。  
+    + 根据excel.yaml中的data_start_row开始向正描述数据，直到遇到空行结束。   
 
-4. 根据-lang参数，选择对应语言的配置及导出模板。  
-  - -lang参数支持go, as3, ts, java, c#，详细请[查看]()。  
+3. 根据-lang参数，选择对应语言的配置及导出模板。
+    + -lang参数支持go, as3, ts, java, c#，详细请[查看]()。  
 
-6. 相应文件全生成到目标目录中。  
-  - 目标根目录由project.yaml中的target.root列表给出。  
-  - 常量表输出目录中project.yaml中的target.const给出，为target.root的相对路径。  
-  - 可以通过-target参数重新指定源目录。  
-  - 根据-range参数的内容，文件分别生成到project.yaml中target.const.client、target.const.server对应的目录中去。  
+4. 相应文件全生成到目标目录中。
+    + 目标根目录由project.yaml中的target.root列表给出。  
+    + 常量表输出目录中project.yaml中的target.const给出，为target.root的相对路径。  
+    + 可以通过-target参数重新指定源目录。  
+    + 根据-range参数的内容，文件分别生成到project.yaml中target.const.client、target.const.server对应的目录中去。  
 
 #### 注入到常量模板中的数据及函数
 
@@ -322,14 +328,15 @@ Linux下执行[goxc_build.sh](/build/goxc_build.sh)
 
 ```golang
   type TempConstProxy struct {
-    Sheet     *excel.ExcelSheet // 当前执行的Sheet数据对象
-    Excel     *excel.ExcelProxy // 当前Excel代理，可能包含多个Excel
-    ConstCtx  *ConstContext     // 当前执行的上下文数据
-    FileName  string            // 导出文件名
-    ClassName string            // 导出常量类名
-    Language  string            // 导出对应的编程语言
-    StartRow  int               // 数据开始行号
-    EndRow    int               // 数据结束行号
+	Sheet     *excel.ExcelSheet // 当前执行的Sheet数据对象
+	Excel     *excel.ExcelProxy // 当前Excel代理，可能包含多个Excel
+	ConstCtx  *ConstContext     // 当前执行的上下文数据
+	FileName  string            // 导出文件名
+	ClassName string            // 导出常量类名
+	Namespace string            // 导出类名的命名空间名称
+	Language  string            // 导出对应的编程语言
+	StartRow  int               // 数据开始行号
+	EndRow    int               // 数据结束行号
   }
 ```
 
@@ -343,6 +350,8 @@ Linux下执行[goxc_build.sh](/build/goxc_build.sh)
     导出文件名称  
   - ClassName:string  
     导出常量类名  
+  - Namespace:string  
+    导出类名的命名空间名称  
   - Language:string  
     导出对应的编程语言  
   - StartRow:int  
@@ -358,18 +367,15 @@ Linux下执行[goxc_build.sh](/build/goxc_build.sh)
 - 要开放yaml等数据导出，请修改system.yaml文件，在"datafiel_formats"列表中补充。  
 
 ### Sql导出
-
 - **Sql导出依赖于表头导出与数据导出的设置。**   
-
-- 当以下三个条件**同时具备**时，进行sql导出。  
-  1. -ragne中包含db项  
-  2. -file中包含sql项  
-  3. -mode中至少包含title或data其中之一。  
-
+- 当以下三个条件**同时具备**时，进行sql导出。   
+    1. -ragne中包含db项  
+    2. -file中包含sql项  
+    3. -mode中至少包含title或data其中之一。  
 - 导出流程：  
-  1. 遍历Excel文件及Sheet与[**表头导出**](#表头导出)和[**数据导出**](#数据导出)一致。  
-  2. 设置-merge参数为true时，只产出一个sql文件(all_merge.sql)  
-  3. 关闭-merge参数或设置为false时，产出"文件名.talbe.sql"和"文件名.data.sql", table.sql文件为表结构更新脚本，data.sql为数据更新脚本。  
+    1. 遍历Excel文件及Sheet与[**表头导出**](#表头导出)和[**数据导出**](#数据导出)一致。  
+    2. 设置-merge参数为true时，只产出一个sql文件(all_merge.sql)  
+    3. 关闭-merge参数或设置为false时，产出"文件名.talbe.sql"和"文件名.data.sql", table.sql文件为表结构更新脚本，data.sql为数据更新脚本。  
 
 #### 注入到常量模板中的数据及函数
 
@@ -378,13 +384,14 @@ Linux下执行[goxc_build.sh](/build/goxc_build.sh)
 
 ```golang
   type TempSqlProxy struct {
-    Sheet      *excel.ExcelSheet // 当前执行的Sheet数据对象
-    Excel      *excel.ExcelProxy // 当前执行的Excel数据代理对象
-    SqlCtx     *SqlContext       // 当前执行的Sql上下文
-    TableName  string            // 数据库表名
-    FieldIndex []int             // 字段选择索引
-    StartRow   int               // 开始行号
-    EndRow     int               // 结束行号
+	Sheet         *excel.ExcelSheet // 当前执行的Sheet数据对象
+	Excel         *excel.ExcelProxy // 当前执行的Excel数据代理对象
+	SqlCtx        *SqlContext       // 当前执行的Sql上下文
+	TableName     string            // 数据库表名
+	FieldIndex    []int             // 字段选择索引
+	StartRow      int               // 开始行号
+	EndRow        int               // 结束行号
+	StartColIndex int               // 开始列索引
   }
 ```
 
@@ -402,6 +409,8 @@ Linux下执行[goxc_build.sh](/build/goxc_build.sh)
     开始行号  
   - EndRow:int  
     结束行号  
+  - StartColIndex:int  
+    开始列索引  
 
 2. [自定义函数](#自定义函数)  
 

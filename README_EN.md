@@ -21,41 +21,46 @@ go get -u github.com/xuzhuoxi/ExcelExporter
 
 2. Compile the project.  
 Execute [goxc_build.bat](/build/goxc_build.bat) under Windows  
-Execute [goxc_build.sh](/build/goxc_build.sh) under Linux  
+Execute [goxc_build.sh](/build/goxc_build.sh) under Linux  or MacOS
 
 ## Configuration environment description
 
 <pre><code>.Configuration root directory
 ├── db: database related configuration and sql template
+│   ├── mysql.yaml: mysql information configuration
+│   ├── mysql_table.temp: mysql table creation template
+│   ├── mysql_data.temp: mysql insert data template
+│   ├── ...: other
 ├── lang: programming language related configuration
-│ ├── as3.yaml: For ActionScript3, read and write syntax configuration of each basic data type under different data files
-│ ├── c#.yaml: For c#, read and write syntax configuration of each basic data type under different data files
-│ ├── c++.yaml: For C++, read and write syntax configuration of each basic data type under different data files
-│ ├── go.yaml: For golang, read and write syntax configuration of each basic data type under different data files
-│ ├── java.yaml: For java, read and write syntax configuration of each basic data type under different data files
-│ ├── ...: In other programming languages, read and write syntax configuration of each basic data type in different data files
+│   ├── as3.yaml: For ActionScript3, read and write syntax configuration of each basic data type under different data files
+│   ├── c#.yaml: For c#, read and write syntax configuration of each basic data type under different data files
+│   ├── c++.yaml: For C++, read and write syntax configuration of each basic data type under different data files
+│   ├── go.yaml: For golang, read and write syntax configuration of each basic data type under different data files
+│   ├── java.yaml: For java, read and write syntax configuration of each basic data type under different data files
+│   ├── ...: In other programming languages, read and write syntax configuration of each basic data type in different data files
 ├── proxy: proxy code set (optional)
-│ ├── as: ActionScript3 related proxy code set
-│ ├── go: golang-related proxy code set
-│ ├── java: Java-related proxy code set
-│ ├── ts: TypeScript-related proxy code set
-│ ├── ...: other programming language-related proxy code sets
+│   ├── as: ActionScript3 related proxy code set
+│   ├── go: golang-related proxy code set
+│   ├── java: Java-related proxy code set
+│   ├── ts: TypeScript-related proxy code set
+│   ├── ...: other programming language-related proxy code sets
 ├── excel.yaml: Excel header configuration, including data header configuration, constant header configuration
 ├── project.yaml: project configuration, including data source configuration, data output configuration, buffer configuration, big and small end configuration, etc.
 ├── system.yaml: Application configuration, including supported programming language configuration (extension, read-write configuration, template association, etc.), data field type configuration, data file configuration, etc.
-│ templates: Template file directory, only supports golang template syntax
-│ ├── as3_const.temp: In ActionScript3 language, constant definition template
-│ ├── as3_title.temp: In ActionScript3 language, Title defines the template
-│ ├── c#_const.temp: In C# language, constant definition template
-│ ├── c#_title.temp: In C# language, Title defines the template
-│ ├── go_const.temp: In golang language, constant definition template
-│ ├── go_title.temp: In golang language, Title defines the template
-│ ├── java_const.temp: constant definition template in java language
-│ ├── java_title.temp: In the java language, Title defines the template
-│ ├── ts_const.temp: Constant definition template in TypeScript language
-│ ├── ts_title.temp: In TypeScript language, Title defines the template
-│ ├── ...: In other languages, constant definition templates and Title definition templates
+├── templates: Template file directory, only supports golang template syntax
+│   ├── as3_const.temp: In ActionScript3 language, constant definition template
+│   ├── as3_title.temp: In ActionScript3 language, Title defines the template
+│   ├── c#_const.temp: In C# language, constant definition template
+│   ├── c#_title.temp: In C# language, Title defines the template
+│   ├── go_const.temp: In golang language, constant definition template
+│   ├── go_title.temp: In golang language, Title defines the template
+│   ├── java_const.temp: constant definition template in java language
+│   ├── java_title.temp: In the java language, Title defines the template
+│   ├── ts_const.temp: Constant definition template in TypeScript language
+│   ├── ts_title.temp: In TypeScript language, Title defines the template
+│   ├── ...: In other languages, constant definition templates and Title definition templates
 </code></pre>
+
 
 ### Application environment configuration instructions
 
@@ -63,89 +68,90 @@ Execute [goxc_build.sh](/build/goxc_build.sh) under Linux
 
 <pre><code>. Apply system level configuration
 ├── languages: Supported programming language configuration
-│ ├── name: programming language name
-│ ├── ext: source code file extension
-│ ├── ref: basic data read and write configuration file path (relative to the configuration root directory)
-│ ├── temps_title: title export class defines the export template path (relative to the configuration root directory)
-│ ├── temps_const: constant defines the export template path (relative to the configuration root directory)
+│   ├── name: programming language name
+│   ├── ext: source code file extension
+│   ├── ref: basic data read and write configuration file path (relative to the configuration root directory)
+│   ├── temps_title: title export class defines the export template path (relative to the configuration root directory)
+│   ├── temps_const: constant defines the export template path (relative to the configuration root directory)
 ├── database: supported database configurations
-│ ├── default: The default database configuration, which must be one of the DatabaseList
-│ ├── list: database configuration list
-│ ├── name: database name
-│ ref: The path where the database configuration file is located (relative to the configuration root directory)
-│ temps_table: table structure sql generates template list
-│ temps_data: table data sql generates template list
+│   ├── default: The default database configuration, which must be one of the DatabaseList
+│   ├── list: database configuration list
+│       ├── name: database name
+│           ref: The path where the database configuration file is located (relative to the configuration root directory)
+│           temps_table: table structure sql generates template list
+│           temps_data: table data sql generates template list
 ├── datafield_formats: list of supported basic data types
 ├── datafile_formats: list of supported data file formats
 </code></pre>
+
 
 - project.yaml
 
 <pre><code>. Apply project-level configuration
 ├── source: Excel source directory
-│ ├── value: Excel source directory path, support multiple, relative to the configuration root directory
-│ ├── encoding: encoding format (if needed)
-│ ├── ext_name: file extension, supports multiple
+│   ├── value: Excel source directory path, support multiple, relative to the configuration root directory
+│   ├── encoding: encoding format (if needed)
+│   ├── ext_name: file extension, supports multiple
 ├── target: output settings
-│ ├── root: output directory, with '':'' switch, or if the path contains '':'', it is regarded as an absolute path
-│ ├── title:
-│ ├── client: The client header defines the output directory
-│ ├── server: The server header defines the output directory
-│ ├── db: db header defines the output directory
-│ ├── data:
-│ ├── client: client data file output directory
-│ ├── server: server data file output directory
-│ ├── db: db data file output directory
-│ ├── const:
-│ ├── client: client constant table output directory
-│ ├── server: server constant table output directory
-│ ├── encoding: The encoding format of the output file
+│   ├── root: output directory, with '':'' switch, or if the path contains '':'', it is regarded as an absolute path
+│   ├── title:
+│       ├── client: The client header defines the output directory
+│       ├── server: The server header defines the output directory
+│       ├── db: db header defines the output directory
+│   ├── data:
+│       ├── client: client data file output directory
+│       ├── server: server data file output directory
+│       ├── db: db data file output directory
+│   ├── const:
+│       ├── client: client constant table output directory
+│       ├── server: server constant table output directory
+│   ├── encoding: The encoding format of the output file
 ├── buff: buffer definition
-│ ├── big_endian: The endian of the binary data file (true|false)
-│ ├── token: buffer size of each field (unused)
-│ ├── item: the buffer size of each piece of data (unused)
-│ ├── sheet: buffer size of each sheet (unused)
+│   ├── big_endian: The endian of the binary data file (true|false)
+│   ├── token: buffer size of each field (unused)
+│   ├── item: the buffer size of each piece of data (unused)
+│   ├── sheet: buffer size of each sheet (unused)
 </code></pre>
+
 
 - excel.yaml
 
 <pre><code>. Apply Excel Configuration
 ├── title&data:
-│ ├── prefix: enable prefix
-│ ├── outputs: export naming settings
-│ ├── range_name: field domain name (client|server|db)
-│ ├── title: The coordinates of the name of the Title definition file
-│ ├── data: The name of the data file
-│ ├── classes: header export class information
-│ ├── name: field domain name (client|server|db)
-│ ├── value: the coordinates of the exported class
-│ ├── nick_row: field alias row number, used to find the specified column, when the value is 0, the column number is used as an alias
-│ ├── name_row: The row number where the data name is located
-│ ├── remark_row: the row number where the data comment is located
-│ ├── field_range_row: output selection row number, content format: 'c,s,d', c means front end, s means back end, d means database, (01)
-│ ├── field_format_row: field data format row number
-│ ├── sql_field_format_row: database field type custom row number, 0 is not customizable
-│ ├── field_names: Title definition file field name configuration
-│ ├── name: language name
-│ row: the row number where the language attribute is located
-│ ├── file_keys: data file field name configuration
-│ ├── name: data file format (bin, json, yaml, etc.)
-│ row: the row number where the data field name is located
-│ ├── data_start_row: data start row number
+│   ├── prefix: enable prefix
+│   ├── outputs: export naming settings
+│       ├── range_name: field domain name (client|server|db)
+│       ├── title_file: export class file name coordinates (Excel coordinates, such as "A1")
+│       ├── data_file: export data file name coordinates (Excel coordinates, such as "A1")
+│       ├── class: export class name coordinates (Excel coordinates, such as "A1")
+│       ├── namespace: export class namespace coordinates (Excel coordinates, such as "A1")
+│   ├── nick_row: field alias row number, used to find the specified column, when the value is 0, the column number is used as an alias
+│   ├── name_row: The row number where the data name is located
+│   ├── remark_row: the row number where the data comment is located
+│   ├── field_range_row: output selection row number, content format: 'c,s,d', c means front end, s means back end, d means database, (01)
+│   ├── field_format_row: field data format row number
+│   ├── sql_field_format_row: database field type custom row number, 0 is not customizable
+│   ├── field_names: Title definition file field name configuration
+│       ├── name: language name
+│           row: the row number where the language attribute is located
+│   ├── file_keys: data file field name configuration
+│       ├── name: data file format (bin, json, yaml, etc.)
+│       row: the row number where the data field name is located
+│   ├── data_start_row: data start row number
 ├── const:
-│ ├── prefix: enable prefix
-│ ├── outputs: export class name configuration
-│ ├── name: field domain (client|server)
-│ value: Coordinate (eg: "A1")
-│ ├── classes: constant export class information
-│ ├── name: field domain name (client|server|db)
-│ ├── value: the coordinates of the exported class
-│ ├── name_col: constant name column number
-│ ├── value_col: constant value column number
-│ ├── type_col: constant value type column number
-│ ├── remark_col: remark column number
-│ ├── data_start: data start col-row name
+│   ├── prefix: enable prefix
+│   ├── outputs: export class name configuration
+│       ├── range_name: field domain (client|server)
+│           file: export class file name coordinates (Excel coordinates, such as "A1")
+│           class: export class name coordinates (Excel coordinates, such as "A1")
+│           namespace: export class namespace coordinates (Excel coordinates, such as "A1")
+│   ├── name_col: constant name column number
+│   ├── value_col: constant value column number
+│   ├── type_col: constant value type column number
+│   ├── remark_col: remark column number
+│   ├── data_start: data start col-row name
 </code></pre>
+
 
 #### Programming language configuration instructions  
 
@@ -239,27 +245,27 @@ Export the header information in the Excel file as a data structure or class of 
 
 #### Header export process  
 
-1. Traverse every matching Excel file in the source directory.  
-  - The source directory is given by the soruce.value list in project.yaml.  
-  - The source directory can be re-specified by the -source parameter.  
-  - Match according to the soruce.ext_name list in project.yaml.  
+1. Traverse every matching Excel file in the source directory. 
+    + The source directory is given by the soruce.value list in project.yaml.  
+    + The source directory can be re-specified by the -source parameter.  
+    + Match according to the soruce.ext_name list in project.yaml.  
 
-2. Traverse the matched Sheets in the Excel file.  
-  - Match according to the title&data.prefix attribute in excel.yaml.  
+2. Traverse the matched Sheets in the Excel file. 
+    + Match according to the title&data.prefix attribute in excel.yaml.  
 
-3. Select the corresponding field list according to the -range parameter.  
-  - The -range parameter supports three types: client, server, and db. For details, please [view]().  
+3. Select the corresponding field list according to the -range parameter. 
+    + The -range parameter supports three types: client, server, and db. For details, please [view]().  
 
-4. According to the -lang parameter, select the configuration and export template corresponding to the language.  
-  - The -lang parameter supports go, as3, ts, java, c#, please [view]() for details.  
+4. According to the -lang parameter, select the configuration and export template corresponding to the language. 
+    + The -lang parameter supports go, as3, ts, java, c#, please [view]() for details.  
 
-5. Field list => fields or properties of a data structure or class.  
+5. Field list => fields or properties of a data structure or class. 
 
-6. The corresponding files are all generated into the target directory.  
-  - The target root directory is given by the target.root list in project.yaml.  
-  - The target.title in project.yaml in the header output directory is given as the relative path of target.root.  
-  - The source directory can be re-specified by the -target parameter.  
-  - According to the content of the -range parameter, the files are generated into the directories corresponding to target.title.client, target.title.server, and target.title.database in project.yaml.  
+6. The corresponding files are all generated into the target directory. 
+    + The target root directory is given by the target.root list in project.yaml.  
+    + The target.title in project.yaml in the header output directory is given as the relative path of target.root.  
+    + The source directory can be re-specified by the -target parameter.  
+    + According to the content of the -range parameter, the files are generated into the directories corresponding to target.title.client, target.title.server, and target.title.database in project.yaml.  
 
 #### Header Template Description  
 
@@ -268,13 +274,14 @@ It can be obtained through template syntax such as `{{.}}`, `{{$proxy := .}}`, a
 
 ```golang
   type TempTitleProxy struct {
-    Sheet *excel.ExcelSheet // currently executed Sheet data object
-    Excel *excel.ExcelProxy // current Excel proxy, may contain multiple Excel
-    TitleCtx *TitleContext // currently executed header context data
-    FileName string // header export class file name
-    ClassName string // header export class name
-    FieldIndex []int // currently selected field index
-    Language string // currently selected programming language
+    Sheet 		*excel.ExcelSheet 	// currently executed Sheet data object
+    Excel 		*excel.ExcelProxy 	// current Excel proxy, may contain multiple Excel
+    TitleCtx 	*TitleContext 		// currently executed header context data
+    FileName 	string 				// header export class file name
+    ClassName 	string 				// header export class name
+    Namespace 	string 				// header export class namespace
+    FieldIndex 	[]int 				// currently selected field index
+    Language 	string 				// currently selected programming language
   }
 ```
 
@@ -288,6 +295,8 @@ It can be obtained through template syntax such as `{{.}}`, `{{$proxy := .}}`, a
     header export class file name  
   - ClassName: string  
     header export class name  
+  - Namespace:string   
+    header export class namespace  
   - FieldIndex: []int  
     The currently selected field index  
   - Language: string  
@@ -297,24 +306,24 @@ It can be obtained through template syntax such as `{{.}}`, `{{$proxy := .}}`, a
 
 ### Constant table export  
 
-1. Traverse every matching Excel file in the source directory.  
-  - The source directory is given by the soruce.value list in project.yaml.  
-  - The source directory can be re-specified by the -source parameter.  
-  - Match according to the soruce.ext_name list in project.yaml.  
+1. Traverse every matching Excel file in the source directory. 
+    + The source directory is given by the soruce.value list in project.yaml.  
+    + The source directory can be re-specified by the -source parameter.  
+    + Match according to the soruce.ext_name list in project.yaml.  
 
-2. Traverse the matched Sheets in the Excel file.  
-  - Match according to the const.prefix property in excel.yaml.  
-  - According to the name_col, value_col, type_col, and remark_col in excel.yaml, locate the name, value, type, and comment of the constant.  
-  - According to the data_start_row in excel.yaml, start to describe the data positively, until it ends with a blank row.  
+2. Traverse the matched Sheets in the Excel file. 
+    + Match according to the const.prefix property in excel.yaml.  
+    + According to the name_col, value_col, type_col, and remark_col in excel.yaml, locate the name, value, type, and comment of the constant.  
+    + According to the data_start_row in excel.yaml, start to describe the data positively, until it ends with a blank row.  
 
-4. According to the -lang parameter, select the configuration and export template corresponding to the language.  
-  - The -lang parameter supports go, as3, ts, java, c#, please [view]() for details.  
+3. According to the -lang parameter, select the configuration and export template corresponding to the language. 
+    + The -lang parameter supports go, as3, ts, java, c#, please [view]() for details.  
 
-6. The corresponding files are all generated into the target directory.  
-  - The target root directory is given by the target.root list in project.yaml.  
-  - given by target.const in project.yaml in the constant table output directory, it is the relative path of target.root.  
-  - The source directory can be re-specified by the -target parameter.  
-  - According to the content of the -range parameter, the files are generated into the directories corresponding to target.const.client and target.const.server in project.yaml respectively.  
+4. The corresponding files are all generated into the target directory. 
+    + The target root directory is given by the target.root list in project.yaml.  
+    + given by target.const in project.yaml in the constant table output directory, it is the relative path of target.root.  
+    + The source directory can be re-specified by the -target parameter.  
+    + According to the content of the -range parameter, the files are generated into the directories corresponding to target.const.client and target.const.server in project.yaml respectively.  
 
 #### Data and functions injected into constant templates  
 
@@ -323,14 +332,15 @@ It can be obtained through template syntax such as `{{.}}`, `{{$proxy := .}}`, a
 
 ```golang
   type TempConstProxy struct {
-    Sheet *excel.ExcelSheet // currently executed Sheet data object
-    Excel *excel.ExcelProxy // current Excel proxy, may contain multiple Excel
-    ConstCtx *ConstContext // currently executed context data
-    FileName string // export file name
-    ClassName string // export constant class name
-    Language string // export the corresponding programming language
-    StartRow int // Data start row number
-    EndRow int // data end row number
+    Sheet 		*excel.ExcelSheet 	// currently executed Sheet data object
+    Excel 		*excel.ExcelProxy 	// current Excel proxy, may contain multiple Excel
+    ConstCtx 	*ConstContext 		// currently executed context data
+    FileName 	string 				// export file name
+    ClassName 	string 				// export constant class name
+    Namespace 	string 				// The namespace name of the exported class name
+    Language 	string 				// export the corresponding programming language
+    StartRow 	int 				// Data start row number
+    EndRow 		int 				// data end row number
   }
 ```
 
@@ -344,6 +354,8 @@ It can be obtained through template syntax such as `{{.}}`, `{{$proxy := .}}`, a
     export file name  
   - ClassName: string  
     export constant class name  
+  - Namespace:string  
+    The namespace name of the exported class name  
   - Language: string  
     Export the corresponding programming language  
   - StartRow:int  
@@ -361,16 +373,14 @@ It can be obtained through template syntax such as `{{.}}`, `{{$proxy := .}}`, a
 ### Sql export  
 
 - **Sql export depends on the settings of header export and data export. **  
-
 - When the following three conditions **consist at the same time**, perform sql export.  
-  1. -ragne contains the db item  
-  2. -file contains sql items  
-  3. -mode contains at least one of title or data.  
-
+    1. -ragne contains the db item  
+    2. -file contains sql items  
+    3. -mode contains at least one of title or data.  
 - Export process:  
-  1. Traversing Excel files and Sheets is consistent with [**Table Header Export**](#Table Header Export) and [**Data Export**](#Data Export).  
-  2. When the -merge parameter is set to true, only one sql file (all_merge.sql) will be produced  
-  3. When the -merge parameter is turned off or set to false, "filename.talbe.sql" and "filename.data.sql" will be generated. The table.sql file is the table structure update script, and data.sql is the data update script.  
+    1. Traversing Excel files and Sheets is consistent with [**Table Header Export**](#Table Header Export) and [**Data Export**](#Data Export).  
+    2. When the -merge parameter is set to true, only one sql file (all_merge.sql) will be produced  
+    3. When the -merge parameter is turned off or set to false, "filename.talbe.sql" and "filename.data.sql" will be generated. The table.sql file is the table structure update script, and data.sql is the data update script.  
 
 #### Data and functions injected into constant templates  
 
@@ -379,13 +389,14 @@ It can be obtained through template syntax such as `{{.}}`, `{{$proxy := .}}`, a
 
 ```golang
   type TempSqlProxy struct {
-    Sheet *excel.ExcelSheet // currently executed Sheet data object
-    Excel *excel.ExcelProxy // currently executing Excel data proxy object
-    SqlCtx *SqlContext // currently executed Sql context
-    TableName string // database table name
-    FieldIndex []int // field selection index
-    StartRow int // start row number
-    EndRow int // end row number
+    Sheet 			*excel.ExcelSheet 	// currently executed Sheet data object
+    Excel 			*excel.ExcelProxy 	// currently executing Excel data proxy object
+    SqlCtx 			*SqlContext 		// currently executed Sql context
+    TableName 		string 				// database table name
+    FieldIndex 		[]int 				// field selection index
+    StartRow 		int 				// start row number
+    EndRow 			int 				// end row number
+    StartColIndex 	int 				// start column index
   }
 ```
 
@@ -403,6 +414,8 @@ It can be obtained through template syntax such as `{{.}}`, `{{$proxy := .}}`, a
     start line number  
   - EndRow:int  
     end line number  
+  - StartColIndex:int   
+    start column index  
 
 2. [Custom function](#Custom function)  
 

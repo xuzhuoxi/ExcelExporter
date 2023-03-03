@@ -19,7 +19,7 @@
 - 执行逻辑： 优化表处理顺序。  
   + 旧顺序： 每个Excel -> 命令mode、lang、ragne、 file、merge的组合处理 -> Sheet.  
   + 新顺序： 每个Excel =》 Sheets =》 命令mode、lang、ragne、 file、merge的组合处理  
-- Log: 优化Log信息，缩减打印信息，并提高清晰度。  
+- Log: 优化Log信息，减小打印信息，并提高清晰度。  
 - Log: 增加数据处理异常时的坐标信息打印。   
 
 ### API Changes  

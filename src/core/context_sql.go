@@ -152,7 +152,7 @@ type TempSqlProxy struct {
 	FieldIndex    []int             // 字段选择索引
 	StartRow      int               // 开始行号
 	EndRow        int               // 结束行号
-	StartColIndex int               //开始列索引
+	StartColIndex int               // 开始列索引
 
 	fieldItems []FieldItem // 字段选择索引对应的字段定义
 	primaryKey []FieldItem // 主键信息
