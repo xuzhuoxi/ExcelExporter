@@ -95,6 +95,7 @@ func loadExcelFiles(execFunc funcExec) {
 }
 
 func loadExcelFilesFromFolder(folderPath string, execFunc funcExec) {
+	Logger.Debugln("loadExcelFilesFromFolder:", folderPath)
 	filex.WalkAllFiles(folderPath, func(filePath string, fileInfo os.FileInfo, err error) error {
 		loadExcelFile(filePath, fileInfo, execFunc)
 		return nil
@@ -164,7 +165,7 @@ func execExcelSheets(showFileInfo bool) (err error) {
 func execSheet(sheet *excel.ExcelSheet) {
 	logPrefix := "core.execSheet"
 	if len(TitleCtx) > 0 || len(DataCtx) > 0 || len(ConstCtx) > 0 || nil != SqlCtx {
-		Logger.Infoln(fmt.Sprintf("[%s][SheetName=%s, FileName=%s]", logPrefix, sheet.SheetName, sheet.FileName()))
+		Logger.Infoln(fmt.Sprintf("[%s] [SheetName=%s, FileName=%s]", logPrefix, sheet.SheetName, sheet.FileName()))
 	}
 	if len(TitleCtx) > 0 {
 		for _, titleCtx := range TitleCtx {
@@ -275,8 +276,10 @@ func getMergedPrefixes() []string {
 			prefixes = append(prefixes, constCtx.EnablePrefix)
 		}
 	}
-	if _, ok := slicex.IndexString(prefixes, SqlCtx.EnablePrefix); !ok {
-		prefixes = append(prefixes, SqlCtx.EnablePrefix)
+	if nil != SqlCtx {
+		if _, ok := slicex.IndexString(prefixes, SqlCtx.EnablePrefix); !ok {
+			prefixes = append(prefixes, SqlCtx.EnablePrefix)
+		}
 	}
 	return prefixes
 }

@@ -27,7 +27,7 @@ func writeMergedSql(sqlCtx *SqlContext) {
 		if nil != err {
 			Logger.Warnln(fmt.Sprintf("[%s] WriteSqlFile error: %s ", logPrefix, err))
 		} else {
-			Logger.Infoln(fmt.Sprintf("[%s] Generate file: %s", logPrefix, filePath))
+			Logger.Infoln(fmt.Sprintf("[%s] \t file => %s", logPrefix, filePath))
 		}
 	}
 }
@@ -178,7 +178,7 @@ func writeDataToFile(data []byte, filePath string) error {
 		err = errors.New(fmt.Sprintf("[%s] WriteSqlFile error: %s ", logPrefix, err))
 		return err
 	}
-	Logger.Infoln(fmt.Sprintf("[%s] Generate file: %s", logPrefix, filePath))
+	Logger.Infoln(fmt.Sprintf("[%s] \t file => %s", logPrefix, filePath))
 	return nil
 }
 

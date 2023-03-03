@@ -92,7 +92,7 @@ func execSheetConstContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, con
 		return err
 	}
 	filex.WriteFile(filePath, buff.Bytes(), os.ModePerm)
-	Logger.Infoln(fmt.Sprintf("[%s] Generate file : %s", logPrefix, filePath))
+	Logger.Infoln(fmt.Sprintf("[%s] \t file => %s", logPrefix, filePath))
 	return nil
 }
 

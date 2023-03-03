@@ -98,6 +98,6 @@ func execSheetDataContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, data
 		err = errors.New(fmt.Sprintf("[%s] WriteDataFile error: %s ", logPrefix, err))
 		return err
 	}
-	Logger.Infoln(fmt.Sprintf("[%s] Generate file: %s", logPrefix, filePath))
+	Logger.Infoln(fmt.Sprintf("[%s] \t file => %s", logPrefix, filePath))
 	return nil
 }
