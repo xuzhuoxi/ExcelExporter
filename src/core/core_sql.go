@@ -25,7 +25,7 @@ func writeMergedSql(sqlCtx *SqlContext) {
 		err := filex.WriteFile(filePath, sqlMergeBuff.Bytes(), os.ModePerm)
 		Logger.Println()
 		if nil != err {
-			Logger.Warnln(fmt.Sprintf("[%s] WriteSqlFile error: %s ", logPrefix, err))
+			Logger.Errorln(fmt.Sprintf("[%s] WriteSqlFile error: %s ", logPrefix, err))
 		} else {
 			Logger.Infoln(fmt.Sprintf("[%s] \t file => %s", logPrefix, filePath))
 		}
@@ -63,7 +63,7 @@ func execSheetSqlContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, sqlCt
 	size := getControlSize(sheet)
 	fieldRangeRow := sheet.GetRowAt(Setting.Excel.TitleData.FieldRangeRow - 1)
 	if nil == fieldRangeRow || fieldRangeRow.Empty() {
-		Logger.Warnln(fmt.Sprintf("[%s] Sheet execute pass at '%s' with filed type empty! ", logPrefix, sheet.SheetName))
+		Logger.Warnln(fmt.Sprintf("[%s] Ignore[%s] execution for filed type empty!", logPrefix, sheet.SheetName))
 		return nil
 	}
 	selects, _, err := parseRangeRow(sheet, fieldRangeRow, uint(sqlCtx.RangeType)-1, sqlCtx.StartColIndex, size)
@@ -103,11 +103,12 @@ func execSqlTable(sqlProxy *TempSqlProxy, sheet *excel.ExcelSheet, sqlCtx *SqlCo
 	sql := Setting.Excel.TitleData.GetSqlInfo()
 	fileName, err := sheet.ValueAtAxis(sql.FileNameAxis)
 	if nil != err {
+		err = errors.New(fmt.Sprintf("[%s] Read Table Name Error At [%s]", logPrefix, sql.FileNameAxis))
 		return err
 	}
-	if strings.TrimSpace(fileName) == "" {
-		err = errors.New(fmt.Sprintf("[%s] Table Name Empty At [%s]", logPrefix, sql.FileNameAxis))
-		return err
+	if strings.TrimSpace(fileName) == "" { // 导出文件如果为空，认为忽略导出
+		Logger.Traceln(fmt.Sprintf("[%s] Ignore export because the file name is empty. ", logPrefix))
+		return nil
 	}
 	temp, err := getSqlTableTemps()
 	if nil != err {
@@ -118,7 +119,7 @@ func execSqlTable(sqlProxy *TempSqlProxy, sheet *excel.ExcelSheet, sqlCtx *SqlCo
 	buff := bytes.NewBuffer(nil)
 	err = temp.Execute(buff, sqlProxy, false)
 	if nil != err {
-		Logger.Warnln(fmt.Sprintf("[%s] Execute Template error: %s ", logPrefix, err))
+		err = errors.New(fmt.Sprintf("[%s] Execute Template error: %s ", logPrefix, err))
 		return err
 	}
 	if sqlCtx.SqlMerge {
@@ -137,11 +138,12 @@ func execSqlData(sqlProxy *TempSqlProxy, sheet *excel.ExcelSheet, sqlCtx *SqlCon
 	sql := Setting.Excel.TitleData.GetSqlInfo()
 	fileName, err := sheet.ValueAtAxis(sql.FileNameAxis)
 	if nil != err {
+		err = errors.New(fmt.Sprintf("[%s] Read Table Name Error At [%s]", logPrefix, sql.FileNameAxis))
 		return err
 	}
-	if strings.TrimSpace(fileName) == "" {
-		err = errors.New(fmt.Sprintf("[%s] Data File Name Empty At [%s]", logPrefix, sql.FileNameAxis))
-		return err
+	if strings.TrimSpace(fileName) == "" { // 导出文件如果为空，认为忽略导出
+		Logger.Traceln(fmt.Sprintf("[%s] Ignore export because the file name is empty. ", logPrefix))
+		return nil
 	}
 	temp, err := getSqlDataTemps()
 	if nil != err {

@@ -43,7 +43,7 @@ func execSheetDataContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, data
 	size := getControlSize(sheet)
 	fieldRangeRow := sheet.GetRowAt(Setting.Excel.TitleData.FieldRangeRow - 1)
 	if nil == fieldRangeRow || fieldRangeRow.Empty() {
-		Logger.Warnln(fmt.Sprintf("[%s] Sheet execute pass at '%s' with filed type empty! ", logPrefix, sheet.SheetName))
+		Logger.Warnln(fmt.Sprintf("[%s] Ignore[%s] execution for filed type empty!", logPrefix, sheet.SheetName))
 		return nil
 	}
 	selects, selectNames, err := parseRangeRow(sheet, fieldRangeRow, uint(dataCtx.RangeType)-1, dataCtx.StartColIndex, size)
@@ -56,14 +56,19 @@ func execSheetDataContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, data
 	}
 
 	fileName, err := sheet.ValueAtAxis(outEle.DataFileAxis)
-	if nil != err || strings.TrimSpace(fileName) == "" {
+	if nil != err {
 		err = errors.New(fmt.Sprintf("[%s] GetTitleFileName Error: {Err=%s,FileName=%s}", logPrefix, err, fileName))
 		return err
 	}
+	if strings.TrimSpace(fileName) == "" { // 导出文件如果为空，认为忽略导出
+		Logger.Traceln(fmt.Sprintf("[%s] Ignore export because the file name is empty. ", logPrefix))
+		return nil
+	}
+
 	keyRowNum := Setting.Excel.TitleData.GetFileKeyRow(dataCtx.DataFileFormat)
 	if -1 == keyRowNum {
-		Logger.Warnln(fmt.Sprintf("[%s] Parse file format: %s ", logPrefix, dataCtx.DataFileFormat))
-		return nil
+		err = errors.New(fmt.Sprintf("[%s] Parse file format: %s ", logPrefix, dataCtx.DataFileFormat))
+		return err
 	}
 	keyRow := sheet.GetRowAt(keyRowNum - 1)
 	//typeRow := sheet.GetRowAt(Setting.Excel.Title.FieldFormatRow - 1)

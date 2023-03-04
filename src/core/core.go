@@ -50,11 +50,11 @@ func Execute(setting *setting.Settings, titleCtx []*TitleContext, dataCtx []*Dat
 	DataCtx = dataCtx
 	ConstCtx = constCtx
 	SqlCtx = sqlCtx
-	Logger.Infof("[core.Execute] Setting=%s", setting)
-	Logger.Infof("[core.Execute] TitleContext=%v", titleCtx)
-	Logger.Infof("[core.Execute] DataContext=%v", dataCtx)
-	Logger.Infof("[core.Execute] ConstCtx=%v", constCtx)
-	Logger.Infof("[core.Execute] SqlCtx=%v", sqlCtx)
+	Logger.Infoln("[core.Execute] Setting=%s", setting)
+	Logger.Infoln("[core.Execute] TitleContext=%v", titleCtx)
+	Logger.Infoln("[core.Execute] DataContext=%v", dataCtx)
+	Logger.Infoln("[core.Execute] ConstCtx=%v", constCtx)
+	Logger.Infoln("[core.Execute] SqlCtx=%v", sqlCtx)
 
 	// 每加载一个文件，马上处理当前文件的全部Sheet
 	loadExcelFiles(execExcelSheets)
@@ -83,7 +83,7 @@ func loadExcelFiles(execFunc funcExec) {
 	sourcePath := Setting.Project.Source.Value
 	for _, path := range sourcePath {
 		if !filex.IsExist(path) {
-			Logger.Warnln(fmt.Sprintf("[%s] Source(%s) is not exist. ", logPrefix, path))
+			Logger.Errorln(fmt.Sprintf("[%s] Source(%s) is not exist. ", logPrefix, path))
 			continue
 		}
 		if filex.IsFolder(path) {
@@ -109,7 +109,7 @@ func loadExcelFile(filePath string, fileInfo os.FileInfo, execFunc funcExec) {
 		if nil != execFunc {
 			Logger.Println()
 		}
-		Logger.Infoln(fmt.Sprintf("[%s] Ignore file: %s", logPrefix, filePath))
+		Logger.Traceln(fmt.Sprintf("[%s] Ignore file: %s", logPrefix, filePath))
 		return
 	}
 	if nil != execFunc {
@@ -117,20 +117,20 @@ func loadExcelFile(filePath string, fileInfo os.FileInfo, execFunc funcExec) {
 		Logger.Infoln(fmt.Sprintf("[%s] Start At %s", logPrefix, filePath))
 		err := Excel.LoadExcel(filePath, true) // 注意：这里使用了覆盖
 		if nil != err {
-			Logger.Warnln(fmt.Sprintf("[%s] Error At %s", logPrefix, err))
+			Logger.Errorln(fmt.Sprintf("[%s] Error At %s", logPrefix, err))
 			return
 		}
 
 		err = execFunc(false)
 		if nil != err {
-			Logger.Warnln(fmt.Sprintf("[%s] Error At %s", logPrefix, err))
+			Logger.Errorln(fmt.Sprintf("[%s] Error At %s", logPrefix, err))
 			return
 		}
 		Logger.Infoln(fmt.Sprintf("[%s] Finish At %s", logPrefix, filePath))
 	} else {
 		err := Excel.LoadExcel(filePath, false) // 注意：这里不覆盖
 		if nil != err {
-			Logger.Warnln(fmt.Sprintf("[%s] Error At %s", logPrefix, err))
+			Logger.Errorln(fmt.Sprintf("[%s] Error At %s", logPrefix, err))
 		}
 	}
 }
@@ -170,7 +170,7 @@ func execSheet(sheet *excel.ExcelSheet) {
 		for _, titleCtx := range TitleCtx {
 			et := execSheetTitleContext(Excel, sheet, titleCtx)
 			if nil != et {
-				Logger.Warnln(fmt.Sprintf("[%s] %s", logPrefix, et))
+				Logger.Errorln(fmt.Sprintf("[%s] %s", logPrefix, et))
 			}
 		}
 	}
@@ -179,7 +179,7 @@ func execSheet(sheet *excel.ExcelSheet) {
 		for _, dataCtx := range DataCtx {
 			ed := execSheetDataContext(Excel, sheet, dataCtx)
 			if nil != ed {
-				Logger.Warnln(fmt.Sprintf("[%s] %s", logPrefix, ed))
+				Logger.Errorln(fmt.Sprintf("[%s] %s", logPrefix, ed))
 			}
 		}
 	}
@@ -188,7 +188,7 @@ func execSheet(sheet *excel.ExcelSheet) {
 		for _, constCtx := range ConstCtx {
 			ec := execSheetConstContext(Excel, sheet, constCtx)
 			if nil != ec {
-				Logger.Warnln(fmt.Sprintf("[%s] %s", logPrefix, ec))
+				Logger.Errorln(fmt.Sprintf("[%s] %s", logPrefix, ec))
 			}
 		}
 	}
@@ -196,7 +196,7 @@ func execSheet(sheet *excel.ExcelSheet) {
 	if nil != SqlCtx {
 		es := execSheetSqlContext(Excel, sheet, SqlCtx)
 		if nil != es {
-			Logger.Warnln(fmt.Sprintf("[%s] %s", logPrefix, es))
+			Logger.Errorln(fmt.Sprintf("[%s] %s", logPrefix, es))
 		}
 	}
 }

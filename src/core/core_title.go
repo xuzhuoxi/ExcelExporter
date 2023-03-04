@@ -56,8 +56,8 @@ func execSheetTitleContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, tit
 
 	size := getControlSize(sheet)
 	fieldRangeRow := sheet.GetRowAt(Setting.Excel.TitleData.FieldRangeRow - 1)
-	if nil == fieldRangeRow || fieldRangeRow.Empty() {
-		Logger.Warnln(fmt.Sprintf("[%s] Ignore execution for filed type empty!", logPrefix))
+	if nil == fieldRangeRow || fieldRangeRow.Empty() { // 忽略
+		Logger.Warnln(fmt.Sprintf("[%s] Ignore[%s] execution for filed type empty!", logPrefix, sheet.SheetName))
 		return nil
 	}
 	selects, _, err := parseRangeRow(sheet, fieldRangeRow, uint(titleCtx.RangeType)-1, titleCtx.StartColIndex, size)
@@ -70,10 +70,15 @@ func execSheetTitleContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, tit
 	}
 
 	fileName, err := sheet.ValueAtAxis(outEle.TitleFileAxis)
-	if nil != err || strings.TrimSpace(fileName) == "" {
+	if nil != err {
 		err = errors.New(fmt.Sprintf("[%s] GetTitleFileName Error: {Err=%s,FileName=%s}", logPrefix, err, fileName))
 		return err
 	}
+	if strings.TrimSpace(fileName) == "" { // 导出文件如果为空，认为忽略导出
+		Logger.Traceln(fmt.Sprintf("[%s] Ignore export because the file name is empty. ", logPrefix))
+		return nil
+	}
+
 	clsName, err := sheet.ValueAtAxis(outEle.ClassAxis)
 	if nil != err || strings.TrimSpace(clsName) == "" {
 		err = errors.New(fmt.Sprintf("[%s] GetTitleClassName Error: {Err=%s,ClassName=%s}", logPrefix, err, clsName))

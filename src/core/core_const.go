@@ -56,10 +56,15 @@ func execSheetConstContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, con
 		return nil
 	}
 	fileName, err := sheet.ValueAtAxis(outEle.FileAxis)
-	if nil != err || strings.TrimSpace(fileName) == "" {
+	if nil != err {
 		err = errors.New(fmt.Sprintf("[%s] GetTitleFileName Error: {Err=%s,FileName=%s}", logPrefix, err, fileName))
 		return err
 	}
+	if strings.TrimSpace(fileName) == "" { // 导出文件如果为空，认为忽略导出
+		Logger.Traceln(fmt.Sprintf("[%s] Ignore export because the file name is empty. ", logPrefix))
+		return nil
+	}
+
 	clsName, err := sheet.ValueAtAxis(outEle.ClassAxis)
 	if nil != err || strings.TrimSpace(clsName) == "" {
 		err = errors.New(fmt.Sprintf("[%s] GetTitleClassName Error: {Err=%s,ClassName=%s}", logPrefix, err, clsName))

@@ -73,7 +73,7 @@ func initAndFixLangs() {
 		err := Settings.InitLangSetting(lang)
 		if nil != err {
 			AppFlags.LangRefs = append(AppFlags.LangRefs[:index], AppFlags.LangRefs[index+1:]...)
-			Logger.Warnln(fmt.Sprintf("[main] Lang Config Error: %s", err))
+			Logger.Errorln(fmt.Sprintf("[main] Lang Config Error: %s", err))
 			os.Exit(1)
 		}
 	}
@@ -84,7 +84,7 @@ func checkAndFixDataFiles() {
 		datafile := AppFlags.DataFiles[index]
 		if !Settings.System.CheckDataFileFormat(datafile) {
 			AppFlags.LangRefs = append(AppFlags.DataFiles[:index], AppFlags.DataFiles[index+1:]...)
-			Logger.Warnln(fmt.Sprintf("[main] DataFile Config Error: %s", datafile))
+			Logger.Errorln(fmt.Sprintf("[main] DataFile Config Error: %s", datafile))
 		}
 	}
 }
