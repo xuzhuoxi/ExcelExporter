@@ -50,11 +50,11 @@ func Execute(setting *setting.Settings, titleCtx []*TitleContext, dataCtx []*Dat
 	DataCtx = dataCtx
 	ConstCtx = constCtx
 	SqlCtx = sqlCtx
-	Logger.Infoln("[core.Execute] Setting=%s", setting)
-	Logger.Infoln("[core.Execute] TitleContext=%v", titleCtx)
-	Logger.Infoln("[core.Execute] DataContext=%v", dataCtx)
-	Logger.Infoln("[core.Execute] ConstCtx=%v", constCtx)
-	Logger.Infoln("[core.Execute] SqlCtx=%v", sqlCtx)
+	Logger.Infoln("[core.Execute]", setting)
+	Logger.Infoln("[core.Execute]", titleCtx)
+	Logger.Infoln("[core.Execute]", dataCtx)
+	Logger.Infoln("[core.Execute]", constCtx)
+	Logger.Infoln("[core.Execute]", sqlCtx)
 
 	// 每加载一个文件，马上处理当前文件的全部Sheet
 	loadExcelFiles(execExcelSheets)
