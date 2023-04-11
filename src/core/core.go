@@ -86,6 +86,13 @@ func loadExcelFiles(execFunc funcExec) {
 			Logger.Errorln(fmt.Sprintf("[%s] Source(%s) is not exist. ", logPrefix, path))
 			continue
 		}
+		if "" != Setting.Excel.TitleData.Ignore {
+			_, name := filex.Split(path)
+			if strings.HasPrefix(name, Setting.Excel.TitleData.Ignore) {
+				Logger.Warnln(fmt.Sprintf("[%s] Source(%s) ignored . ", logPrefix, path))
+				continue
+			}
+		}
 		if filex.IsFolder(path) {
 			loadExcelFilesFromFolder(path, execFunc)
 		} else {
@@ -103,13 +110,20 @@ func loadExcelFilesFromFolder(folderPath string, execFunc funcExec) {
 
 func loadExcelFile(filePath string, fileInfo os.FileInfo, execFunc funcExec) {
 	logPrefix := "core.loadExcelFile"
+	isFileIgnore := Setting.Excel.TitleData.CheckFileIgnore(filePath)
 	isFileMatching := Setting.Project.Source.CheckFileFormat(filePath)
 	isFileEmpty := nil != fileInfo && fileInfo.Size() == 0
-	if !isFileMatching || isFileEmpty {
+	if isFileIgnore || !isFileMatching || isFileEmpty {
 		if nil != execFunc {
 			Logger.Println()
 		}
-		Logger.Traceln(fmt.Sprintf("[%s] Ignore file: %s", logPrefix, filePath))
+		if isFileIgnore {
+			Logger.Traceln(fmt.Sprintf("[%s] Ignore file by ignore prefix: %s", logPrefix, filePath))
+		} else if !isFileMatching {
+			Logger.Traceln(fmt.Sprintf("[%s] Ignore file by format unmatching: %s", logPrefix, filePath))
+		} else {
+			Logger.Traceln(fmt.Sprintf("[%s] Ignore file by empty size: %s", logPrefix, filePath))
+		}
 		return
 	}
 	if nil != execFunc {

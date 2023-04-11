@@ -115,7 +115,8 @@ Linux或MacOS下执行[goxc_build.sh](/build/goxc_build.sh)
 
   <pre><code>.应用Excel配置
   ├── title&data: 
-  │   ├── prefix: 启用前缀
+  │   ├── ignore: 忽略文件前缀
+  │   ├── prefix: 启用Sheet前缀
   │   ├── outputs: 导出命名设置
   │      ├── range_name：字段域名称(client|server|db)
   │      ├── title_file: 导出类文件名坐标(Excel坐标，如"A1")

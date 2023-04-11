@@ -3,6 +3,8 @@ package setting
 import (
 	"fmt"
 	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
+	"github.com/xuzhuoxi/infra-go/filex"
+	"strings"
 )
 
 // 名称与号记录项
@@ -47,7 +49,9 @@ type TitleDataSqlInfo struct {
 }
 
 type TitleData struct {
-	// 启用前缀
+	// 忽略文件前缀
+	Ignore string `yaml:"ignore"`
+	// 启用Sheet前缀
 	Prefix string `yaml:"prefix"`
 	// 导出命名
 	Outputs []TitleDataOutputInfo `yaml:"outputs"`
@@ -141,6 +145,14 @@ func (td TitleData) GetFileKeyRow(fileTypeName string) int {
 
 func (td TitleData) IsCustomSqlFieldType() bool {
 	return td.SqlFieldFormatRow > 0
+}
+
+func (td TitleData) CheckFileIgnore(filePath string) bool {
+	if "" == td.Ignore {
+		return false
+	}
+	_, name := filex.Split(filePath)
+	return strings.HasPrefix(name, td.Ignore)
 }
 
 // 导出标记

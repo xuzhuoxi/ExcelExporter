@@ -118,7 +118,8 @@ Execute [goxc_build.sh](/build/goxc_build.sh) under Linux  or MacOS
 
 <pre><code>. Apply Excel Configuration
 ├── title&data:
-│   ├── prefix: enable prefix
+│   ├── ignore: Ignore file prefixe  
+│   ├── prefix: enable sheet prefix
 │   ├── outputs: export naming settings
 │       ├── range_name: field domain name (client|server|db)
 │       ├── title_file: export class file name coordinates (Excel coordinates, such as "A1")

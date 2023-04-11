@@ -1,7 +1,9 @@
  # 表头配置
 'title&data':
-  # 启用前缀
-  prefix: Data_
+  # 忽略文件前缀
+  ignore: '_'
+  # 启用Sheet前缀
+  prefix: 'Data_'
   # 导出配置
   outputs:
     - range_name: 'client'
