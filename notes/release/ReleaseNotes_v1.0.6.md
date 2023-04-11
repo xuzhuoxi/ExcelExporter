@@ -1,6 +1,6 @@
-## Release notes  
+## Release notes with v1.0.6 
 
-### Known Issues in v1.0.6  
+### Known Issues 
 - yaml, toml, hcl, env, properties数据导出时，key会转为**小写**，本意要求**大小写相关**。
 - project.yaml中encoding与buff相关的配置未实现。
 - C++表头模板未实现， C++常量模板未实现。
@@ -15,6 +15,6 @@
 
 ### API Changes  
 
-## Library changes in v1.0.5  
+## Library changes
 
 ### library updated  
