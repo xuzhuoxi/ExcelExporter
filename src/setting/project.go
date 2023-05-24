@@ -69,6 +69,7 @@ type TargetCfg struct {
 	Data     OutDir `yaml:"data"`     // 数据文件目录
 	Const    OutDir `yaml:"const"`    // 常量类目录
 	Sql      string `yaml:"sql"`      // Sql目录
+	Proto    OutDir `yaml:"proto"`    // Proto目录
 	Encoding string `yaml:"encoding"` // 字符文件编码，暂时未使用
 }
 
@@ -95,8 +96,13 @@ func (o *TargetCfg) GetSqlDir(fieldRangeName string) string {
 	return filex.Combine(o.RootDir, o.Sql)
 }
 
+func (o *TargetCfg) GetProtoDir(fieldRangeName string) string {
+	return filex.Combine(o.RootDir, o.Proto.GetValue(fieldRangeName))
+}
+
 func (o TargetCfg) String() string {
-	return fmt.Sprintf("TargetCfg{RootDir=%s, Title=%v, Data=%v, Const=%v}", o.RootDir, o.Title, o.Data, o.Const)
+	return fmt.Sprintf("TargetCfg{RootDir=%s, Title=%v, Data=%v, Const=%v, Proto=%v}",
+		o.RootDir, o.Title, o.Data, o.Const, o.Proto)
 }
 
 // 缓冲区定义(未使用)

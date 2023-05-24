@@ -1,0 +1,38 @@
+{{- $proxy := . -}}
+namespace {{$proxy.Namespace}}
+{
+    public class {{$proxy.ClassName}}
+    {
+        /// <summary>
+        /// ProtoId
+        /// </summary>
+        public const {{$proxy.ProtoIdDataType}} ProtoId = {{$proxy.ProtoId}};
+
+        {{- range $index, $value := $proxy.GetFields}}
+        /// <summary>
+        /// {{$value.Remark}}
+        /// </summary>
+        private {{$value.Type}} m_{{ToUpperCamelCase $value.Name}};
+		{{- end}}
+
+		// Get方法 --------------
+
+        {{- range $index, $value := $proxy.GetFields}}
+        /// <summary>
+        /// {{$value.Remark}}
+        /// </summary>
+        public {{$value.Type}} {{ToUpperCamelCase $value.Name}} => m_{{ToUpperCamelCase $value.Name}};
+		{{- end}}
+
+		// 以下为解释数据方法 --------------
+
+        // 二进制数据解释
+//		public void ParseBinary(proxy: xu.BinaryReaderProxy)
+//		{
+            {{- range $index, $value := $proxy.GetFields}}
+            {{- $typeDefine := $value.TypeDefine}}
+//          this.{{ToUpperCamelCase $value.Name}} = proxy.{{$typeDefine.GetGetOperate "bin"}}();
+            {{- end}}
+//		}
+    }
+}

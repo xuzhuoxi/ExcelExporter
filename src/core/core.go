@@ -17,14 +17,18 @@ import (
 )
 
 var (
-	Logger logx.ILogger
+	Logger         logx.ILogger
+	Setting        *setting.Settings
+	Excel          *excel.ExcelProxy
+	EnablePrefixes []string
+)
 
-	Setting  *setting.Settings
+var (
 	TitleCtx []*TitleContext
 	DataCtx  []*DataContext
-	ConstCtx []*ConstContext
 	SqlCtx   *SqlContext
-	Excel    *excel.ExcelProxy
+	ConstCtx []*ConstContext
+	ProtoCtx []*ProtoContext
 )
 
 var (
@@ -32,6 +36,7 @@ var (
 	ConstLanguageTemps = make(map[string]*temps.TemplateProxy)
 	SqlTableTemps      *temps.TemplateProxy
 	SqlDataTemps       *temps.TemplateProxy
+	ProtoLanguageTemps = make(map[string]*temps.TemplateProxy)
 )
 
 type funcExec = func(showFileInfo bool) error
@@ -44,17 +49,23 @@ func SetLogger(logger logx.ILogger) {
 	Logger = logger
 }
 
-func Execute(setting *setting.Settings, titleCtx []*TitleContext, dataCtx []*DataContext, constCtx []*ConstContext, sqlCtx *SqlContext) {
+func Execute(setting *setting.Settings, titleCtx []*TitleContext, dataCtx []*DataContext, sqlCtx *SqlContext,
+	constCtx []*ConstContext, protoCtx []*ProtoContext) {
 	Setting = setting
+
 	TitleCtx = titleCtx
 	DataCtx = dataCtx
-	ConstCtx = constCtx
 	SqlCtx = sqlCtx
-	Logger.Infoln("[core.Execute]", setting)
-	Logger.Infoln("[core.Execute]", titleCtx)
-	Logger.Infoln("[core.Execute]", dataCtx)
-	Logger.Infoln("[core.Execute]", constCtx)
-	Logger.Infoln("[core.Execute]", sqlCtx)
+	ConstCtx = constCtx
+	ProtoCtx = protoCtx
+	EnablePrefixes = getMergedPrefixes()
+
+	Logger.Infoln(fmt.Sprintf("[core.Execute][Settings]: %v", setting))
+	Logger.Infoln(fmt.Sprintf("[core.Execute][Title][%d]: %v", len(titleCtx), titleCtx))
+	Logger.Infoln(fmt.Sprintf("[core.Execute][Data][%d]: %v", len(dataCtx), dataCtx))
+	Logger.Infoln(fmt.Sprintf("[core.Execute][Sql]: %v", sqlCtx))
+	Logger.Infoln(fmt.Sprintf("[core.Execute][Const][%d]: %v", len(constCtx), constCtx))
+	Logger.Infoln(fmt.Sprintf("[core.Execute][Proto][%d]: %v", len(protoCtx), protoCtx))
 
 	// 每加载一个文件，马上处理当前文件的全部Sheet
 	loadExcelFiles(execExcelSheets)
@@ -74,7 +85,7 @@ func loadExcelFiles(execFunc funcExec) {
 		Logger.Infoln(fmt.Sprintf("[%s] Execution stop with error settings. ", logPrefix))
 		return
 	}
-	if len(TitleCtx) == 0 && len(DataCtx) == 0 && len(ConstCtx) == 0 {
+	if len(TitleCtx) == 0 && len(DataCtx) == 0 && len(ConstCtx) == 0 && nil == SqlCtx && len(ProtoCtx) == 0 {
 		Logger.Infoln(fmt.Sprintf("[%s] Execution finish with doing nothing. ", logPrefix))
 		return
 	}
@@ -86,12 +97,9 @@ func loadExcelFiles(execFunc funcExec) {
 			Logger.Errorln(fmt.Sprintf("[%s] Source(%s) is not exist. ", logPrefix, path))
 			continue
 		}
-		if "" != Setting.Excel.TitleData.Ignore {
-			_, name := filex.Split(path)
-			if strings.HasPrefix(name, Setting.Excel.TitleData.Ignore) {
-				Logger.Warnln(fmt.Sprintf("[%s] Source(%s) ignored . ", logPrefix, path))
-				continue
-			}
+		if Setting.Excel.CheckIgnorePath(path) {
+			Logger.Warnln(fmt.Sprintf("[%s] Source(%s) ignored . ", logPrefix, path))
+			continue
 		}
 		if filex.IsFolder(path) {
 			loadExcelFilesFromFolder(path, execFunc)
@@ -110,7 +118,7 @@ func loadExcelFilesFromFolder(folderPath string, execFunc funcExec) {
 
 func loadExcelFile(filePath string, fileInfo os.FileInfo, execFunc funcExec) {
 	logPrefix := "core.loadExcelFile"
-	isFileIgnore := Setting.Excel.TitleData.CheckFileIgnore(filePath)
+	isFileIgnore := Setting.Excel.CheckIgnorePath(filePath)
 	isFileMatching := Setting.Project.Source.CheckFileFormat(filePath)
 	isFileEmpty := nil != fileInfo && fileInfo.Size() == 0
 	if isFileIgnore || !isFileMatching || isFileEmpty {
@@ -152,8 +160,7 @@ func loadExcelFile(filePath string, fileInfo os.FileInfo, execFunc funcExec) {
 func execExcelSheets(showFileInfo bool) (err error) {
 	logPrefix := "core.execExcelSheets"
 	colNameRow := Setting.Excel.TitleData.NickRow
-	prefixes := getMergedPrefixes()
-	err = Excel.LoadSheetsByPrefixes(prefixes, colNameRow, true) //加载全部
+	err = Excel.LoadSheetsByPrefixes(EnablePrefixes, colNameRow, true) //加载全部
 	if nil != err {
 		return
 	}
@@ -198,6 +205,13 @@ func execSheet(sheet *excel.ExcelSheet) {
 		}
 	}
 
+	if nil != SqlCtx {
+		es := execSheetSqlContext(Excel, sheet, SqlCtx)
+		if nil != es {
+			Logger.Errorln(fmt.Sprintf("[%s] %s", logPrefix, es))
+		}
+	}
+
 	if len(ConstCtx) > 0 {
 		for _, constCtx := range ConstCtx {
 			ec := execSheetConstContext(Excel, sheet, constCtx)
@@ -207,10 +221,12 @@ func execSheet(sheet *excel.ExcelSheet) {
 		}
 	}
 
-	if nil != SqlCtx {
-		es := execSheetSqlContext(Excel, sheet, SqlCtx)
-		if nil != es {
-			Logger.Errorln(fmt.Sprintf("[%s] %s", logPrefix, es))
+	if len(ProtoCtx) > 0 {
+		for _, protoCtx := range ProtoCtx {
+			ec := execSheetProtoContext(Excel, sheet, protoCtx)
+			if nil != ec {
+				Logger.Errorln(fmt.Sprintf("[%s] %s", logPrefix, ec))
+			}
 		}
 	}
 }
@@ -274,25 +290,27 @@ func getRowData(keyRow *excel.ExcelRow, typeRow *excel.ExcelRow, valueRow *excel
 
 func getMergedPrefixes() []string {
 	var prefixes []string
-	for _, titleCtx := range TitleCtx {
-		if _, ok := slicex.IndexString(prefixes, titleCtx.EnablePrefix); !ok {
-			prefixes = append(prefixes, titleCtx.EnablePrefix)
-		}
+	if len(TitleCtx) > 0 {
+		prefixes = appendPrefix(prefixes, TitleCtx[0].EnablePrefix)
 	}
-	for _, dataCtx := range DataCtx {
-		if _, ok := slicex.IndexString(prefixes, dataCtx.EnablePrefix); !ok {
-			prefixes = append(prefixes, dataCtx.EnablePrefix)
-		}
-	}
-	for _, constCtx := range ConstCtx {
-		if _, ok := slicex.IndexString(prefixes, constCtx.EnablePrefix); !ok {
-			prefixes = append(prefixes, constCtx.EnablePrefix)
-		}
+	if len(DataCtx) > 0 {
+		prefixes = appendPrefix(prefixes, DataCtx[0].EnablePrefix)
 	}
 	if nil != SqlCtx {
-		if _, ok := slicex.IndexString(prefixes, SqlCtx.EnablePrefix); !ok {
-			prefixes = append(prefixes, SqlCtx.EnablePrefix)
-		}
+		prefixes = appendPrefix(prefixes, SqlCtx.EnablePrefix)
+	}
+	if len(ConstCtx) > 0 {
+		prefixes = appendPrefix(prefixes, ConstCtx[0].EnablePrefix)
+	}
+	if len(ProtoCtx) > 0 {
+		prefixes = appendPrefix(prefixes, ProtoCtx[0].EnablePrefix)
 	}
 	return prefixes
+}
+
+func appendPrefix(prefixes []string, prefix string) []string {
+	if _, ok := slicex.IndexString(prefixes, prefix); ok {
+		return prefixes
+	}
+	return append(prefixes, prefix)
 }

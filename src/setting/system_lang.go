@@ -56,7 +56,7 @@ type LangSetting struct {
 	DataTypes []LangDataType `yaml:"data_types"` // 编程语言数据类型配置
 }
 
-func (o *LangSetting) GetLangDefine(name string) (format LangDataType, ok bool) {
+func (o *LangSetting) GetDataTypeDefine(name string) (format LangDataType, ok bool) {
 	for index := range o.DataTypes {
 		if o.DataTypes[index].FieldTypeName == name {
 			return o.DataTypes[index], true

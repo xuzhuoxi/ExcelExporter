@@ -1,12 +1,13 @@
-{{- $proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx}}{{$clsName := $proxy.ClassName}}{{$lang := $proxy.Language -}}
+{{- $proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel -}}
+{{- $ctx := $proxy.TitleCtx}}{{$clsName := $proxy.ClassName -}}
 package {{$proxy.Namespace}}
 /**
  * @author {AUTHOR}
  * Created on {NowTimeStr} .
- * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.ProgramLanguage}}
+ * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.Language}}
  */
 type I{{$clsName}} interface {
-{{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+    {{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
     /**
      * {{$proxy.GetTitleName $value}}
      *
@@ -14,7 +15,7 @@ type I{{$clsName}} interface {
      * @return {{$langDefine.LangTypeName}}
      */
     Get{{ToUpperCamelCase $fieldName}}() {{$langDefine.LangTypeName}}
-{{- end}}
+    {{- end}}
 }
 
 /**
@@ -23,17 +24,17 @@ type I{{$clsName}} interface {
  */
 type {{$clsName}} struct {
     //以下为属性声明
-{{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}} {{$jsonName := $proxy.GetTitleFileKey $value "json"}}
+    {{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}} {{$jsonName := $proxy.GetTitleFileKey $value "json"}}
     // {{$proxy.GetTitleName $value}}
     {{ToLowerCamelCase $fieldName}} {{$langDefine.LangTypeName}} `json:"{{$jsonName}}"`
-{{- end}}
+    {{- end}}
 }
 
 // 接口实现
 {{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
 /**
  * {{$proxy.GetTitleName $value}}
-*/
+ */
 func (o *{{$clsName}}) Get{{ToUpperCamelCase $fieldName}}() {{$langDefine.LangTypeName}} {
 	return o.{{ToLowerCamelCase $fieldName}}
 }

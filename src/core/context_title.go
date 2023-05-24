@@ -9,16 +9,16 @@ import (
 
 // 表头导出上下文
 type TitleContext struct {
-	EnablePrefix    string         // 开启前缀
-	RangeName       string         // 使用的字段索引名称
-	RangeType       FieldRangeType // 使用的字段索引
-	ProgramLanguage string         // 使用的编程语言
-	StartColIndex   int            // 开始列索引
+	EnablePrefix  string         // 开启前缀
+	RangeName     string         // 使用的字段索引名称
+	RangeType     FieldRangeType // 使用的字段索引
+	Language      string         // 使用的编程语言
+	StartColIndex int            // 开始列索引
 }
 
 func (o TitleContext) String() string {
-	return fmt.Sprintf("TitleContent(Prefix=%s, RangeName=%s, RangeType=%v, ProgramLanguage=%s, StartColIndex=%d)",
-		o.EnablePrefix, o.RangeName, o.RangeType, o.ProgramLanguage, o.StartColIndex)
+	return fmt.Sprintf("TitleContent(Prefix=%s, RangeName=%s, RangeType=%v, Language=%s, StartColIndex=%d)",
+		o.EnablePrefix, o.RangeName, o.RangeType, o.Language, o.StartColIndex)
 }
 
 // 数据表代理
@@ -30,7 +30,15 @@ type TempTitleProxy struct {
 	ClassName  string            // 表头导出类名
 	Namespace  string            // 表头导出类命名空间
 	FieldIndex []int             // 当前选中的字段索引
-	Language   string            // 当前的选择的编程语言
+}
+
+func (o *TempTitleProxy) Language() string {
+	return o.TitleCtx.Language
+}
+
+func (o *TempTitleProxy) LanguageDefine() *setting.ProgramLanguage {
+	ld, _ := Setting.System.FindProgramLanguage(o.TitleCtx.Language)
+	return ld
 }
 
 func (o *TempTitleProxy) ValueAtAxis(axis string) string {
@@ -69,27 +77,22 @@ func (o *TempTitleProxy) GetTitleLangDefine(index int) setting.LangDataType {
 	formatRowIndex := Setting.Excel.TitleData.FieldFormatRow - 1
 	value, err := o.Sheet.GetRowAt(formatRowIndex).ValueAtIndex(index)
 	if err != nil {
-		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error1 At %d: %v", index, err))
+		Logger.Error(fmt.Sprintf("GetTitleLangDefine Error1 At %d: %v", index, err))
 		return setting.LangDataType{}
 	}
-	ls, ok := Setting.System.FindProgramLanguage(o.Language)
-	if !ok {
-		err = errors.New(fmt.Sprintf("Find Program Language Fail At %d ", index))
-		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error2 At %d: %v", index, err))
-		return setting.LangDataType{}
-	}
-	value = o.formatFieldType(value)
-	format, ok := ls.Setting.GetLangDefine(value)
+	ld := o.LanguageDefine()
+	value = setting.Format2FieldType(value)
+	format, ok := ld.Setting.GetDataTypeDefine(value)
 	if !ok {
 		err = errors.New(fmt.Sprintf("Get Lang Define Fail At %d, %s ", index, value))
-		Logger.Error(fmt.Sprintf("GetFieldValueFormat Error3 At %d: %v", index, err))
+		Logger.Error(fmt.Sprintf("GetTitleLangDefine Error3 At %d: %v", index, err))
 		return setting.LangDataType{}
 	}
 	return format
 }
 
 func (o *TempTitleProxy) GetFieldName(index int) string {
-	return o.GetTitleLangKey(index, o.Language)
+	return o.GetTitleLangKey(index, o.TitleCtx.Language)
 }
 
 func (o *TempTitleProxy) GetTitleLangKey(index int, langName string) string {
@@ -112,11 +115,4 @@ func (o *TempTitleProxy) GetTitleFileKey(index int, fileType string) string {
 		return ""
 	}
 	return value
-}
-
-func (o *TempTitleProxy) formatFieldType(fieldValue string) string {
-	if !setting.RegFixedString.MatchString(fieldValue) {
-		return fieldValue
-	}
-	return setting.RegFixedString.ReplaceAllString(fieldValue, "string")
 }

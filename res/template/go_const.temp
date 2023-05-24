@@ -1,4 +1,4 @@
-{{- $proxy := .}}{{$clsName := $proxy.ClassName -}}
+{{- $proxy := . -}}
 package {{$proxy.Namespace}}
 const (
     {{- range $index, $value := $proxy.GetItems}}

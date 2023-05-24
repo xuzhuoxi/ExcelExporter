@@ -1,0 +1,41 @@
+{{- $proxy := . }}{{$clsName := $proxy.ClassName -}}
+package {{$proxy.Namespace}}
+
+/**
+ * {{$proxy.ClassRemark}}
+ * Created on {NowTimeStr} .
+ */
+type I{{$clsName}} interface {
+    {{- range $index, $value := $proxy.GetFields}}
+    /**
+     * @remark {{$value.Remark}}
+     * @return {{$value.Type}}
+     */
+    Get{{ToUpperCamelCase $value.Name}}() {{$value.Type}}
+    {{- end}}
+}
+
+/**
+ * @author ${AUTHOR}
+ * Created on ${DATE}.
+ */
+type {{$clsName}} struct {
+    //以下为属性声明
+    {{- range $index, $value := $proxy.GetFields}}
+    //  {{$value.Remark}}
+    {{ToLowerCamelCase $value.Name}} {{$value.Type}}
+    {{- end}}
+}
+
+// 接口实现
+{{- range $index, $value := $proxy.GetFields}}
+/**
+ * @remark {{$value.Remark}}
+ * @return {{$value.Type}}
+ */
+func (o *{{$clsName}}) Get{{ToUpperCamelCase $value.Name}}() {{$value.Type}} {
+	return o.{{ToLowerCamelCase $value.Name}}
+}
+{{- end}}
+
+// 以下为解释数据方法 --------------

@@ -34,7 +34,7 @@ func execSheetTitleContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, tit
 		return nil
 	}
 	logPrefix := "core.execSheetTitleContext"
-	lang := titleCtx.ProgramLanguage
+	lang := titleCtx.Language
 	temp, err := getTitleLanguageTemp(lang)
 	if nil != err {
 		err = errors.New(fmt.Sprintf("[%s] Get lang[%s] temp fail: %s", logPrefix, lang, err))
@@ -98,8 +98,7 @@ func execSheetTitleContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, tit
 
 	// 创建模板数据代理
 	tempDataProxy := &TempTitleProxy{Sheet: sheet, Excel: excel, TitleCtx: titleCtx,
-		FileName: fileName, FieldIndex: selects, ClassName: clsName, Namespace: namespace,
-		Language: titleCtx.ProgramLanguage}
+		FileName: fileName, FieldIndex: selects, ClassName: clsName, Namespace: namespace}
 	buff := bytes.NewBuffer(nil)
 	err = temp.Execute(buff, tempDataProxy, false)
 	if nil != err {

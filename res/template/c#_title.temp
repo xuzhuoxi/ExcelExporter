@@ -1,4 +1,5 @@
-{{- $proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx}}{{$clsName := $proxy.ClassName}}{{$lang := $proxy.Language -}}
+{{- $proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel -}}
+{{- $ctx := $proxy.TitleCtx}}{{$clsName := $proxy.ClassName -}}
 using System;
 using UnityEngine;
 /**
@@ -9,19 +10,19 @@ namespace {{$proxy.Namespace}}
     /**
      * @author {AUTHOR}
      * Created on {NowTimeStr} .
-     * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.ProgramLanguage}}
+     * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.Language}}
      */
     [Serializable]
     public class {{$clsName}}
     {
         // 以下为属性声明
-{{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+        {{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
         // {{$proxy.GetTitleName $value}}
         [SerializeField] private {{$langDefine.LangTypeName}} {{ToLowerCamelCase $fieldName}};
-{{- end}}
+        {{- end}}
 
         // 以下为Get方法
-{{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+        {{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
         /**
          * {{$proxy.GetTitleName $value}}
          *
@@ -29,7 +30,7 @@ namespace {{$proxy.Namespace}}
          * @return {{$langDefine.LangTypeName}}
          */
         public {{$langDefine.LangTypeName}} {{ToUpperCamelCase $fieldName}} => {{ToLowerCamelCase $fieldName}};
-{{- end}}
+        {{- end}}
         // 以下为解释数据方法
 
         // Json数据解释
@@ -40,8 +41,10 @@ namespace {{$proxy.Namespace}}
 
         // 二进制数据解释
 //		public void ParseBinary(proxy: xu.BinaryReaderProxy)
-//		{   {{range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
-            //this.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.GetGetOperate "bin"}}();{{end}}
+//		{
+            {{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+//          this.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.GetGetOperate "bin"}}();
+            {{- end}}
 //		}
 
         // 静态实例化

@@ -15,6 +15,6 @@ type DataContext struct {
 }
 
 func (o DataContext) String() string {
-	return fmt.Sprintf("DataContext(Prefix=%s, RangeName=%s, RangeType=%v, ProgramLanguage=%s, StartRowNum=%d, StartColIndex=%d)",
+	return fmt.Sprintf("DataContext(Prefix=%s, RangeName=%s, RangeType=%v, Language=%s, StartRowNum=%d, StartColIndex=%d)",
 		o.EnablePrefix, o.RangeName, o.RangeType, o.DataFileFormat, o.StartRowNum, o.StartColIndex)
 }

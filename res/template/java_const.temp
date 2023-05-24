@@ -1,11 +1,11 @@
-{{- $proxy := .}}{{$clsName := $proxy.ClassName -}}
+{{- $proxy := . -}}
 package {{$proxy.Namespace}};
 
 /**
  * @author ${AUTHOR}
  * Created on ${DATE}.
  */
-public class {{$clsName}} { 
+public class {{$proxy.ClassName}} {
 	{{- range $index, $value := $proxy.GetItems}}
     // {{$value.Remark}}
     public static const {{$value.Type}} {{$value.Name}} = {{$value.Value}};

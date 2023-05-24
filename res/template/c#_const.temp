@@ -1,7 +1,7 @@
-{{- $proxy := .}}{{$clsName := $proxy.ClassName -}}
+{{- $proxy := . -}}
 namespace {{$proxy.Namespace}}
 {
-    public static class {{$clsName}}
+    public static class {{$proxy.ClassName}}
     {   {{range $index, $value := $proxy.GetItems}}
         /// <summary>
         /// {{$value.Remark}}

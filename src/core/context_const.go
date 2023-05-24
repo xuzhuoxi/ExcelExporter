@@ -10,15 +10,15 @@ import (
 
 // 常量表上下文
 type ConstContext struct {
-	EnablePrefix    string         // 开启前缀
-	RangeName       string         // 使用的字段索引名称
-	RangeType       FieldRangeType // 使用的字段索引
-	ProgramLanguage string         // 使用的编程语言
+	EnablePrefix string         // 开启前缀
+	RangeName    string         // 使用的字段索引名称
+	RangeType    FieldRangeType // 使用的字段索引
+	Language     string         // 使用的编程语言
 }
 
 func (o ConstContext) String() string {
-	return fmt.Sprintf("ConstContext(Prefix=%s, RangeName=%s, RangeType=%v, ProgramLanguage=%s)",
-		o.EnablePrefix, o.RangeName, o.RangeType, o.ProgramLanguage)
+	return fmt.Sprintf("ConstContext(Prefix=%s, RangeName=%s, RangeType=%v, Language=%s)",
+		o.EnablePrefix, o.RangeName, o.RangeType, o.Language)
 }
 
 // 常量数据
@@ -37,9 +37,12 @@ type TempConstProxy struct {
 	FileName  string            // 导出文件名
 	ClassName string            // 导出常量类名
 	Namespace string            // 导出类名的命名空间名称
-	Language  string            // 导出对应的编程语言
 	StartRow  int               // 数据开始行号
 	EndRow    int               // 数据结束行号
+}
+
+func (o *TempConstProxy) Language() string {
+	return o.ConstCtx.Language
 }
 
 // 取当前Sheet中对应坐标的字符数据，若数据不存在，返回空字符串
@@ -71,7 +74,13 @@ func (o *TempConstProxy) GetItems() []ConstItem {
 // 取当前Sheet指定行号数据，转换为常量项，格式非法则返回对应错误
 func (o *TempConstProxy) GetItem(row int) (item ConstItem, err error) {
 	//fmt.Println("GetItem:", row)
-	if !o.checkItemRow(row) {
+	pLang, ok := Setting.System.FindProgramLanguage(o.Language)
+	if !ok {
+		err = errors.New(fmt.Sprintf("Lang[%s] is not found! ", o.Language))
+		return
+	}
+
+	if !o.checkInRange(row) {
 		err = errors.New(fmt.Sprintf("Row[%d] out of range. ", row))
 		return
 	}
@@ -87,14 +96,9 @@ func (o *TempConstProxy) GetItem(row int) (item ConstItem, err error) {
 	}
 	remark, _ := excelRow.ValueAtAxis(Setting.Excel.Const.RemarkCol)
 	tp, _ := excelRow.ValueAtAxis(Setting.Excel.Const.TypeCol)
-	ld, ok := Setting.System.FindProgramLanguage(o.Language)
-	//fmt.Println("行:", o.Language, tp, ld, excelRow.Cell)
-	err = errors.New(fmt.Sprintf("Const Item Type Error At Row %d ", row))
+	typeFormat, ok := pLang.Setting.GetDataTypeDefine(tp)
 	if !ok {
-		return
-	}
-	typeFormat, ok := ld.Setting.GetLangDefine(tp)
-	if !ok {
+		err = errors.New(fmt.Sprintf("Const Item Type Error At Row %d ", row))
 		return
 	}
 	value, _ := excelRow.ValueAtAxis(Setting.Excel.Const.ValueCol)
@@ -104,6 +108,6 @@ func (o *TempConstProxy) GetItem(row int) (item ConstItem, err error) {
 	return ConstItem{Name: name, Type: typeFormat.LangTypeName, Value: value, Remark: remark}, nil
 }
 
-func (o *TempConstProxy) checkItemRow(row int) bool {
+func (o *TempConstProxy) checkInRange(row int) bool {
 	return row >= o.StartRow && row < o.EndRow
 }

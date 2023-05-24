@@ -1,0 +1,31 @@
+{{- $proxy := .}}{{$sheetProxy := $proxy.SheetProxy }}{{$clsName := $proxy.ClassName -}}
+{{- $ctx := $sheetProxy.ProtoCtx -}}
+namespace {{$proxy.Namespace}} {
+    /**
+     * {{$proxy.ClassRemark}}
+	 * @author {AUTHOR}
+	 * Created on {NowTimeStr} .
+	 * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.Language}}
+	 */
+	export class {{$proxy.ClassName}} {
+        // 以下为属性声明
+        {{- range $index, $value := $proxy.GetFields}}
+        // {{$value.Remark}}
+        private _{{ToLowerCamelCase $value.Name}}: {{$value.Type}};
+        {{- end}}
+
+        // 以下为Get方法
+        {{- range $index, $value := $proxy.GetFields}}
+        /**
+         * @remark {{$value.Remark}}
+         * @return {{$value.Type}}
+         */
+        get {{ToLowerCamelCase $value.Name}}(): {{$value.Type}} {
+            return this._{{ToLowerCamelCase $value.Name}};
+        }
+        {{- end}}
+
+        // 以下为解释数据方法 --------------
+
+	}
+}

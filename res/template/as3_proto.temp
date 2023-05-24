@@ -1,0 +1,30 @@
+{{- $proxy := . -}}
+package {{$proxy.Namespace}} {
+    /**
+     * {{$proxy.ClassRemark}}
+     */
+    public class {{$proxy.ClassName}} {
+        // ProtoId
+        public static const ProtoId : {{$proxy.ProtoIdDataType}} = {{$proxy.ProtoId}};
+
+		{{- range $index, $value := $proxy.GetFields}}
+        /**
+         * {{$value.Remark}}
+         */
+        private var _{{ToLowerCamelCase $value.Name}} : {{$value.Type}};
+		{{- end}}
+
+        // Get方法 --------------
+
+        {{- range $index, $value := $proxy.GetFields}}
+        /**
+         * {{$value.Remark}}
+         */
+        public function get {{ToLowerCamelCase $value.Name}}() : {{$value.Type}} {
+            return this._{{ToLowerCamelCase $value.Name}};
+        }
+        {{- end}}
+
+        // 以下为解释数据方法 --------------
+    }
+}

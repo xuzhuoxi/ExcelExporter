@@ -1,19 +1,20 @@
-{{- $proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx}}{{$clsName := $proxy.ClassName}}{{$lang := $proxy.Language -}}
+{{- $proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel -}}
+{{- $ctx := $proxy.TitleCtx -}}
 namespace {{$proxy.Namespace}} { 
     /**
 	 * @author {AUTHOR}
 	 * Created on {NowTimeStr} .
-	 * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.ProgramLanguage}}
+	 * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.Language}}
 	 */
-	export class {{$clsName}} {
+	export class {{$proxy.ClassName}} {
         //以下为属性声明
-{{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+        {{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
         // {{$proxy.GetTitleName $value}}
         private _{{ToLowerCamelCase $fieldName}}: {{$langDefine.LangTypeName}};
-{{- end}}
+        {{- end}}
 
         //以下为Get方法
-{{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+        {{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
         /**
          * {{$proxy.GetTitleName $value}}
          *
@@ -23,7 +24,7 @@ namespace {{$proxy.Namespace}} {
         get {{ToLowerCamelCase $fieldName}}(): {{$langDefine.LangTypeName}} {
             return this._{{ToLowerCamelCase $fieldName}};
         }
-{{- end}}
+        {{- end}}
 
         //以下为解释数据方法
 

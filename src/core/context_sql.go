@@ -31,7 +31,7 @@ func (o SqlContext) String() string {
 }
 
 // 字段定义
-type FieldItem struct {
+type SqlFieldItem struct {
 	FieldName       string                  // 字段名称
 	FieldType       string                  // 字段类型(原始未标准化)
 	CustomFieldType string                  // 定制字段类型
@@ -42,21 +42,21 @@ type FieldItem struct {
 }
 
 // 是否为定制类型
-func (i FieldItem) IsCustomFieldType() bool {
+func (i SqlFieldItem) IsCustomFieldType() bool {
 	return "" != i.CustomFieldType
 }
 
 // 是否为数据库动态类型
-func (i FieldItem) IsDynamicDbFieldType() bool {
+func (i SqlFieldItem) IsDynamicDbFieldType() bool {
 	return i.DbField.IsDynamicLen()
 }
 
 // 是否为字段固定类型
-func (i FieldItem) IsFixedFieldType() bool {
+func (i SqlFieldItem) IsFixedFieldType() bool {
 	return setting.RegFixedString.MatchString(i.FieldType)
 }
 
-func (i FieldItem) SqlFieldType() string {
+func (i SqlFieldItem) SqlFieldType() string {
 	// 有定制类型
 	if i.IsCustomFieldType() {
 		return i.CustomFieldType
@@ -76,12 +76,12 @@ func (i FieldItem) SqlFieldType() string {
 	return strings.ReplaceAll(i.DbField.FieldType, "*", strconv.Itoa(size))
 }
 
-func (i FieldItem) getFixedFieldTypeSize() (size int, err error) {
+func (i SqlFieldItem) getFixedFieldTypeSize() (size int, err error) {
 	start := strings.LastIndex(i.FieldType, "(")
 	end := strings.LastIndex(i.FieldType, ")")
 	size, err = strconv.Atoi(i.FieldType[start+1 : end])
 	if nil != err {
-		Logger.Warnln("FieldItem.getDynamicFieldTypeSize:", err)
+		Logger.Warnln("SqlFieldItem.getDynamicFieldTypeSize:", err)
 	}
 	if i.DbField.IsDynamicChar() {
 		size = int(math.Ceil(i.DatabaseExtend.ScaleChar * float64(size)))
@@ -91,7 +91,7 @@ func (i FieldItem) getFixedFieldTypeSize() (size int, err error) {
 	return
 }
 
-func (i FieldItem) getDynamicStatSize() int {
+func (i SqlFieldItem) getDynamicStatSize() int {
 	size := i.MaxByteSize
 	if i.DbField.IsDynamicChar() {
 		size = int(math.Ceil(i.DatabaseExtend.ScaleChar * float64(i.MaxRuneSize)))
@@ -101,15 +101,15 @@ func (i FieldItem) getDynamicStatSize() int {
 	return size
 }
 
-func (i FieldItem) String() string {
-	return fmt.Sprintf("FieldItem{Name=%v, Type=%v, FieldType=%v}", i.FieldName, i.FieldType, i.DbField)
+func (i SqlFieldItem) String() string {
+	return fmt.Sprintf("SqlFieldItem{Name=%v, Type=%v, FieldType=%v}", i.FieldName, i.FieldType, i.DbField)
 }
 
 // 单条数据项
 type SqlItem struct {
 	excelRow   *excel.ExcelRow // 数据行
 	selects    []int           // 数据行选择索引
-	fieldItems []FieldItem     // 数据行选择索引对应的字段定义
+	fieldItems []SqlFieldItem  // 数据行选择索引对应的字段定义
 }
 
 func (i *SqlItem) FieldLen() int {
@@ -154,8 +154,8 @@ type TempSqlProxy struct {
 	EndRow        int               // 结束行号
 	StartColIndex int               // 开始列索引
 
-	fieldItems []FieldItem // 字段选择索引对应的字段定义
-	primaryKey []FieldItem // 主键信息
+	fieldItems []SqlFieldItem // 字段选择索引对应的字段定义
+	primaryKey []SqlFieldItem // 主键信息
 }
 
 func (o *TempSqlProxy) MergeOn() bool {
@@ -182,17 +182,17 @@ func (o *TempSqlProxy) ValueAtAxis(axis string) string {
 	return value
 }
 
-func (o *TempSqlProxy) GetFieldItems() []FieldItem {
+func (o *TempSqlProxy) GetFieldItems() []SqlFieldItem {
 	o.initFieldItems()
 	return o.fieldItems
 }
 
-func (o *TempSqlProxy) GetFieldItem(realIndex int) FieldItem {
+func (o *TempSqlProxy) GetFieldItem(realIndex int) SqlFieldItem {
 	localIndex, _ := slicex.IndexInt(o.FieldIndex, realIndex)
 	return o.GetFieldItemLocal(localIndex)
 }
 
-func (o *TempSqlProxy) GetFieldItemLocal(localIndex int) FieldItem {
+func (o *TempSqlProxy) GetFieldItemLocal(localIndex int) SqlFieldItem {
 	o.initFieldItems()
 	return o.fieldItems[localIndex]
 }
@@ -218,7 +218,7 @@ func (o *TempSqlProxy) PrimaryKeyLen() int {
 	return len(o.primaryKey)
 }
 
-func (o *TempSqlProxy) GetPrimaryKeys() []FieldItem {
+func (o *TempSqlProxy) GetPrimaryKeys() []SqlFieldItem {
 	o.initFieldItems()
 	return o.primaryKey
 }
@@ -245,7 +245,7 @@ func (o *TempSqlProxy) initFieldItems() {
 	sqlNameRow := o.Sheet.GetRowAt(Setting.Excel.TitleData.GetFileKeyRow(setting.FileNameSql) - 1)
 	formatRow := o.Sheet.GetRowAt(Setting.Excel.TitleData.FieldFormatRow - 1)
 	isCustomSqlField := Setting.Excel.TitleData.IsCustomSqlFieldType()
-	o.fieldItems = make([]FieldItem, len(o.FieldIndex))
+	o.fieldItems = make([]SqlFieldItem, len(o.FieldIndex))
 	db, _ := Setting.System.GetDatabase()
 	extend, _ := db.GetDatabaseExtend()
 	for index, realIndex := range o.FieldIndex {
@@ -256,7 +256,7 @@ func (o *TempSqlProxy) initFieldItems() {
 
 		if isCustomSqlField { // 定制类型处理
 			customFieldType, _ := o.Sheet.ValueAtIndex(realIndex, Setting.Excel.TitleData.SqlFieldFormatRow-1)
-			o.fieldItems[index] = FieldItem{
+			o.fieldItems[index] = SqlFieldItem{
 				FieldName: fieldName, FieldType: fieldType, CustomFieldType: strings.ToUpper(customFieldType),
 				DatabaseExtend: extend, DbField: sqlDataType}
 			continue
@@ -264,14 +264,14 @@ func (o *TempSqlProxy) initFieldItems() {
 
 		if sqlDataType.IsDynamicLen() { // 动态长度处理
 			byteSize, runeSize := o.getMaxSize(realIndex)
-			o.fieldItems[index] = FieldItem{
+			o.fieldItems[index] = SqlFieldItem{
 				FieldName: fieldName, FieldType: fieldType,
 				DatabaseExtend: extend, DbField: sqlDataType,
 				MaxByteSize: byteSize, MaxRuneSize: runeSize}
 			continue
 		}
 		// 固定长度处理
-		o.fieldItems[index] = FieldItem{
+		o.fieldItems[index] = SqlFieldItem{
 			FieldName: fieldName, FieldType: fieldType,
 			DatabaseExtend: extend, DbField: sqlDataType}
 	}
@@ -301,7 +301,7 @@ func (o *TempSqlProxy) initPrimaryKey() {
 		return
 	}
 	arr := strings.Split(value, ",")
-	key := make([]FieldItem, len(arr))
+	key := make([]SqlFieldItem, len(arr))
 	for index := range arr {
 		fieldCol := mathx.System26To10(arr[index])
 		localIndex, _ := slicex.IndexInt(o.FieldIndex, fieldCol-1)

@@ -11,6 +11,8 @@ languages:
       - './template/as3_title.temp'
     temps_const:
       - './template/as3_const.temp'
+    temps_proto:
+      - './template/as3_proto.temp'
   # C++
   - name: 'c++'
     ext: 'cpp'
@@ -19,6 +21,8 @@ languages:
       - './template/c++_title.temp'
     temps_const:
       - './template/c++_const.temp'
+    temps_proto:
+      - './template/c++_proto.temp'
   # C#
   - name: 'c#'
     ext: 'cs'
@@ -27,6 +31,8 @@ languages:
       - './template/c#_title.temp'
     temps_const:
       - './template/c#_const.temp'
+    temps_proto:
+      - './template/c#_proto.temp'
   # Golang
   - name: 'go'
     ext: 'go'
@@ -35,6 +41,8 @@ languages:
       - './template/go_title.temp'
     temps_const:
       - './template/go_const.temp'
+    temps_proto:
+      - './template/go_proto.temp'
   # Java
   - name: 'java'
     ext: 'java'
@@ -43,6 +51,8 @@ languages:
       - './template/java_title.temp'
     temps_const:
       - './template/java_const.temp'
+    temps_proto:
+      - './template/java_proto.temp'
   # TypeScript
   - name: 'ts'
     ext: 'ts'
@@ -51,6 +61,8 @@ languages:
       - './template/ts_title.temp'
     temps_const:
       - './template/ts_const.temp'
+    temps_proto:
+      - './template/ts_proto.temp'
 
 # 数据库相关配置
 # default: 默认使用的数据库

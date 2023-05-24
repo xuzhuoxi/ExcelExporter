@@ -15,6 +15,7 @@ type ProgramLanguage struct {
 	RefPath    string   `yaml:"ref"`         // 基础数据读写配置文件路径(相对于配置根目录相对路径)
 	TempsTitle []string `yaml:"temps_title"` // title导出类定义导出模板路径(相对于配置根目录相对路径)
 	TempsConst []string `yaml:"temps_const"` // 常量定义导出模板路径(相对于配置根目录相对路径)
+	TempsProto []string `yaml:"temps_proto"` // 协议定义导出模板路径(相对于配置根目录相对路径)
 
 	Setting *LangSetting // 由RefPath加载进来的配置信息
 }
@@ -32,6 +33,9 @@ func (o *ProgramLanguage) UpgradePaths(envPath string) {
 	for index := range o.TempsConst {
 		o.TempsConst[index] = filex.Combine(envPath, o.TempsConst[index])
 	}
+	for index := range o.TempsProto {
+		o.TempsProto[index] = filex.Combine(envPath, o.TempsProto[index])
+	}
 }
 
 func (o *ProgramLanguage) GetTempsTitlePath() string {
@@ -40,6 +44,10 @@ func (o *ProgramLanguage) GetTempsTitlePath() string {
 
 func (o *ProgramLanguage) GetTempsConstPath() string {
 	return getMergedTempsPath(o.TempsConst)
+}
+
+func (o *ProgramLanguage) GetTempsProtoPath() string {
+	return getMergedTempsPath(o.TempsProto)
 }
 
 func getMergedTempsPath(paths []string) string {

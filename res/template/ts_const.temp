@@ -1,10 +1,10 @@
-{{- $proxy := .}}{{$clsName := $proxy.ClassName -}}
+{{- $proxy := . -}}
 namespace {{$proxy.Namespace}} {
 	/**
 	 * @author ${AUTHOR}
 	 * Created on ${DATE}.
 	 */
-	export class {{$clsName}} {
+	export class {{$proxy.ClassName}} {
 		{{- range $index, $value := $proxy.GetItems}}
         /// <summary>
         /// {{$value.Remark}}

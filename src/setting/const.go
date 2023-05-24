@@ -10,6 +10,7 @@ const (
 	ModeNameTitle = "title"
 	ModeNameData  = "data"
 	ModeNameConst = "const"
+	ModeNameProto = "proto"
 )
 
 const (
@@ -69,5 +70,16 @@ const (
 )
 
 var (
-	RegFixedString = regexp.MustCompile(`string\(\d+\)`)
+	RegFixedString      = regexp.MustCompile(`string\(\d+\)`)
+	RegFixedStringArray = regexp.MustCompile(`\[\]string\(\d+\)`)
 )
+
+func Format2FieldType(fieldStr string) string {
+	if RegFixedString.MatchString(fieldStr) {
+		return RegFixedString.ReplaceAllString(fieldStr, "string")
+	}
+	if RegFixedStringArray.MatchString(fieldStr) {
+		return RegFixedString.ReplaceAllString(fieldStr, "[]string")
+	}
+	return fieldStr
+}

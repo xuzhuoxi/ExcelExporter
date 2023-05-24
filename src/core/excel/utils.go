@@ -2,6 +2,7 @@ package excel
 
 import (
 	"errors"
+	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/xuzhuoxi/infra-go/filex"
 	"github.com/xuzhuoxi/infra-go/mathx"
@@ -17,6 +18,10 @@ const (
 // 1=>A, 2=>B
 func GetAxisName(col int) string {
 	return mathx.System10To26(col)
+}
+
+func GetCellName(col int, row int) string {
+	return fmt.Sprintf("%s%d", mathx.System10To26(col), row)
 }
 
 // A=>1，B=>2

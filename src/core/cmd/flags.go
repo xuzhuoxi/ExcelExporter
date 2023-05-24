@@ -23,6 +23,9 @@ func ModeNameToType(modeName string) core.ModeType {
 	if modeName == setting.ModeNameConst {
 		return core.ModeConst
 	}
+	if modeName == setting.ModeNameProto {
+		return core.ModeProto
+	}
 	return core.ModeNone
 }
 
@@ -53,7 +56,8 @@ func ParseFlag() (cfg *SysFlags, err error) {
 
 	modesVal := strings.ToLower(*modes)
 	rangesVal := strings.ToLower(*ranges)
-	return &SysFlags{EnvPath: *envPath, Modes: modesVal, Ranges: rangesVal, LangRefs: *langRefs, DataFiles: *dataFiles,
+	langRefVals := strings.ToLower(*langRefs)
+	return &SysFlags{EnvPath: *envPath, Modes: modesVal, Ranges: rangesVal, LangRefs: langRefVals, DataFiles: *dataFiles,
 		SqlMerge: *sqlMerge, Source: *source, Target: *target}, nil
 }
 
@@ -194,8 +198,8 @@ func (o *AppFlags) GenTitleContexts(prefix string, startRowNum int, startColInde
 		for langIdx := 0; langIdx < langLen; langIdx += 1 {
 			context := &core.TitleContext{EnablePrefix: prefix,
 				RangeName: o.RangeNames[fieldIdx], RangeType: o.RangeTypes[fieldIdx],
-				ProgramLanguage: o.LangRefs[langIdx],
-				StartColIndex:   startColIndex}
+				Language:      o.LangRefs[langIdx],
+				StartColIndex: startColIndex}
 			contexts = append(contexts, context)
 		}
 	}
@@ -228,32 +232,6 @@ func (o *AppFlags) GenDataContexts(prefix string, startRowNum int, startColIndex
 	return
 }
 
-func (o *AppFlags) GenConstContexts(prefix string) (contexts []*core.ConstContext) {
-	if !o.CheckMode(core.ModeConst) {
-		return nil
-	}
-	rangeLen := len(o.RangeTypes)
-	langLen := len(o.LangRefs)
-	if rangeLen == 0 || langLen == 0 {
-		return nil
-	}
-	ln := rangeLen * langLen
-	contexts = make([]*core.ConstContext, 0, ln)
-	for fieldIdx := 0; fieldIdx < rangeLen; fieldIdx += 1 {
-		for langIdx := 0; langIdx < langLen; langIdx += 1 {
-			rangeName := o.RangeNames[fieldIdx]
-			if rangeName != setting.FieldRangeNameClient && rangeName != setting.FieldRangeNameServer {
-				continue
-			}
-			context := &core.ConstContext{EnablePrefix: prefix,
-				RangeName: o.RangeNames[fieldIdx], RangeType: o.RangeTypes[fieldIdx],
-				ProgramLanguage: o.LangRefs[langIdx]}
-			contexts = append(contexts, context)
-		}
-	}
-	return
-}
-
 // 生成Sql导出相关
 func (o *AppFlags) GenSqlContext(prefix string, startRowNum int, startColIndex int) (context *core.SqlContext) {
 	if !o.CheckRange(core.FieldRangeDatabase) || !o.CheckDataFile(setting.FileNameSql) {
@@ -268,4 +246,57 @@ func (o *AppFlags) GenSqlContext(prefix string, startRowNum int, startColIndex i
 		RangeName: setting.FieldRangeNameDb, RangeType: core.FieldRangeDatabase,
 		TitleOn: titleOn, DataOn: dataOn, SqlMerge: o.SqlMerge,
 		StartRowNum: startRowNum, StartColIndex: startColIndex}
+}
+
+func (o *AppFlags) GenConstContexts(prefix string) (contexts []*core.ConstContext) {
+	if !o.CheckMode(core.ModeConst) {
+		return nil
+	}
+	rangeLen := len(o.RangeTypes)
+	langLen := len(o.LangRefs)
+	if rangeLen == 0 || langLen == 0 {
+		return nil
+	}
+	ln := rangeLen * langLen
+	contexts = make([]*core.ConstContext, 0, ln)
+	for rangeIdx := 0; rangeIdx < rangeLen; rangeIdx += 1 {
+		for langIdx := 0; langIdx < langLen; langIdx += 1 {
+			rangeName := o.RangeNames[rangeIdx]
+			if rangeName != setting.FieldRangeNameClient && rangeName != setting.FieldRangeNameServer {
+				continue
+			}
+			context := &core.ConstContext{EnablePrefix: prefix,
+				RangeName: o.RangeNames[rangeIdx], RangeType: o.RangeTypes[rangeIdx],
+				Language: o.LangRefs[langIdx]}
+			contexts = append(contexts, context)
+		}
+	}
+	return
+}
+
+// 生成Proto导出相关
+func (o *AppFlags) GenProtoContexts(prefix string) (contexts []*core.ProtoContext) {
+	if !o.CheckMode(core.ModeProto) {
+		return nil
+	}
+	rangeLen := len(o.RangeTypes)
+	langLen := len(o.LangRefs)
+	if rangeLen == 0 || langLen == 0 {
+		return nil
+	}
+	ln := rangeLen * langLen
+	contexts = make([]*core.ProtoContext, 0, ln)
+	for rangeIdx := 0; rangeIdx < rangeLen; rangeIdx += 1 {
+		rangeName := o.RangeNames[rangeIdx]
+		if rangeName != setting.FieldRangeNameClient && rangeName != setting.FieldRangeNameServer {
+			continue
+		}
+		for langIdx := 0; langIdx < langLen; langIdx += 1 {
+			context := &core.ProtoContext{EnablePrefix: prefix,
+				RangeName: rangeName, RangeType: o.RangeTypes[rangeIdx],
+				Language: o.LangRefs[langIdx]}
+			contexts = append(contexts, context)
+		}
+	}
+	return
 }

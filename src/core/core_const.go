@@ -34,7 +34,7 @@ func execSheetConstContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, con
 		return nil
 	}
 	logPrefix := "core.execSheetConstContext"
-	lang := constCtx.ProgramLanguage
+	lang := constCtx.Language
 	temp, err := getConstLanguageTemp(lang)
 	if nil != err {
 		err = errors.New(fmt.Sprintf("[%s] Get lang[%s] temp fail: %s", logPrefix, lang, err))
@@ -85,13 +85,12 @@ func execSheetConstContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, con
 	// 创建模板数据代理
 	startRow := Setting.Excel.Const.DataStartRow
 	endRow := len(sheet.Rows) + 1
-	tempDataProxy := &TempConstProxy{Sheet: sheet, Excel: excel, ConstCtx: constCtx,
+	tempConstProxy := &TempConstProxy{Sheet: sheet, Excel: excel, ConstCtx: constCtx,
 		FileName: fileName, ClassName: clsName, Namespace: namespace,
-		Language: constCtx.ProgramLanguage,
 		StartRow: startRow, EndRow: endRow}
 
 	buff := bytes.NewBuffer(nil)
-	err = temp.Execute(buff, tempDataProxy, false)
+	err = temp.Execute(buff, tempConstProxy, false)
 	if nil != err {
 		err = errors.New(fmt.Sprintf("[%s] Execute Template error: %s ", logPrefix, err))
 		return err

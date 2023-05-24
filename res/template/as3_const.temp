@@ -1,11 +1,11 @@
-{{- $proxy := .}}{{$clsName := $proxy.ClassName -}}
+{{- $proxy := . -}}
 package {{$proxy.Namespace}} {
-    public class {{$clsName}}{   
-		{{- range $index, $value := $proxy.GetItems}}
-         /// <summary>
-         /// {{$value.Remark}}
-         /// </summary>
-         public static const {{$value.Name}} : {{$value.Type}} = {{$value.Value}};
-		 {{- end}}
+    public class {{$proxy.ClassName}} {
+        {{- range $index, $value := $proxy.GetItems}}
+        /// <summary>
+        /// {{$value.Remark}}
+        /// </summary>
+        public static const {{$value.Name}} : {{$value.Type}} = {{$value.Value}};
+        {{- end}}
     }
 }

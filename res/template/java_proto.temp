@@ -1,0 +1,32 @@
+{{- $proxy := .}}{{$sheetProxy := $proxy.SheetProxy }}{{$clsName := $proxy.ClassName -}}
+{{- $ctx := $sheetProxy.ProtoCtx -}}
+package {{$proxy.Namespace}};
+import org.json.JSONObject;
+import xu.BinaryReaderProxy;
+import xu.JsonReaderProxy;
+/**
+ * {{$proxy.ClassRemark}}
+ * @author {AUTHOR}
+ * Created on {NowTimeStr} .
+ * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.Language}}
+ */
+ public class {{$clsName}} {
+    {{- range $index, $value := $proxy.GetFields}}
+    // {{$value.Remark}}
+    private {{$value.Type}} {{ToLowerCamelCase $value.Name}};
+    {{- end}}
+
+    // Get方法 --------------
+
+    {{- range $index, $value := $proxy.GetFields}}
+    /**
+     * @remark {{$value.Remark}}
+     * @return {{$value.Type}}
+     */
+    public {{$value.Type}} get{{ToUpperCamelCase $value.Name}}() {
+        return this.{{ToLowerCamelCase $value.Name}};
+    }
+    {{- end}}
+
+    // 以下为解释数据方法 --------------
+ }

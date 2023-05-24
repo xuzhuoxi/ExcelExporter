@@ -8,6 +8,7 @@ const (
 	ModeTitle
 	ModeData
 	ModeConst
+	ModeProto
 )
 
 // 字段类型
