@@ -65,7 +65,7 @@ func execSheetDataContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, data
 		return nil
 	}
 
-	keyRowNum := Setting.Excel.TitleData.GetFileKeyRow(dataCtx.DataFileFormat)
+	keyRowNum := Setting.Excel.TitleData.GetFieldFileKeyRow(dataCtx.DataFileFormat)
 	if -1 == keyRowNum {
 		err = errors.New(fmt.Sprintf("[%s] Parse file format: %s ", logPrefix, dataCtx.DataFileFormat))
 		return err

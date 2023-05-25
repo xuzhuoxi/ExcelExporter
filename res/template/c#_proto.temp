@@ -1,4 +1,5 @@
-{{- $proxy := . -}}
+{{- $proxy := .}}{{$sheetProxy := $proxy.SheetProxy -}}{{- $ctx := $sheetProxy.ProtoCtx -}}
+{{- $clsName := $proxy.ClassName}}{{$fields := $proxy.GetFields -}}
 namespace {{$proxy.Namespace}}
 {
     public class {{$proxy.ClassName}}
@@ -8,7 +9,7 @@ namespace {{$proxy.Namespace}}
         /// </summary>
         public const {{$proxy.ProtoIdDataType}} ProtoId = {{$proxy.ProtoId}};
 
-        {{- range $index, $value := $proxy.GetFields}}
+        {{- range $index, $value := $fields}}
         /// <summary>
         /// {{$value.Remark}}
         /// </summary>
@@ -17,7 +18,7 @@ namespace {{$proxy.Namespace}}
 
 		// Get方法 --------------
 
-        {{- range $index, $value := $proxy.GetFields}}
+        {{- range $index, $value := $fields}}
         /// <summary>
         /// {{$value.Remark}}
         /// </summary>

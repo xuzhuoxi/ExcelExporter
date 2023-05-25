@@ -1,46 +1,46 @@
-{{- $proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel -}}
-{{- $ctx := $proxy.TitleCtx}}{{$clsName := $proxy.ClassName -}}
+{{- $proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx -}}
+{{- $clsName := $proxy.ClassName}}{{$fields := $proxy.GetFields -}}
 package {{$proxy.Namespace}};
 import org.json.JSONObject;
 import xu.BinaryReaderProxy;
 import xu.JsonReaderProxy;
 
 /**
- * @author {AUTHOR}
- * Created on {NowTimeStr} .
- * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.Language}}
+ * @author: {AUTHOR}
+ * @date: on {NowTimeStr} .
+ * @description: {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.Language}}
  */
  public class {{$clsName}} {
-    {{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
-    // {{$proxy.GetTitleName $value}}
-    private {{$langDefine.LangTypeName}} {{ToLowerCamelCase $fieldName}};
+    {{- range $index, $value := $fields}}
+    // {{$value.TitleName}}
+    private {{$value.LangType}} {{ToLowerCamelCase $value.FieldLangName}};
     {{- end}}
 
-    {{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
+    {{- range $index, $value := $fields}}
     /**
-     * {{$proxy.GetTitleName $value}}
-     *
-     * @remark {{$proxy.GetTitleRemark $value}}
-     * @return {{$langDefine.LangTypeName}}
+     * {{$value.TitleName}}
+     * @remark
+     *   {{$value.TitleRemark}}
+     * @return {{$value.LangType}}
      */
-    public {{$langDefine.LangTypeName}} get{{ToUpperCamelCase $fieldName}}() {
-        return this.{{ToLowerCamelCase $fieldName}};
+    public {{$value.LangType}} get{{ToUpperCamelCase $value.FieldLangName}}() {
+        return this.{{ToLowerCamelCase $value.FieldLangName}};
     }
     {{- end}}
 
     // Json数据解释
-    public void parseJson(JsonReaderProxy proxy) {
+    public void fromJsonOverride(JsonReaderProxy proxy) {
         // 以下为从 Json数据代理 中解释出字段数据
-        {{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}{{$jsonName := $proxy.GetTitleFileKey $value "json"}}
-        o.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.GetGetOperate "json"}}("{{$jsonName}}")
+        {{- range $index, $value := $fields}}{{$define := $value.LangTypeDefine}}
+        this.{{ToLowerCamelCase $value.FieldLangName}} = proxy.{{$define.GetGetOperate "json"}}("{{$value.GetFileKey "json"}}")
         {{- end}}
     }
 
     // 二进制数据解释
-    public void parseBinary(BinaryReaderProxy proxy) {
+    public void fromBinaryOverride(BinaryReaderProxy proxy) {
         // 以下为从 二进制数据代理 中解释出字段数据
-        {{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
-        o.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.GetGetOperate "bin"}}()
+        {{- range $index, $value := $fields}}{{$define := $value.LangTypeDefine}}
+        this.{{ToLowerCamelCase $value.FieldLangName}} = proxy.{{$define.GetGetOperate "bin"}}()
         {{- end}}
     }
  }

@@ -1,5 +1,5 @@
-{{- $proxy := .}}{{$sheetProxy := $proxy.SheetProxy }}{{$clsName := $proxy.ClassName -}}
-{{- $ctx := $sheetProxy.ProtoCtx -}}
+{{- $proxy := .}}{{$sheetProxy := $proxy.SheetProxy -}}{{- $ctx := $sheetProxy.ProtoCtx -}}
+{{- $clsName := $proxy.ClassName}}{{$fields := $proxy.GetFields -}}
 package {{$proxy.Namespace}};
 import org.json.JSONObject;
 import xu.BinaryReaderProxy;
@@ -11,14 +11,14 @@ import xu.JsonReaderProxy;
  * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.Language}}
  */
  public class {{$clsName}} {
-    {{- range $index, $value := $proxy.GetFields}}
+    {{- range $index, $value := $fields}}
     // {{$value.Remark}}
     private {{$value.Type}} {{ToLowerCamelCase $value.Name}};
     {{- end}}
 
     // Get方法 --------------
 
-    {{- range $index, $value := $proxy.GetFields}}
+    {{- range $index, $value := $fields}}
     /**
      * @remark {{$value.Remark}}
      * @return {{$value.Type}}

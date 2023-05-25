@@ -1,5 +1,5 @@
-{{- $proxy := .}}{{$sheetProxy := $proxy.SheetProxy }}{{$clsName := $proxy.ClassName -}}
-{{- $ctx := $sheetProxy.ProtoCtx -}}
+{{- $proxy := .}}{{$sheetProxy := $proxy.SheetProxy -}}{{- $ctx := $sheetProxy.ProtoCtx -}}
+{{- $clsName := $proxy.ClassName}}{{$fields := $proxy.GetFields -}}
 namespace {{$proxy.Namespace}} {
     /**
      * {{$proxy.ClassRemark}}
@@ -9,13 +9,13 @@ namespace {{$proxy.Namespace}} {
 	 */
 	export class {{$proxy.ClassName}} {
         // 以下为属性声明
-        {{- range $index, $value := $proxy.GetFields}}
+        {{- range $index, $value := $fields}}
         // {{$value.Remark}}
         private _{{ToLowerCamelCase $value.Name}}: {{$value.Type}};
         {{- end}}
 
         // 以下为Get方法
-        {{- range $index, $value := $proxy.GetFields}}
+        {{- range $index, $value := $fields}}
         /**
          * @remark {{$value.Remark}}
          * @return {{$value.Type}}

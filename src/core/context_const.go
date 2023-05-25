@@ -74,7 +74,7 @@ func (o *TempConstProxy) GetItems() []ConstItem {
 // 取当前Sheet指定行号数据，转换为常量项，格式非法则返回对应错误
 func (o *TempConstProxy) GetItem(row int) (item ConstItem, err error) {
 	//fmt.Println("GetItem:", row)
-	pLang, ok := Setting.System.FindProgramLanguage(o.Language)
+	pLang, ok := Setting.System.FindProgramLanguage(o.ConstCtx.Language)
 	if !ok {
 		err = errors.New(fmt.Sprintf("Lang[%s] is not found! ", o.Language))
 		return

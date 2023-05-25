@@ -1,5 +1,5 @@
-{{- $proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel -}}
-{{- $ctx := $proxy.TitleCtx}}{{$clsName := $proxy.ClassName -}}
+{{- $proxy := .}}{{$sheet := $proxy.Sheet}}{{$excel := $proxy.Excel}}{{$ctx := $proxy.TitleCtx -}}
+{{- $clsName := $proxy.ClassName}}{{$fields := $proxy.GetFields -}}
 using System;
 using UnityEngine;
 /**
@@ -16,34 +16,33 @@ namespace {{$proxy.Namespace}}
     public class {{$clsName}}
     {
         // 以下为属性声明
-        {{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
-        // {{$proxy.GetTitleName $value}}
-        [SerializeField] private {{$langDefine.LangTypeName}} {{ToLowerCamelCase $fieldName}};
+        {{- range $index, $value := $fields}}
+        // {{$value.TitleName}}
+        [Tooltip("{{$value.TitleName}}")] [SerializeField] private {{$value.LangType}} {{ToLowerCamelCase $value.FieldLangName}};
         {{- end}}
 
         // 以下为Get方法
-        {{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
-        /**
-         * {{$proxy.GetTitleName $value}}
-         *
-         * @remark {{$proxy.GetTitleRemark $value}}
-         * @return {{$langDefine.LangTypeName}}
-         */
-        public {{$langDefine.LangTypeName}} {{ToUpperCamelCase $fieldName}} => {{ToLowerCamelCase $fieldName}};
+        {{- range $index, $value := $fields}}
+        /// <summary>
+        /// {{$value.TitleName}}
+        /// </summary>
+        /// <returns>{{$value.LangType}}</returns>
+        /// <remarks>{{$value.TitleRemark}}</remarks>
+        public {{$value.LangType}} {{ToUpperCamelCase $value.FieldLangName}} => {{ToUpperCamelCase $value.FieldLangName}};
         {{- end}}
-        // 以下为解释数据方法
 
+        // 以下为解释数据方法
         // Json数据解释
-        public void ParseJson(string data)
+        public void FromJsonOverride(string data)
         {
             JsonUtility.FromJsonOverwrite(data, this);
         }
 
         // 二进制数据解释
-//		public void ParseBinary(proxy: xu.BinaryReaderProxy)
+//		public void FromBinaryOverride(proxy: xu.BinaryReaderProxy)
 //		{
-            {{- range $index, $value := $proxy.FieldIndex}}{{$fieldName := $proxy.GetFieldName $value}}{{$langDefine := $proxy.GetTitleLangDefine $value}}
-//          this.{{ToLowerCamelCase $fieldName}} = proxy.{{$langDefine.GetGetOperate "bin"}}();
+            {{- range $index, $value := $fields}}{{$define := $value.LangTypeDefine}}
+//          this.{{ToLowerCamelCase $value.FieldLangName}} = proxy.{{$define.GetGetOperate "bin"}}();
             {{- end}}
 //		}
 

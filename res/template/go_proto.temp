@@ -1,4 +1,5 @@
-{{- $proxy := . }}{{$clsName := $proxy.ClassName -}}
+{{- $proxy := .}}{{$sheetProxy := $proxy.SheetProxy -}}{{- $ctx := $sheetProxy.ProtoCtx -}}
+{{- $clsName := $proxy.ClassName}}{{$fields := $proxy.GetFields -}}
 package {{$proxy.Namespace}}
 
 /**
@@ -6,7 +7,7 @@ package {{$proxy.Namespace}}
  * Created on {NowTimeStr} .
  */
 type I{{$clsName}} interface {
-    {{- range $index, $value := $proxy.GetFields}}
+    {{- range $index, $value := $fields}}
     /**
      * @remark {{$value.Remark}}
      * @return {{$value.Type}}
@@ -21,14 +22,14 @@ type I{{$clsName}} interface {
  */
 type {{$clsName}} struct {
     //以下为属性声明
-    {{- range $index, $value := $proxy.GetFields}}
+    {{- range $index, $value := $fields}}
     //  {{$value.Remark}}
     {{ToLowerCamelCase $value.Name}} {{$value.Type}}
     {{- end}}
 }
 
 // 接口实现
-{{- range $index, $value := $proxy.GetFields}}
+{{- range $index, $value := $fields}}
 /**
  * @remark {{$value.Remark}}
  * @return {{$value.Type}}

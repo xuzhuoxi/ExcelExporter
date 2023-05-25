@@ -242,7 +242,7 @@ func (o *TempSqlProxy) initFieldItems() {
 	if nil != o.fieldItems {
 		return
 	}
-	sqlNameRow := o.Sheet.GetRowAt(Setting.Excel.TitleData.GetFileKeyRow(setting.FileNameSql) - 1)
+	sqlNameRow := o.Sheet.GetRowAt(Setting.Excel.TitleData.GetFieldFileKeyRow(setting.FileNameSql) - 1)
 	formatRow := o.Sheet.GetRowAt(Setting.Excel.TitleData.FieldFormatRow - 1)
 	isCustomSqlField := Setting.Excel.TitleData.IsCustomSqlFieldType()
 	o.fieldItems = make([]SqlFieldItem, len(o.FieldIndex))

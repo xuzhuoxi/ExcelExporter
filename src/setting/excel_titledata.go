@@ -89,7 +89,7 @@ func (td TitleData) GetOutputInfo(rangeName string) (info TitleDataOutputInfo, o
 	return TitleDataOutputInfo{}, false
 }
 
-func (td TitleData) GetFieldNameInfo(langName string) (row NameRow, ok bool) {
+func (td TitleData) GetFieldLangNameInfo(langName string) (row NameRow, ok bool) {
 	for index := range td.FieldNames {
 		if td.FieldNames[index].Name == langName {
 			return td.FieldNames[index], true
@@ -98,14 +98,14 @@ func (td TitleData) GetFieldNameInfo(langName string) (row NameRow, ok bool) {
 	return NameRow{}, false
 }
 
-func (td TitleData) GetFieldNameRow(langName string) int {
-	if row, ok := td.GetFieldNameInfo(langName); ok {
+func (td TitleData) GetFieldLangNameRow(langName string) int {
+	if row, ok := td.GetFieldLangNameInfo(langName); ok {
 		return row.Row
 	}
 	return 0
 }
 
-func (td TitleData) GetFileKeyInfo(fileTypeName string) (row NameRow, ok bool) {
+func (td TitleData) GetFieldFileKeyInfo(fileTypeName string) (row NameRow, ok bool) {
 	for index := range td.FileKeys {
 		if td.FileKeys[index].Name == fileTypeName {
 			return td.FileKeys[index], true
@@ -114,8 +114,8 @@ func (td TitleData) GetFileKeyInfo(fileTypeName string) (row NameRow, ok bool) {
 	return NameRow{}, false
 }
 
-func (td TitleData) GetFileKeyRow(fileTypeName string) int {
-	if row, ok := td.GetFileKeyInfo(fileTypeName); ok {
+func (td TitleData) GetFieldFileKeyRow(fileTypeName string) int {
+	if row, ok := td.GetFieldFileKeyInfo(fileTypeName); ok {
 		return row.Row
 	}
 	return 0
