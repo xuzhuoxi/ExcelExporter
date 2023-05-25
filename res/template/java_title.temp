@@ -16,6 +16,8 @@ import xu.JsonReaderProxy;
     private {{$value.LangType}} {{ToLowerCamelCase $value.FieldLangName}};
     {{- end}}
 
+    // Get方法 --------------
+
     {{- range $index, $value := $fields}}
     /**
      * {{$value.TitleName}}
@@ -27,6 +29,8 @@ import xu.JsonReaderProxy;
         return this.{{ToLowerCamelCase $value.FieldLangName}};
     }
     {{- end}}
+
+    // 以下为解释数据方法 --------------
 
     // Json数据解释
     public void fromJsonOverride(JsonReaderProxy proxy) {

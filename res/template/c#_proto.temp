@@ -1,5 +1,10 @@
 {{- $proxy := .}}{{$sheetProxy := $proxy.SheetProxy -}}{{- $ctx := $sheetProxy.ProtoCtx -}}
 {{- $clsName := $proxy.ClassName}}{{$fields := $proxy.GetFields -}}
+using System;
+using UnityEngine;
+/**
+ * C#定义
+ */
 namespace {{$proxy.Namespace}}
 {
     public class {{$proxy.ClassName}}
@@ -13,7 +18,7 @@ namespace {{$proxy.Namespace}}
         /// <summary>
         /// {{$value.Remark}}
         /// </summary>
-        private {{$value.Type}} m_{{ToUpperCamelCase $value.Name}};
+        private {{$value.LangType}} m_{{ToUpperCamelCase $value.Name}};
 		{{- end}}
 
 		// Get方法 --------------
@@ -22,18 +27,43 @@ namespace {{$proxy.Namespace}}
         /// <summary>
         /// {{$value.Remark}}
         /// </summary>
-        public {{$value.Type}} {{ToUpperCamelCase $value.Name}} => m_{{ToUpperCamelCase $value.Name}};
+        /// <returns>{{$value.LangType}}</returns>
+        public {{$value.LangType}} {{ToUpperCamelCase $value.Name}} => m_{{ToUpperCamelCase $value.Name}};
 		{{- end}}
 
 		// 以下为解释数据方法 --------------
 
         // 二进制数据解释
-//		public void ParseBinary(proxy: xu.BinaryReaderProxy)
-//		{
+		public void FromJsonOverride(string data)
+		{
+            JsonUtility.FromJsonOverwrite(data, this);
+		}
+
+        // 二进制数据解释
+		public void FromBinaryOverride(BinaryReaderProxy proxy)
+		{
+		    / 以下为从 二进制数据代理 中解释出字段数据
             {{- range $index, $value := $proxy.GetFields}}
-            {{- $typeDefine := $value.TypeDefine}}
-//          this.{{ToUpperCamelCase $value.Name}} = proxy.{{$typeDefine.GetGetOperate "bin"}}();
+            {{- if $value.IsCustomType}}
+            this.m_{{ToUpperCamelCase $value.Name}} = {{$value.LangType}}.FromBinary(proxy);
+            {{- else}}{{$define := $value.LangTypeDefine}}
+            this.m_{{ToUpperCamelCase $value.Name}} = proxy.{{$define.GetGetOperate "bin"}}();
             {{- end}}
-//		}
+            {{- end}}
+		}
+
+        // 以下为静态实例化 --------------
+
+        public static {{$clsName}} FromJson(string data)
+        {
+            return JsonUtility.FromJson<{{$clsName}}>(data);
+        }
+
+        public static {{$clsName}} FromBinary(BinaryReaderProxy proxy)
+        {
+            var rs = new {{$clsName}}();
+            rs.FromBinaryOverride(proxy);
+            return rs;
+        }
     }
 }

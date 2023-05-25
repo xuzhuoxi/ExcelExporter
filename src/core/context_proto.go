@@ -42,40 +42,13 @@ func (o ProtoSheetTitle) MatchRange(rangeName string) bool {
 
 // 协议属性
 type ProtoFieldItem struct {
-	Name          string // 名称
-	OriginalType  string // 原始的数据类型
-	FormattedType string // 格式化后的数据类型
-	Remark        string // 备注
-
-	lang string // 编程语言
-	loc  string // 坐标
-}
-
-func (o *ProtoFieldItem) IsCustomType() bool {
-	_, ok := o.getTypeDefine()
-	return !ok
-}
-
-func (o *ProtoFieldItem) Type() string {
-	define, ok := o.getTypeDefine()
-	if ok {
-		return define.LangTypeName
-	} else {
-		return o.OriginalType
-	}
-}
-
-func (o *ProtoFieldItem) TypeDefine() setting.LangDataType {
-	define, ok := o.getTypeDefine()
-	if !ok {
-		return setting.LangDataType{}
-	}
-	return define
-}
-
-func (o *ProtoFieldItem) getTypeDefine() (dataType setting.LangDataType, ok bool) {
-	lang, _ := Setting.System.FindProgramLanguage(o.lang)
-	return lang.Setting.GetDataTypeDefine(o.FormattedType)
+	Remark         string               // 备注
+	Name           string               // 属性Key：Excel配置值
+	OriginalType   string               // 属性数据类型：原始值
+	FormattedType  string               // 属性数据类型：格式化值
+	LangType       string               // 属性数据类型：编程语言值
+	LangTypeDefine setting.LangDataType // 属性数据类型：编程语言定义
+	IsCustomType   bool                 // 属性数据类型：是否为自定义类型
 }
 
 // 协议项
@@ -284,34 +257,53 @@ func (o *ProtoSheetProxy) getFieldItems(rowId int, itemRow, remarkRow *excel.Exc
 	idx := 0
 	for idx < fieldSize {
 		fieldStr := itemRow.Cell[colIdx]
-		info := strings.Split(fieldStr, ":")
-
-		cellName := excel.GetCellName(colIdx+1, rowId)
-		if len(info) != 2 {
-			return nil, errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Format Size Error!, ",
-				cellName, fieldStr))
-		}
-		nameStr := strings.TrimSpace(info[0])
-		originalType := strings.TrimSpace(info[1])
-		if len(nameStr) == 0 || len(originalType) == 0 {
-			return nil, errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Format Empty Error!, ",
-				cellName, fieldStr))
-		}
-		formattedType := setting.Format2FieldType(originalType)
-		fieldItem := &ProtoFieldItem{Name: nameStr, OriginalType: originalType, FormattedType: formattedType,
-			loc: cellName, lang: o.ProtoCtx.Language}
+		cellLoc := excel.GetCellName(colIdx+1, rowId)
+		dataRemark := ""
 		if remarkExist {
-			fieldItem.Remark = strings.TrimSpace(remarkRow.Cell[colIdx])
+			dataRemark = strings.TrimSpace(remarkRow.Cell[colIdx])
 		}
-
-		// 属性类型错误
-		if fieldItem.IsCustomType() && !o.checkProtoName(formattedType) {
-			return nil, errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Format Type Error!, ",
-				cellName, fieldStr))
+		fieldItem, err1 := o.getFieldItem(cellLoc, fieldStr, dataRemark)
+		if nil != err1 {
+			return nil, err1
 		}
 		fieldItems[idx] = *fieldItem
 		colIdx += 1
 		idx += 1
 	}
 	return fieldItems, nil
+}
+
+func (o *ProtoSheetProxy) getFieldItem(loc string, fieldStr string, dataRemark string) (fieldItem *ProtoFieldItem, err error) {
+	info := strings.Split(fieldStr, ":")
+	if len(info) != 2 {
+		return nil,
+			errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Format Size Error!, ",
+				loc, fieldStr))
+	}
+	dataName := strings.TrimSpace(info[0])
+	originalType := strings.TrimSpace(info[1])
+	if len(dataName) == 0 || len(originalType) == 0 {
+		return nil,
+			errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Format Empty Error!, ",
+				loc, fieldStr))
+	}
+	formattedType := setting.Format2FieldType(originalType)
+	lang, _ := Setting.System.FindProgramLanguage(o.ProtoCtx.Language)
+	landDataTypeDefine, ok := lang.Setting.GetDataTypeDefine(formattedType)
+	fieldItem = &ProtoFieldItem{
+		Remark:        dataRemark,
+		Name:          dataName,
+		OriginalType:  originalType,
+		FormattedType: formattedType,
+	}
+	if ok {
+		fieldItem.LangTypeDefine, fieldItem.LangType = landDataTypeDefine, landDataTypeDefine.LangTypeName
+	} else {
+		if o.checkProtoName(formattedType) {
+			fieldItem.LangType, fieldItem.IsCustomType = formattedType, true
+		} else {
+			err = errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Format LangType Error!, ", loc, fieldStr))
+		}
+	}
+	return
 }

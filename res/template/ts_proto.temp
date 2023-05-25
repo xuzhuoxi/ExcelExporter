@@ -8,24 +8,62 @@ namespace {{$proxy.Namespace}} {
 	 * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.Language}}
 	 */
 	export class {{$proxy.ClassName}} {
+	    public static readonly ProtoId: {{$proxy.ProtoIdDataType}} = {{$proxy.ProtoId}};
+
         // 以下为属性声明
         {{- range $index, $value := $fields}}
         // {{$value.Remark}}
-        private _{{ToLowerCamelCase $value.Name}}: {{$value.Type}};
+        private _{{ToLowerCamelCase $value.Name}}: {{$value.LangType}};
         {{- end}}
 
         // 以下为Get方法
         {{- range $index, $value := $fields}}
         /**
          * @remark {{$value.Remark}}
-         * @return {{$value.Type}}
+         * @return {{$value.LangType}}
          */
-        get {{ToLowerCamelCase $value.Name}}(): {{$value.Type}} {
+        get {{ToLowerCamelCase $value.Name}}(): {{$value.LangType}} {
             return this._{{ToLowerCamelCase $value.Name}};
         }
         {{- end}}
 
         // 以下为解释数据方法 --------------
 
+        // Json数据解释
+        public fromJsonOverride(data: any): void {
+            {{- range $index, $value := $fields}}{{$define := $value.LangTypeDefine}}
+              {{- if $value.IsCustomType}}
+            {{ToLowerCamelCase $value.Name}} = {{$value.LangType}}.fromJson(proxy);
+              {{- else}}
+            {{ToLowerCamelCase $value.Name}} = proxy.{{$value.Name}};
+              {{- end}}
+            {{- end}}
+        }
+
+        // 二进制数据解释
+        public fromBinaryOverride(proxy: BinaryReaderProxy): void {
+            // 以下为从 二进制数据代理 中解释出字段数据
+            {{- range $index, $value := $fields}}{{$define := $value.LangTypeDefine}}
+              {{- if $value.IsCustomType}}
+            {{ToLowerCamelCase $value.Name}} = {{$value.LangType}}.fromBinary(proxy);
+              {{- else}}
+            {{ToLowerCamelCase $value.Name}} = proxy.{{$define.GetGetOperate "bin"}}()
+              {{- end}}
+            {{- end}}
+        }
+
+        // 以下为静态实例化 --------------
+
+        public static fromJson(data: any): {{$clsName}} {
+            let rs = new {{$clsName}}();
+            rs.fromJsonOverride(data);
+            return rs;
+        }
+
+        public static fromBinary(proxy: BinaryReaderProxy): {{$clsName}} {
+            let rs = new {{$clsName}}();
+            rs.fromBinaryOverride(proxy);
+            return rs;
+        }
 	}
 }

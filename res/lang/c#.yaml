@@ -10,7 +10,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadBool'
         set: ''
   - name: int8
     lang: 'sbyte'
@@ -22,7 +22,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadInt8'
         set: ''
   - name: int16
     lang: 'short'
@@ -34,7 +34,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadInt16'
         set: ''
   - name: int32
     lang: 'int'
@@ -46,7 +46,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadInt32'
         set: ''
   - name: int64
     lang: 'long'
@@ -58,7 +58,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadInt64'
         set: ''
   - name: uint8
     lang: 'byte'
@@ -70,7 +70,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadUInt8'
         set: ''
   - name: uint16
     lang: 'ushort'
@@ -82,7 +82,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadUInt16'
         set: ''
   - name: uint32
     lang: 'uint'
@@ -94,7 +94,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadUInt32'
         set: ''
   - name: uint64
     lang: 'long'
@@ -106,7 +106,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadUInt64'
         set: ''
   - name: float32
     lang: 'float'
@@ -118,7 +118,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadFloat32'
         set: ''
   - name: float64
     lang: 'double'
@@ -130,7 +130,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadFloat64'
         set: ''
   - name: string
     lang: 'string'
@@ -142,7 +142,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadString'
         set: ''
   - name: json
     lang: 'string'
@@ -154,7 +154,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadString'
         set: ''
   - name: '[]bool'
     lang: 'bool[]'
@@ -166,7 +166,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadBoolArray'
         set: ''
   - name: '[]int8'
     lang: 'sbyte[]'
@@ -178,7 +178,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadInt8Array'
         set: ''
   - name: '[]int16'
     lang: 'short[]'
@@ -190,7 +190,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadInt16Array'
         set: ''
   - name: '[]int32'
     lang: 'int[]'
@@ -202,7 +202,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadInt32Array'
         set: ''
   - name: '[]int64'
     lang: 'long[]'
@@ -214,7 +214,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadInt64Array'
         set: ''
   - name: '[]uint8'
     lang: 'byte[]'
@@ -226,7 +226,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadUInt8Array'
         set: ''
   - name: '[]uint16'
     lang: 'ushort[]'
@@ -238,7 +238,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadUInt16Array'
         set: ''
   - name: '[]uint32'
     lang: 'uint[]'
@@ -250,7 +250,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadUInt32Array'
         set: ''
   - name: '[]uint64'
     lang: 'ulong[]'
@@ -262,7 +262,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadUInt64Array'
         set: ''
   - name: '[]float32'
     lang: 'float[]'
@@ -274,7 +274,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadFloat32Array'
         set: ''
   - name: '[]float64'
     lang: 'double[]'
@@ -286,7 +286,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadFloat64Array'
         set: ''
   - name: '[]string'
     lang: 'string[]'
@@ -298,7 +298,7 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadStringArray'
         set: ''
   - name: '[]json'
     lang: 'string[]'
@@ -310,5 +310,5 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: ''
+        get: 'ReadStringArray'
         set: ''
