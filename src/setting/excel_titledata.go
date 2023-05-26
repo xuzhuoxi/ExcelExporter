@@ -47,33 +47,36 @@ type TitleData struct {
 	// 内容格式: 'c,s,d'，c、s、d的格式只能是0或1，c指前端，s指后端，d指数据库
 	// 顺序不能颠倒
 	// sql脚本导出只针对d值
-	FieldRangeRow int `yaml:"field_range_row"`
+	FieldRangeRow int `yaml:"range_row"`
 	//  数据格式行号，内容格式支持:
 	//  uint8,uint16,uint32,int8,int16,int32,float32,boolean,string,string(*),
 	//  uint8[],uint16[],uint32[],int8[],int16[],int32[],float32[],boolean[],string[],string(*)[]
-	FieldFormatRow int `yaml:"field_format_row"`
+	DataTypeRow int `yaml:"data_type_row"`
 	// 数据库字段类型定制行号，0为不定制
-	SqlFieldFormatRow int `yaml:"sql_field_format_row"`
+	SqlDataTypeRow int `yaml:"sql_data_type_row"`
 	// 各语言使用的字段名称对应行号
-	FieldNames []NameRow `yaml:"field_names"`
+	ExtNameRows []NameRow `yaml:"ext_name_rows"`
 	// 数据文件使用的字段名称行号
-	FileKeys []NameRow `yaml:"file_keys"`
-	//// 数据的开始行号
-	//DataStartRow int `yaml:"data_start_row"`
+	FileKeyRows []NameRow `yaml:"file_key_rows"`
 	// 数据的开始行号
-	DataStart string `yaml:"data_start"`
+	DataStartAxis string `yaml:"data_start_axis"`
 }
 
 // 数据开始行号
 func (td TitleData) DataStartRow() int {
-	_, row, _ := excel.SplitAxis(td.DataStart)
+	_, row, _ := excel.SplitAxis(td.DataStartAxis)
 	return row
 }
 
 // 数据开始列号索引
 func (td TitleData) DataStartColIndex() int {
-	colIndex, _, _ := excel.ParseAxisIndex(td.DataStart)
+	colIndex, _, _ := excel.ParseAxisIndex(td.DataStartAxis)
 	return colIndex
+}
+
+func (td TitleData) DataStart() (row int, col int) {
+	col, row, _ = excel.ParseAxisIndex(td.DataStartAxis)
+	return col + 1, row + 1
 }
 
 func (td TitleData) GetSqlInfo() TitleDataSqlInfo {
@@ -90,9 +93,9 @@ func (td TitleData) GetOutputInfo(rangeName string) (info TitleDataOutputInfo, o
 }
 
 func (td TitleData) GetFieldLangNameInfo(langName string) (row NameRow, ok bool) {
-	for index := range td.FieldNames {
-		if td.FieldNames[index].Name == langName {
-			return td.FieldNames[index], true
+	for index := range td.ExtNameRows {
+		if td.ExtNameRows[index].Name == langName {
+			return td.ExtNameRows[index], true
 		}
 	}
 	return NameRow{}, false
@@ -106,9 +109,9 @@ func (td TitleData) GetFieldLangNameRow(langName string) int {
 }
 
 func (td TitleData) GetFieldFileKeyInfo(fileTypeName string) (row NameRow, ok bool) {
-	for index := range td.FileKeys {
-		if td.FileKeys[index].Name == fileTypeName {
-			return td.FileKeys[index], true
+	for index := range td.FileKeyRows {
+		if td.FileKeyRows[index].Name == fileTypeName {
+			return td.FileKeyRows[index], true
 		}
 	}
 	return NameRow{}, false
@@ -122,5 +125,5 @@ func (td TitleData) GetFieldFileKeyRow(fileTypeName string) int {
 }
 
 func (td TitleData) IsCustomSqlFieldType() bool {
-	return td.SqlFieldFormatRow > 0
+	return td.SqlDataTypeRow > 0
 }

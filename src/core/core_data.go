@@ -71,8 +71,8 @@ func execSheetDataContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, data
 		return err
 	}
 	keyRow := sheet.GetRowAt(keyRowNum - 1)
-	//typeRow := sheet.GetRowAt(Setting.Excel.Title.FieldFormatRow - 1)
-	typeRow := sheet.GetRowAt(Setting.Excel.TitleData.FieldFormatRow - 1)
+	//typeRow := sheet.GetRowAt(Setting.Excel.Title.DataTypeRow - 1)
+	typeRow := sheet.GetRowAt(Setting.Excel.TitleData.DataTypeRow - 1)
 	//startRow := Setting.Excel.Data.StartRow
 	startRow := dataCtx.StartRowNum
 	builder := data.GenBuilder(dataCtx.DataFileFormat)

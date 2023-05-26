@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-const (
+var (
 	ExtXlsx = "xlsx"
 )
 
@@ -81,8 +81,7 @@ func LoadExcels(path string) (excels []*excelize.File, excelPaths []string, err 
 			if info.IsDir() {
 				return nil
 			}
-			name := info.Name()
-			if filex.CheckExt(name, ExtXlsx) {
+			if filex.CheckExt(info.Name(), ExtXlsx) {
 				filePaths = append(filePaths, path)
 			}
 			return nil

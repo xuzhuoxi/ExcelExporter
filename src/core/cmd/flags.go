@@ -130,13 +130,16 @@ func (f *SysFlags) parseFieldRanges() (names []string, types []core.FieldRangeTy
 }
 
 func (f *SysFlags) split(value string, sep string) []string {
-	rs := strings.Split(value, sep)
-	for index := len(rs) - 1; index >= 0; index -= 1 {
-		v := strings.TrimSpace(rs[index])
-		if v == "" {
-			rs = append(rs[:index], rs[index:+1]...)
+	if len(value) == 0 {
+		return nil
+	}
+	values := strings.Split(value, sep)
+	var rs []string
+	for index := range values {
+		v := strings.TrimSpace(values[index])
+		if len(v) != 0 {
+			rs = append(rs, v)
 		}
-		rs[index] = v
 	}
 	return rs
 }

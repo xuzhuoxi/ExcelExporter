@@ -20,7 +20,7 @@ var (
 )
 
 type Settings struct {
-	System  *SystemSetting  // 工具系统配置
+	System  *SystemSettings // 工具系统配置
 	Project *ProjectSetting // 项目配置
 	Excel   *ExcelSetting   // Excel表格相关配置
 }
@@ -57,7 +57,7 @@ func (s *Settings) InitLangSetting(lang string) error {
 }
 
 func (s *Settings) loadSystemSetting() error {
-	system := &SystemSetting{}
+	system := &SystemSettings{}
 	err := UnmarshalData(SystemPath, system)
 	if nil != err {
 		return err

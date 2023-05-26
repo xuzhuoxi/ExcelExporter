@@ -13,7 +13,7 @@ func TestSystemSetting(t *testing.T) {
 		t.Fatal(err)
 		return
 	}
-	system := &SystemSetting{}
+	system := &SystemSettings{}
 	err = yaml.Unmarshal(str, system)
 	if nil != err {
 		t.Fatal(err)

@@ -14,7 +14,7 @@ source:
 target:
   # 输出目录
   root: ./target
-  # 定义)导出类目录
+  # 导出类目录
   title:
     client: title/client
     server: title/server
@@ -30,7 +30,8 @@ target:
     server: const/server
     db: const/db
   # Sql目录
-  sql: sql
+  sql:
+    dir: sql
   # Proto目录
   proto:
     client: proto/client

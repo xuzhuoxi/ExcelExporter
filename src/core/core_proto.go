@@ -96,13 +96,13 @@ func getProtoLanguageTemp(lang string) (t *temps.TemplateProxy, err error) {
 }
 
 func getProtoTitle(sheet *excel.ExcelSheet, settings setting.Proto) ProtoSheetTitle {
-	idFormat, _ := sheet.ValueAtAxis(settings.IdFormat)
+	idDataType, _ := sheet.ValueAtAxis(settings.IdDataType)
 	rangeName, _ := sheet.ValueAtAxis(settings.RangeName)
 	namespace, _ := sheet.ValueAtAxis(settings.Namespace)
 	exportSub, _ := sheet.ValueAtAxis(settings.Export)
 	ranges := strings.Split(strings.ToLower(strings.TrimSpace(rangeName)), setting.ParamsSep)
 	return ProtoSheetTitle{
-		IdDataType:   strings.ToLower(strings.TrimSpace(idFormat)),
+		IdDataType:   strings.ToLower(strings.TrimSpace(idDataType)),
 		RangeName:    ranges,
 		Namespace:    strings.TrimSpace(namespace),
 		ExportSubDir: strings.TrimSpace(exportSub),

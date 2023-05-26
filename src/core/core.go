@@ -119,7 +119,7 @@ func loadExcelFilesFromFolder(folderPath string, execFunc funcExec) {
 func loadExcelFile(filePath string, fileInfo os.FileInfo, execFunc funcExec) {
 	logPrefix := "core.loadExcelFile"
 	isFileIgnore := Setting.Excel.CheckIgnorePath(filePath)
-	isFileMatching := Setting.Project.Source.CheckFileFormat(filePath)
+	isFileMatching := Setting.Project.Source.CheckFileType(filePath)
 	isFileEmpty := nil != fileInfo && fileInfo.Size() == 0
 	if isFileIgnore || !isFileMatching || isFileEmpty {
 		if nil != execFunc {

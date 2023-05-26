@@ -26,6 +26,10 @@ func (o OutDir) GetValue(fieldRangeName string) string {
 	}
 }
 
+type OutSql struct {
+	Dir string `yaml:"dir"` // 输出目录
+}
+
 // 数据源配置
 type SourceCfg struct {
 	Value    []string `yaml:"value"`    // 目录路径或文件路径
@@ -45,13 +49,12 @@ func (o *SourceCfg) UpgradeEnvPath(envPath string) {
 	}
 }
 
-func (o SourceCfg) CheckFileFormat(filePath string) bool {
+func (o SourceCfg) CheckFileType(filePath string) bool {
 	if len(o.ExtName) == 0 {
 		return false
 	}
-	_, _, ext := filex.SplitFileName(filePath)
 	for _, e := range o.ExtName {
-		if e == strings.ToLower(strings.TrimSpace(ext)) {
+		if filex.CheckExt(filePath, e) {
 			return true
 		}
 	}
@@ -65,11 +68,11 @@ func (o SourceCfg) String() string {
 // 输出配置
 type TargetCfg struct {
 	RootDir  string `yaml:"root"`     // 输出根目录
-	Title    OutDir `yaml:"title"`    // (定义)导出类目录
-	Data     OutDir `yaml:"data"`     // 数据文件目录
-	Const    OutDir `yaml:"const"`    // 常量类目录
-	Sql      string `yaml:"sql"`      // Sql目录
-	Proto    OutDir `yaml:"proto"`    // Proto目录
+	Title    OutDir `yaml:"title"`    // (定义)导出类输出配置
+	Data     OutDir `yaml:"data"`     // 数据文件输出配置
+	Const    OutDir `yaml:"const"`    // 常量类输出配置
+	Sql      OutSql `yaml:"sql"`      // Sql输出配置
+	Proto    OutDir `yaml:"proto"`    // Proto输出配置
 	Encoding string `yaml:"encoding"` // 字符文件编码，暂时未使用
 }
 
@@ -93,7 +96,7 @@ func (o *TargetCfg) GetConstDir(fieldRangeName string) string {
 }
 
 func (o *TargetCfg) GetSqlDir(fieldRangeName string) string {
-	return filex.Combine(o.RootDir, o.Sql)
+	return filex.Combine(o.RootDir, o.Sql.Dir)
 }
 
 func (o *TargetCfg) GetProtoDir(fieldRangeName string) string {

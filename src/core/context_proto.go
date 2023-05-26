@@ -62,8 +62,8 @@ type ProtoItem struct {
 
 // 协议表模板代理
 type TempProtoProxy struct {
-	ProtoItem  ProtoItem
-	SheetProxy *ProtoSheetProxy
+	ProtoItem  ProtoItem        // 协议信息
+	SheetProxy *ProtoSheetProxy // Sheet表信息代理
 }
 
 func (o *TempProtoProxy) ValueAtAxis(axis string) string {

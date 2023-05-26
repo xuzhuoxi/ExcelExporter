@@ -243,21 +243,21 @@ func (o *TempSqlProxy) initFieldItems() {
 		return
 	}
 	sqlNameRow := o.Sheet.GetRowAt(Setting.Excel.TitleData.GetFieldFileKeyRow(setting.FileNameSql) - 1)
-	formatRow := o.Sheet.GetRowAt(Setting.Excel.TitleData.FieldFormatRow - 1)
+	dataTypeRow := o.Sheet.GetRowAt(Setting.Excel.TitleData.DataTypeRow - 1)
 	isCustomSqlField := Setting.Excel.TitleData.IsCustomSqlFieldType()
 	o.fieldItems = make([]SqlFieldItem, len(o.FieldIndex))
 	db, _ := Setting.System.GetDatabase()
 	extend, _ := db.GetDatabaseExtend()
 	for index, realIndex := range o.FieldIndex {
 		fieldName, _ := sqlNameRow.ValueAtIndex(realIndex)
-		fieldType, _ := formatRow.ValueAtIndex(realIndex)
-		formattedType := o.formatFieldType(fieldType)
+		originalType, _ := dataTypeRow.ValueAtIndex(realIndex)
+		formattedType := setting.Format2FieldType(originalType)
 		sqlDataType, _ := extend.GetFieldType(formattedType)
 
 		if isCustomSqlField { // 定制类型处理
-			customFieldType, _ := o.Sheet.ValueAtIndex(realIndex, Setting.Excel.TitleData.SqlFieldFormatRow-1)
+			customFieldType, _ := o.Sheet.ValueAtIndex(realIndex, Setting.Excel.TitleData.SqlDataTypeRow-1)
 			o.fieldItems[index] = SqlFieldItem{
-				FieldName: fieldName, FieldType: fieldType, CustomFieldType: strings.ToUpper(customFieldType),
+				FieldName: fieldName, FieldType: originalType, CustomFieldType: strings.ToUpper(customFieldType),
 				DatabaseExtend: extend, DbField: sqlDataType}
 			continue
 		}
@@ -265,14 +265,14 @@ func (o *TempSqlProxy) initFieldItems() {
 		if sqlDataType.IsDynamicLen() { // 动态长度处理
 			byteSize, runeSize := o.getMaxSize(realIndex)
 			o.fieldItems[index] = SqlFieldItem{
-				FieldName: fieldName, FieldType: fieldType,
+				FieldName: fieldName, FieldType: originalType,
 				DatabaseExtend: extend, DbField: sqlDataType,
 				MaxByteSize: byteSize, MaxRuneSize: runeSize}
 			continue
 		}
 		// 固定长度处理
 		o.fieldItems[index] = SqlFieldItem{
-			FieldName: fieldName, FieldType: fieldType,
+			FieldName: fieldName, FieldType: originalType,
 			DatabaseExtend: extend, DbField: sqlDataType}
 	}
 	o.initPrimaryKey()
@@ -313,11 +313,4 @@ func (o *TempSqlProxy) initPrimaryKey() {
 		key[index] = fieldItem
 	}
 	o.primaryKey = key
-}
-
-func (o *TempSqlProxy) formatFieldType(fieldType string) string {
-	if !setting.RegFixedString.MatchString(fieldType) {
-		return fieldType
-	}
-	return setting.RegFixedString.ReplaceAllString(fieldType, "string(*)") // string(*) || []string(*)
 }

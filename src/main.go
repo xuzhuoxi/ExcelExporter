@@ -9,6 +9,7 @@ import (
 	"github.com/xuzhuoxi/infra-go/mathx"
 	"github.com/xuzhuoxi/infra-go/osxu"
 	"os"
+	"strings"
 )
 
 const (
@@ -71,6 +72,15 @@ func main() {
 }
 
 func initAndFixLangs() {
+	// 只导出sql脚本
+	if len(AppFlags.LangRefs) == 0 &&
+		len(AppFlags.DataFiles) == 1 && AppFlags.CheckDataFile("sql") &&
+		AppFlags.rang {
+		return
+	}
+	fmt.Println("666", AppFlags.LangRefs, AppFlags.DataFiles)
+	fmt.Println("777", len(AppFlags.LangRefs), len(AppFlags.DataFiles), AppFlags.CheckDataFile("sql"))
+	fmt.Println("888", len(strings.Split("", ",")))
 	for index := len(AppFlags.LangRefs) - 1; index >= 0; index -= 1 {
 		lang := AppFlags.LangRefs[index]
 		err := Settings.InitLangSetting(lang)
@@ -85,7 +95,7 @@ func initAndFixLangs() {
 func checkAndFixDataFiles() {
 	for index := len(AppFlags.DataFiles) - 1; index >= 0; index -= 1 {
 		datafile := AppFlags.DataFiles[index]
-		if !Settings.System.CheckDataFileFormat(datafile) {
+		if !Settings.System.CheckExportDataFile(datafile) {
 			AppFlags.LangRefs = append(AppFlags.DataFiles[:index], AppFlags.DataFiles[index+1:]...)
 			Logger.Errorln(fmt.Sprintf("[main] DataFile Config Error: %s", datafile))
 		}

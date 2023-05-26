@@ -24,7 +24,7 @@ func (o ConstContext) String() string {
 // 常量数据
 type ConstItem struct {
 	Name   string // Excel表格中常量名称
-	Value  string // Excel表格中常量值
+	Value  string // Excel表格中常量值, 字符串已经加双引号处理
 	Type   string // Excel表格中常量类型
 	Remark string // Excel表格中常量备注内容
 }

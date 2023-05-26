@@ -1,4 +1,4 @@
-# 忽略文件前缀
+# 忽略处理的文件前缀
 ignore:
   - '_'
   - '~$'
@@ -31,7 +31,7 @@ ignore:
     file: 'F1'
     # 主键信息坐标
     key: 'G1'
-  # 数据控制列，决定数据范围
+  # 数据控制行，本行长度决定数据处理的长度
   control_row: 4
   # 字段别名行号，用于查找指定列，值为0时使用列号作为别名
   nick_row: 0
@@ -43,15 +43,15 @@ ignore:
   # 内容格式: 'c,s,d'，c、s、d的格式只能是0或1，c指前端，s指后端，d指数据库
   # 顺序不能颠倒
   # sql脚本导出只针对d值
-  field_range_row: 4
+  range_row: 4
   # 字段数据格式行号，内容格式支持:
   # uint8,uint16,uint32,int8,int16,int32,float32,bool,string,string(*),
   # []uint8,[]uint16,[]uint32,[]int8,[]int16,[]int32,[]float32,[]bool,[]string,[]string(*)
-  field_format_row: 5
+  data_type_row: 5
   # 数据库字段类型定制行号，0为不定制
-  sql_field_format_row: 0
-  # 各语言使用的字段名称对应行号
-  field_names:
+  sql_data_type_row: 0
+  # 语言扩展使用的字段名称对应行号
+  ext_name_rows:
     - name: 'as3'
       row: 6
     - name: 'c++'
@@ -65,7 +65,7 @@ ignore:
     - name: 'ts'
       row: 6
   # 数据文件使用的字段名称行号
-  file_keys:
+  file_key_rows:
     - name: 'bin'
       row: 7
     - name: 'sql'
@@ -85,7 +85,7 @@ ignore:
     - name: 'properties'
       row: 7
   # 数据的开始单元
-  data_start: 'A8'
+  data_start_axis: 'A8'
 
 const:
   # 启用前缀
@@ -116,7 +116,7 @@ proto:
   prefix: Proto_
 
   # Id数据类型 配置单元格
-  id_format: A1
+  id_datatype: A1
   # 导出范围[client, server, db]
   range_name: B1
   # 命名空间(包名) 配置单元格
@@ -132,7 +132,7 @@ proto:
   # 协议名称(导出类名) 配置列号
   name_col: C
   # 协议属性开始列号
-  field_col: D
+  field_start_col: D
 
   # 协议数据开始行号: 格式(key:type)
   # type使用system.yaml中的datafield_formats定义

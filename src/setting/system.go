@@ -142,7 +142,7 @@ func (d *Databases) FindDatabase(name string) (db Database, exist bool) {
 	return
 }
 
-type SystemSetting struct {
+type SystemSettings struct {
 	// 数据结构定义所支持的编程语言
 	Languages []*ProgramLanguage `yaml:"languages"`
 	// 数据库相关配置
@@ -151,24 +151,24 @@ type SystemSetting struct {
 	// 其中string中的*代表字符数，范围[1,1024]。
 	// 浮点数最多支持6位小数，而且当数值越大，精度就越低，反之亦然
 	// 使用浮点数时，如果是负数，序列化为二进制后再读取，部分编程语言会出现抖动现象，如AS3: -2.3 => [-64,19,51,51] => -2.299999952316284
-	DataFieldFormats []string `yaml:"datafield_formats"`
-	// 支持的数据文件格式
-	DataFileFormats []string `yaml:"datafile_formats"`
+	FieldDataTypes []string `yaml:"field_datatypes"`
+	// 支持的导出数据文件格式
+	ExportDataFiles []string `yaml:"export_files"`
 }
 
-func (s *SystemSetting) String() string {
+func (s *SystemSettings) String() string {
 	return fmt.Sprintf("System{Languages=%v, Fields=%v, Files=%v}",
-		s.Languages, s.DataFieldFormats, s.DataFileFormats)
+		s.Languages, s.FieldDataTypes, s.ExportDataFiles)
 }
 
-func (s *SystemSetting) UpgradeEnvPath(envPath string) {
+func (s *SystemSettings) UpgradeEnvPath(envPath string) {
 	for index := range s.Languages {
 		s.Languages[index].UpgradePaths(envPath)
 	}
 	s.Databases.UpgradePaths(envPath)
 }
 
-func (s *SystemSetting) FindProgramLanguage(lang string) (define *ProgramLanguage, ok bool) {
+func (s *SystemSettings) FindProgramLanguage(lang string) (define *ProgramLanguage, ok bool) {
 	if len(lang) == 0 {
 		return nil, false
 	}
@@ -180,30 +180,30 @@ func (s *SystemSetting) FindProgramLanguage(lang string) (define *ProgramLanguag
 	return nil, false
 }
 
-func (s *SystemSetting) CheckDataFieldFormat(dataFieldFormat string) bool {
-	if len(dataFieldFormat) == 0 {
+func (s *SystemSettings) CheckFieldDataType(dataType string) bool {
+	if len(dataType) == 0 {
 		return false
 	}
-	for _, ld := range s.DataFieldFormats {
-		if ld == dataFieldFormat {
+	for _, ld := range s.FieldDataTypes {
+		if ld == dataType {
 			return true
 		}
 	}
 	return false
 }
 
-func (s *SystemSetting) CheckDataFileFormat(dataFileFormat string) bool {
-	if len(dataFileFormat) == 0 {
+func (s *SystemSettings) CheckExportDataFile(dataFileType string) bool {
+	if len(dataFileType) == 0 {
 		return false
 	}
-	for _, ld := range s.DataFileFormats {
-		if ld == dataFileFormat {
+	for _, ld := range s.ExportDataFiles {
+		if ld == dataFileType {
 			return true
 		}
 	}
 	return false
 }
 
-func (s *SystemSetting) GetDatabase() (db Database, ok bool) {
+func (s *SystemSettings) GetDatabase() (db Database, ok bool) {
 	return s.Databases.GetDefaultDatabase()
 }

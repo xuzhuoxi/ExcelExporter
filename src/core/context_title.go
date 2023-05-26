@@ -159,19 +159,19 @@ func (o *TempTitleProxy) getTitleRemark(index int) (titleRemark string, err erro
 	return tools.Format2HtmlNewline(value), nil
 }
 
-func (o *TempTitleProxy) getFieldDataType(index int) (origin, formatted, lang string,
+func (o *TempTitleProxy) getFieldDataType(index int) (origin, formattedType, lang string,
 	define setting.LangDataType, err error) {
-	formatRowIndex := Setting.Excel.TitleData.FieldFormatRow - 1
-	value, err1 := o.Sheet.GetRowAt(formatRowIndex).ValueAtIndex(index)
+	dataTypeRowIdx := Setting.Excel.TitleData.DataTypeRow - 1
+	originalType, err1 := o.Sheet.GetRowAt(dataTypeRowIdx).ValueAtIndex(index)
 	if err1 != nil {
-		origin, err = value, errors.New(fmt.Sprintf("GetTitleLangDefine Error At %d: %v", index, err1))
+		origin, err = originalType, errors.New(fmt.Sprintf("GetTitleLangDefine Error At %d: %v", index, err1))
 		return
 	}
 	ld := o.LanguageDefine()
-	formatted = setting.Format2FieldType(value)
-	dtDefine, ok := ld.Setting.GetDataTypeDefine(formatted)
+	formattedType = setting.Format2FieldType(originalType)
+	dtDefine, ok := ld.Setting.GetDataTypeDefine(formattedType)
 	if !ok {
-		err = errors.New(fmt.Sprintf("GetTitleLangDefine Error At[%d]: Get Lang Define Fail with %s ", index, formatted))
+		err = errors.New(fmt.Sprintf("GetTitleLangDefine Error At[%d]: Get Lang Define Fail with %s ", index, formattedType))
 		return
 	}
 	lang, define = dtDefine.LangTypeName, dtDefine
