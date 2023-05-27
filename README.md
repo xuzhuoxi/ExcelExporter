@@ -25,7 +25,7 @@ go get -u github.com/xuzhuoxi/ExcelExporter
 + Windows下执行[goxc_build.bat](/build/goxc_build.bat)  
 + Linux或MacOS下执行[goxc_build.sh](/build/goxc_build.sh)  
 
-##  3. 如何使用
+##  3. 开始
 
 #### 3.1. 环境准备
 1. 解压evn.zip到本地，并清理soruce中的测试文件。  
@@ -36,10 +36,8 @@ go get -u github.com/xuzhuoxi/ExcelExporter
 
 #### 3.2. 执行命令
 ```
-执行文件路径 -env=%env% -mode=title,data,const,proto -range=client,server,db -lang=as3,c#,go,java,ts -file=json,bin,sql -merge=false -source==源路径 -target=导出路径
+ExcelExporter -env=%env% -mode=title,data,const,proto -range=client,server,db -lang=as3,c#,go,java,ts -file=json,bin,sql -merge=false -source==源路径 -target=导出路径
 ```
-
--mode=proto,const,title,data -lang=as3,c#,go,java,ts -range=client,server,db -file=json,sql
 
 **示例**：  
 1. 导出client范围下的表头与数据，使用的编程语言的c#，数据文件导出为json.
@@ -163,7 +161,7 @@ ExcelExporter -mode=const,proto -range=client -lang=go
 ### 4.2 [System配置](./res/system.yaml)  
 负责基本功能相关的配置：[system.yaml](./res/system.yaml)  
 
-#### 4.2.1 包含职能  
+#### 4.2.1 职能范围  
 1. 编程语言信息配置  
    + 扩展名配置
    + 数据类型读写行为配置  
@@ -175,7 +173,7 @@ ExcelExporter -mode=const,proto -range=client -lang=go
 3. 基础数据类型配置  
 4. 导出数据文件格式配置  
 
-#### 4.2.2 自定义场景
+#### 4.2.2 定制场合
 以下几种情况，你应该修改 [system.yaml](./res/system.yaml)  
 + 扩展或修改编程语言  
 + 扩展或修改数据库  
@@ -185,7 +183,7 @@ ExcelExporter -mode=const,proto -range=client -lang=go
 ### 4.3 [Project配置](./res/project.yaml)
 负责项目相关的配置：[project.yaml](./res/project.yaml)  
 
-#### 4.3.1 包含职能
+#### 4.3.1 职能范围
 1. 数据源配置，包括目录、扩展名等
 2. 导出信息配置，包括：
    + 导出根目录配置
@@ -193,7 +191,7 @@ ExcelExporter -mode=const,proto -range=client -lang=go
    + 导出sql时子目录配置。 
 3. 处理时缓存设置
 
-#### 4.3.2 自定义场景
+#### 4.3.2 定制场合
 以下几种情况，你应该修改 [project.yaml](./res/project.yaml)    
 + Excle目录不只一个，并希望在同一条命令处理。可以扩展source.value的路径。  
 + 在命令行中不提供-source参数，又希望自定义excel的源目录，可以修改source.value的路径。  
@@ -202,7 +200,7 @@ ExcelExporter -mode=const,proto -range=client -lang=go
 ### 4.4 [Excel配置](./res/excel.yaml)
 负责Excel相关的配置： [excel.yaml](./res/excel.yaml)  
 
-#### 4.4.1 包含职能
+#### 4.4.1 职能范围
 1. 自定义文件名前缀，用于处理时忽略
 2. title和data模式下excel表配置
    + prefix：启用前缀配置，针对title和data模式加入处理。
@@ -243,7 +241,7 @@ ExcelExporter -mode=const,proto -range=client -lang=go
    + remark_offset：**协议备注偏移值**
    + blank_break：**是否空行中断**
 
-#### 4.4.2 自定义场景
+#### 4.4.2 定制场合
 以下几种情况，你应该修改[excel.yaml](./res/excel.yaml)  
 + 自定义Excel源目录路径
 + 过滤源目标中部分Excel文件，使之不参与处理。
@@ -442,7 +440,7 @@ ExcelExporter -mode=const,proto -range=client -lang=go
        Excel表格中常量类型  
      + Remark : string  
        Excel表格中常量备注内容  
-       
+   
 3. [自定义函数](#5.6.1 自定义函数)  
 
 ### 5.4 协议表导出
@@ -489,7 +487,7 @@ ExcelExporter -mode=const,proto -range=client -lang=go
        导出类名  
      + GetFields : \[\][ProtoFieldItem](/src/core/context_proto.go)  
        取得字段信息数组  
-       
+   
 2. 由 GetItems 获的字段对象为 [ProtoFieldItem]((/src/core/context_const.go)
    + 结构定义
      ![image](./docs/assets/images/proto_3.jpg)  
@@ -631,5 +629,5 @@ ExcelExporter -mode=const,proto -range=client -lang=go
 xuzhuoxi   
 <xuzhuoxi@gmail.com> 或 <mailxuzhuoxi@163.com>  
 
-## 8. 开源许可证  
+## 8. 许可证  
 ExcelExporter 源代码基于[MIT许可证](/LICENSE)进行开源。

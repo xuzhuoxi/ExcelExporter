@@ -75,7 +75,7 @@ func initAndFixLangs() {
 	// 只导出sql脚本
 	if len(AppFlags.LangRefs) == 0 &&
 		len(AppFlags.DataFiles) == 1 && AppFlags.CheckDataFile("sql") &&
-		AppFlags.rang {
+		len(AppFlags.RangeNames) == 1 && AppFlags.CheckRange(core.FieldRangeDatabase) {
 		return
 	}
 	fmt.Println("666", AppFlags.LangRefs, AppFlags.DataFiles)
