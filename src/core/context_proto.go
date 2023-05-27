@@ -223,9 +223,9 @@ func (o *ProtoSheetProxy) getFieldSize(excelRow *excel.ExcelRow, fieldStartIdx i
 		return 0
 	}
 	for idx := fieldStartIdx; idx < celLen; idx += 1 {
-		cellStr := excelRow.Cell[idx]
+		cellStr := strings.TrimSpace(excelRow.Cell[idx])
 		if len(cellStr) == 0 {
-			return idx - fieldStartIdx + 1
+			return idx - fieldStartIdx
 		}
 	}
 	return celLen - fieldStartIdx
