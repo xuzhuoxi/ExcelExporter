@@ -17,7 +17,7 @@ type I{{$clsName}} interface {
 
 // @description {{$proxy.ClassRemark}}
 type {{$clsName}} struct {
-    //以下为属性声明
+    // 以下为属性声明
     {{- range $index, $value := $fields}}
     //  {{$value.Remark}}
     {{ToLowerCamelCase $value.Name}} {{if $value.IsCustomType}}*{{end}}{{$value.LangType}}
@@ -53,7 +53,7 @@ func (o *{{$clsName}}) FromJsonOverride(proxy IJsonReaderProxy) {
 
 // Yaml数据解释
 func (o *{{$clsName}}) FromYamlOverride(proxy IYamlReaderProxy) {
-	//以下为从 Yaml数据代理 中解释出字段数据
+	// 以下为从 Yaml数据代理 中解释出字段数据
     {{- range $index, $value := $fields}}
       {{- if $value.IsCustomType}}
     o.{{ToLowerCamelCase $value.Name}} = New{{$clsName}}FromYaml(data.{{$value.Name}})
@@ -65,7 +65,7 @@ func (o *{{$clsName}}) FromYamlOverride(proxy IYamlReaderProxy) {
 
 // 二进制数据解释
 func (o *{{$clsName}}) FromBinaryOverride(proxy IBinaryReaderProxy) {
-	//以下为从 二进制数据代理 中解释出字段数据
+	// 以下为从 二进制数据代理 中解释出字段数据
     {{- range $index, $value := $fields}}
       {{- if $value.IsCustomType}}
     o.{{ToLowerCamelCase $value.Name}} = New{{$clsName}}FromBinary(data.{{$value.Name}})

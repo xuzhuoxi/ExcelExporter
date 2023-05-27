@@ -7,13 +7,13 @@ namespace {{$proxy.Namespace}} {
 	 * {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.Language}}
 	 */
 	export class {{$clsName}} {
-        //以下为属性声明
+        // 以下为属性声明
         {{- range $index, $value := $fields}}
          // {{$value.TitleName}}
         private _{{ToLowerCamelCase $value.FieldLangName}}: {{$value.LangType}};
         {{- end}}
 
-        //以下为Get方法
+        // 以下为Get方法
         {{- range $index, $value := $fields}}
         /**
          * {{$value.TitleName}}
@@ -26,7 +26,7 @@ namespace {{$proxy.Namespace}} {
         }
         {{- end}}
 
-        //以下为解释数据方法
+        // 以下为解释数据方法
 
         // Json数据解释
         public fromJsonOverride(data: any): void {

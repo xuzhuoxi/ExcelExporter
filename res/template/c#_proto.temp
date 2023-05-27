@@ -42,7 +42,7 @@ namespace {{$proxy.Namespace}}
         // 二进制数据解释
 		public void FromBinaryOverride(BinaryReaderProxy proxy)
 		{
-		    / 以下为从 二进制数据代理 中解释出字段数据
+		    // 以下为从 二进制数据代理 中解释出字段数据
             {{- range $index, $value := $proxy.GetFields}}
             {{- if $value.IsCustomType}}
             this.m_{{ToUpperCamelCase $value.Name}} = {{$value.LangType}}.FromBinary(proxy);
