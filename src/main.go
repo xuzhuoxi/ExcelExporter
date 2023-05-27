@@ -9,7 +9,6 @@ import (
 	"github.com/xuzhuoxi/infra-go/mathx"
 	"github.com/xuzhuoxi/infra-go/osxu"
 	"os"
-	"strings"
 )
 
 const (
@@ -78,9 +77,6 @@ func initAndFixLangs() {
 		len(AppFlags.RangeNames) == 1 && AppFlags.CheckRange(core.FieldRangeDatabase) {
 		return
 	}
-	fmt.Println("666", AppFlags.LangRefs, AppFlags.DataFiles)
-	fmt.Println("777", len(AppFlags.LangRefs), len(AppFlags.DataFiles), AppFlags.CheckDataFile("sql"))
-	fmt.Println("888", len(strings.Split("", ",")))
 	for index := len(AppFlags.LangRefs) - 1; index >= 0; index -= 1 {
 		lang := AppFlags.LangRefs[index]
 		err := Settings.InitLangSetting(lang)

@@ -76,7 +76,7 @@ func (o *TempConstProxy) GetItem(row int) (item ConstItem, err error) {
 	//fmt.Println("GetItem:", row)
 	pLang, ok := Setting.System.FindProgramLanguage(o.ConstCtx.Language)
 	if !ok {
-		err = errors.New(fmt.Sprintf("Lang[%s] is not found! ", o.Language))
+		err = errors.New(fmt.Sprintf("Lang[%s] is not found! ", o.Language()))
 		return
 	}
 
