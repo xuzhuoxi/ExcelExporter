@@ -2,7 +2,7 @@ package excel
 
 import (
 	"errors"
-	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/xuzhuoxi/ExcelExporter/src/excelize.v2"
 	"github.com/xuzhuoxi/infra-go/slicex"
 	"strings"
 )

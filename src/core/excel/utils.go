@@ -3,7 +3,7 @@ package excel
 import (
 	"errors"
 	"fmt"
-	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/xuzhuoxi/ExcelExporter/src/excelize.v2"
 	"github.com/xuzhuoxi/infra-go/filex"
 	"github.com/xuzhuoxi/infra-go/mathx"
 	"os"
