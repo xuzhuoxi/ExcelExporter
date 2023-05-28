@@ -2,7 +2,7 @@
 
 - infra-go  
   url: https://github.com/xuzhuoxi/infra-go  
-  version: v1.0.2  
+  version: v1.0.3  
 - excelize  
   url: https://github.com/qax-os/excelize  
   version: v2.4.0  
