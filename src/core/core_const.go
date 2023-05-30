@@ -76,11 +76,18 @@ func execSheetConstContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, con
 		return err
 	}
 	targetDir := Setting.Project.Target.GetConstDir(constCtx.RangeName)
+	subDir, err := sheet.ValueAtAxis(outEle.ExportAxis)
+	if nil != err {
+		err = errors.New(fmt.Sprintf("[%s] Get Sub Export Info Error: {Err=%s,ExportAxis=%s}",
+			logPrefix, err, outEle.ExportAxis))
+		return err
+	}
+	targetDir = filex.Combine(targetDir, strings.TrimSpace(subDir))
 	if !filex.IsExist(targetDir) {
 		os.MkdirAll(targetDir, os.ModePerm)
 	}
 	extendName := langDefine.ExtendName
-	filePath := filex.Combine(targetDir, fileName+"."+extendName)
+	filePath := filex.Combine(targetDir, fmt.Sprintf("%s.%s", fileName, extendName))
 
 	// 创建模板数据代理
 	startRow := Setting.Excel.Const.DataStartRow

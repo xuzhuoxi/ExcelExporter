@@ -96,10 +96,12 @@ const:
       file: 'A1'
       class: 'A1'
       namespace: 'C1'
+      export: 'D1'
     - range_name: 'server'
       file: 'B1'
       class: 'B1'
       namespace: 'C1'
+      export: 'D1'
   # 常量名
   name_col: A
   # 常量值

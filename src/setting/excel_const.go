@@ -8,6 +8,7 @@ type ConstOutputInfo struct {
 	FileAxis      string `yaml:"file"`       // 导出类文件名坐标(Excel坐标)
 	ClassAxis     string `yaml:"class"`      // 导出类名坐标(Excel坐标)
 	NamespaceAxis string `yaml:"namespace"`  // 导出类命名空间坐标(Excel坐标)
+	ExportAxis    string `yaml:"export"`     // 额外的导出子目录(Excel坐标)
 }
 
 type Const struct {
