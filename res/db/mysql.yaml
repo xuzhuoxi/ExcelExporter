@@ -28,19 +28,19 @@ types:
     number: true
     array: false
   - name: 'uint8'
-    type: 'TINYINT(1) unsigned'
+    type: 'TINYINT(1) UNSIGNED'
     number: true
     array: false
   - name: 'uint16'
-    type: 'SMALLINT(2) unsigned'
+    type: 'SMALLINT(2) UNSIGNED'
     number: true
     array: false
   - name: 'uint32'
-    type: 'INT(4) unsigned'
+    type: 'INT(4) UNSIGNED'
     number: true
     array: false
   - name: 'uint64'
-    type: 'BIGINT(8) unsigned'
+    type: 'BIGINT(8) UNSIGNED'
     number: true
     array: false
   - name: 'float32'

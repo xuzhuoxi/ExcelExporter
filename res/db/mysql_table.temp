@@ -1,8 +1,8 @@
 {{- $proxy := .}}{{$fieldLen := $proxy.FieldLen -}}
-DROP TABLE `{{$proxy.TableName}}`;
+DROP TABLE IF EXISTS `{{$proxy.TableName}}`;
 CREATE TABLE `{{$proxy.TableName}}`(
 {{- range $fieldIdx, $fieldItem := $proxy.GetFieldItems}}{{$fieldIdx1 := Add $fieldIdx 1 -}}
-    `{{- $fieldItem.FieldName}}` {{$fieldItem.SqlFieldType}}
+    `{{- $fieldItem.FieldName}}` {{$fieldItem.SqlFieldType}} NOT NULL
     {{- if lt $fieldIdx1 $fieldLen -}}
         ,
     {{- else}}
