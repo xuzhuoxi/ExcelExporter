@@ -39,14 +39,58 @@ namespace {{$proxy.Namespace}}
         /// <returns>{{$value.LangType}}</returns>
         public {{$value.LangType}} {{ToUpperCamelCase $value.Name}} => m_{{ToUpperCamelCase $value.Name}};
 		{{- end}}
+		
+		public override string ToString()
+		{
+			return $"{{"{{"}}
+			{{- range $index, $value := $fields }}
+			{{- ToUpperCamelCase $value.Name}}={m_{{ToUpperCamelCase $value.Name}}}{{if lt (Add $index 1) (len $fields)}}, {{end}}
+			{{- end -}}
+			{{"}}"}}";
+		}
+
+		// Set方法 --------------
+
+        {{- range $index, $value := $fields}}
+        public void Set{{ToUpperCamelCase $value.Name}}({{$value.LangType}} {{ToLowerCamelCase $value.Name}})
+		{
+			m_{{ToUpperCamelCase $value.Name}} = {{ToLowerCamelCase $value.Name}};
+		}
+		{{- end}}
+
+		public void SetValues(
+			{{- range $index, $value := $fields }}
+			{{- $value.LangType}} {{ToLowerCamelCase $value.Name}}{{if lt (Add $index 1) (len $fields)}}, {{end -}}
+			{{- end -}}) 
+		{
+			{{- range $index, $value := $fields }}
+			m_{{ToUpperCamelCase $value.Name}} = {{ToLowerCamelCase $value.Name}};
+			{{- end}}
+		}
 
 		// 以下为解释数据方法 --------------
 
-        // 二进制数据解释
+		// Json ---
+
+        /// <summary>
+        /// 序列化为Json字符串
+        /// </summary>
+        /// <returns></returns>
+        public string ToJson()
+        {
+            return JsonUtility.ToJson(this);
+        }
+
+        /// <summary>
+        /// 从Json字符串中反序列化
+        /// </summary>
+        /// <param name="data"></param>
 		public void FromJsonOverride(string data)
 		{
             JsonUtility.FromJsonOverwrite(data, this);
 		}
+
+		// Binary ---
 
         // 二进制数据解释
 		public void FromBinaryOverride(BinaryReaderProxy proxy)

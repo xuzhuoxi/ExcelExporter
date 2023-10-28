@@ -11,9 +11,10 @@
 //------------------------------------------------------------------------------
 
 package {{$proxy.Namespace}}
+
 const (
     {{- range $index, $value := $proxy.GetItems}}
-    // {{$value.Remark}}
-    {{$value.Name}} {{$value.Type}} = {{$value.Value}}
+    // {{$proxy.ClassName}}{{$value.Name}} {{$value.Remark}}
+    {{$proxy.ClassName}}{{$value.Name}} {{$value.Type}} = {{$value.Value}}
 	{{- end}}
 )

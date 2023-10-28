@@ -37,7 +37,7 @@ namespace {{$proxy.Namespace}}
         /// </summary>
         /// <returns>{{$value.LangType}}</returns>
         /// <remarks>{{$value.TitleRemark}}</remarks>
-        public {{$value.LangType}} {{ToUpperCamelCase $value.FieldLangName}} => {{ToUpperCamelCase $value.FieldLangName}};
+        public {{$value.LangType}} {{ToUpperCamelCase $value.FieldLangName}} => {{ToLowerCamelCase $value.FieldLangName}};
         {{- end}}
 
         // 以下为解释数据方法

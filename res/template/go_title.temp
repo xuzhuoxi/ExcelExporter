@@ -13,6 +13,36 @@
 
 package {{$proxy.Namespace}}
 
+func NewIGroup{{$clsName}}() interface{} {
+	return NewGroup{{$clsName}}()
+}
+
+func NewGroup{{$clsName}}() *Group{{$clsName}} {
+	return &Group{{$clsName}}{}
+}
+
+type Group{{$clsName}} struct {
+	Count int          `json:"count"`
+	Data  []{{$clsName}} `json:"data"`
+}
+
+func (o *Group{{$clsName}}) GetByIndex(index int) I{{$clsName}} {
+	return &o.Data[index]
+}
+
+func (o *Group{{$clsName}}) GetById(id uint32) I{{$clsName}} {
+	for index := range o.Data {
+		if o.Data[index].Id == id {
+			return &o.Data[index]
+		}
+	}
+	return nil
+}
+
+func NewI{{$clsName}}() I{{$clsName}} {
+	return New{{$clsName}}()
+}
+
 // I{{$clsName}}
 // @auth {AUTHOR} {NowTimeStr}
 // @description {{$ctx.RangeName}} {{$ctx.RangeType}} {{$ctx.Language}}
@@ -24,6 +54,10 @@ type I{{$clsName}} interface {
     // @return {{$value.LangType}}
     Get{{ToUpperCamelCase $value.FieldLangName}}() {{$value.LangType}}
     {{- end}}
+}
+
+func New{{$clsName}}() *{{$clsName}} {
+	return &{{$clsName}}{}
 }
 
 // {{$clsName}}
@@ -52,27 +86,27 @@ func (o *{{$clsName}}) Get{{ToUpperCamelCase $value.FieldLangName}}() {{$value.L
 
 // FromJsonOverride
 // Json数据解释
-func (o *{{$clsName}}) FromJsonOverride(proxy IJsonReaderProxy) {
-	// 以下为从 Json数据代理 中解释出字段数据
-    {{- range $index, $value := $fields}}{{$define := $value.LangTypeDefine}}
-    o.{{ToUpperCamelCase $value.FieldLangName}} = proxy.{{$define.GetGetOperate "json"}}("{{$value.GetFileKey "json"}}")
-    {{- end}}
-}
+//func (o *{{$clsName}}) FromJsonOverride(proxy IJsonReaderProxy) {
+// 	  // 以下为从 Json数据代理 中解释出字段数据
+      {{- range $index, $value := $fields}}{{$define := $value.LangTypeDefine}}
+//    o.{{ToUpperCamelCase $value.FieldLangName}} = proxy.{{$define.GetGetOperate "json"}}("{{$value.GetFileKey "json"}}")
+      {{- end}}
+//}
 
 // FromYamlOverride
 // Yaml数据解释
-func (o *{{$clsName}}) FromYamlOverride(proxy IYamlReaderProxy) {
-	//以下为从 Yaml数据代理 中解释出字段数据
-    {{- range $index, $value := $fields}}{{$define := $value.LangTypeDefine}}
-    //o.{{ToUpperCamelCase $value.FieldLangName}} = proxy.{{$define.GetGetOperate "yaml"}}("{{$value.GetFileKey "yaml"}}")
-    {{- end}}
-}
+//func (o *{{$clsName}}) FromYamlOverride(proxy IYamlReaderProxy) {
+// 	  //以下为从 Yaml数据代理 中解释出字段数据
+      {{- range $index, $value := $fields}}{{$define := $value.LangTypeDefine}}
+//    //o.{{ToUpperCamelCase $value.FieldLangName}} = proxy.{{$define.GetGetOperate "yaml"}}("{{$value.GetFileKey "yaml"}}")
+      {{- end}}
+//}
 
 // FromBinaryOverride
 // 二进制数据解释
-func (o *{{$clsName}}) FromBinaryOverride(proxy IBinaryReaderProxy) {
-	//以下为从 二进制数据代理 中解释出字段数据
-    {{- range $index, $value := $fields}}{{$define := $value.LangTypeDefine}}
-    o.{{ToUpperCamelCase $value.FieldLangName}} = proxy.{{$define.GetGetOperate "bin"}}()
-    {{- end}}
-}
+//func (o *{{$clsName}}) FromBinaryOverride(proxy IBinaryReaderProxy) {
+// 	  //以下为从 二进制数据代理 中解释出字段数据
+      {{- range $index, $value := $fields}}{{$define := $value.LangTypeDefine}}
+//    o.{{ToUpperCamelCase $value.FieldLangName}} = proxy.{{$define.GetGetOperate "bin"}}()
+      {{- end}}
+//}

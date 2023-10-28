@@ -11,7 +11,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadBool'
-        set: ''
+        set: 'WriteData'
   - name: int8
     lang: 'sbyte'
     operates:
@@ -23,7 +23,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadInt8'
-        set: ''
+        set: 'WriteData'
   - name: int16
     lang: 'short'
     operates:
@@ -35,7 +35,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadInt16'
-        set: ''
+        set: 'WriteData'
   - name: int32
     lang: 'int'
     operates:
@@ -47,7 +47,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadInt32'
-        set: ''
+        set: 'WriteData'
   - name: int64
     lang: 'long'
     operates:
@@ -59,7 +59,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadInt64'
-        set: ''
+        set: 'WriteData'
   - name: uint8
     lang: 'byte'
     operates:
@@ -71,7 +71,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadUInt8'
-        set: ''
+        set: 'WriteData'
   - name: uint16
     lang: 'ushort'
     operates:
@@ -83,7 +83,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadUInt16'
-        set: ''
+        set: 'WriteData'
   - name: uint32
     lang: 'uint'
     operates:
@@ -95,7 +95,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadUInt32'
-        set: ''
+        set: 'WriteData'
   - name: uint64
     lang: 'long'
     operates:
@@ -107,7 +107,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadUInt64'
-        set: ''
+        set: 'WriteData'
   - name: float32
     lang: 'float'
     operates:
@@ -118,8 +118,8 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: 'ReadFloat32'
-        set: ''
+        get: 'ReadFloat'
+        set: 'WriteData'
   - name: float64
     lang: 'double'
     operates:
@@ -130,8 +130,8 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: 'ReadFloat64'
-        set: ''
+        get: 'ReadDouble'
+        set: 'WriteData'
   - name: string
     lang: 'string'
     operates:
@@ -143,7 +143,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadString'
-        set: ''
+        set: 'WriteData'
   - name: json
     lang: 'string'
     operates:
@@ -155,7 +155,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadString'
-        set: ''
+        set: 'WriteData'
   - name: '[]bool'
     lang: 'bool[]'
     operates:
@@ -167,7 +167,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadBoolArray'
-        set: ''
+        set: 'WriteData'
   - name: '[]int8'
     lang: 'sbyte[]'
     operates:
@@ -179,7 +179,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadInt8Array'
-        set: ''
+        set: 'WriteData'
   - name: '[]int16'
     lang: 'short[]'
     operates:
@@ -191,7 +191,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadInt16Array'
-        set: ''
+        set: 'WriteData'
   - name: '[]int32'
     lang: 'int[]'
     operates:
@@ -203,7 +203,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadInt32Array'
-        set: ''
+        set: 'WriteData'
   - name: '[]int64'
     lang: 'long[]'
     operates:
@@ -215,7 +215,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadInt64Array'
-        set: ''
+        set: 'WriteData'
   - name: '[]uint8'
     lang: 'byte[]'
     operates:
@@ -227,7 +227,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadUInt8Array'
-        set: ''
+        set: 'WriteData'
   - name: '[]uint16'
     lang: 'ushort[]'
     operates:
@@ -239,7 +239,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadUInt16Array'
-        set: ''
+        set: 'WriteData'
   - name: '[]uint32'
     lang: 'uint[]'
     operates:
@@ -251,7 +251,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadUInt32Array'
-        set: ''
+        set: 'WriteData'
   - name: '[]uint64'
     lang: 'ulong[]'
     operates:
@@ -263,7 +263,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadUInt64Array'
-        set: ''
+        set: 'WriteData'
   - name: '[]float32'
     lang: 'float[]'
     operates:
@@ -274,8 +274,8 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: 'ReadFloat32Array'
-        set: ''
+        get: 'ReadFloatArray'
+        set: 'WriteData'
   - name: '[]float64'
     lang: 'double[]'
     operates:
@@ -286,8 +286,8 @@ data_types:
         get: ''
         set: ''
       - file_name: bin
-        get: 'ReadFloat64Array'
-        set: ''
+        get: 'ReadDoubleArray'
+        set: 'WriteData'
   - name: '[]string'
     lang: 'string[]'
     operates:
@@ -299,7 +299,7 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadStringArray'
-        set: ''
+        set: 'WriteData'
   - name: '[]json'
     lang: 'string[]'
     operates:
@@ -311,4 +311,4 @@ data_types:
         set: ''
       - file_name: bin
         get: 'ReadStringArray'
-        set: ''
+        set: 'WriteData'
