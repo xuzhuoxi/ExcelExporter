@@ -110,7 +110,7 @@ func loadExcelFiles(execFunc funcExec) {
 }
 
 func loadExcelFilesFromFolder(folderPath string, execFunc funcExec) {
-	filex.WalkAllFiles(folderPath, func(filePath string, fileInfo os.FileInfo, err error) error {
+	_ = filex.WalkAllFiles(folderPath, func(filePath string, fileInfo os.FileInfo, err error) error {
 		loadExcelFile(filePath, fileInfo, execFunc)
 		return nil
 	})

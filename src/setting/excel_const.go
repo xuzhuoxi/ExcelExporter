@@ -1,8 +1,9 @@
+// Package setting
 // Create on 2023/5/21
 // @author xuzhuoxi
 package setting
 
-// 导出标记
+// ConstOutputInfo 导出标记
 type ConstOutputInfo struct {
 	RangeName     string `yaml:"range_name"` // 导出范围名称[client, server, db]
 	FileAxis      string `yaml:"file"`       // 导出类文件名坐标(Excel坐标)

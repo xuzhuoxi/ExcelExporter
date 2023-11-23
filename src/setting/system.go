@@ -7,6 +7,7 @@ import (
 	"os"
 )
 
+// ProgramLanguage
 // 数据结构定义所支持的编程语言定义
 // 编程语言描述
 type ProgramLanguage struct {
@@ -20,7 +21,7 @@ type ProgramLanguage struct {
 	Setting *LangSetting // 由RefPath加载进来的配置信息
 }
 
-func (o ProgramLanguage) String() string {
+func (o *ProgramLanguage) String() string {
 	return fmt.Sprintf("Lang{Name=%s, RefPath=%s, TempsTitle=%s, TempsConst=%s}",
 		o.Name, o.RefPath, o.TempsTitle, o.TempsConst)
 }

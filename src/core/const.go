@@ -1,6 +1,6 @@
 package core
 
-// 执行模式
+// ModeType 执行模式
 type ModeType uint
 
 const (
@@ -11,7 +11,7 @@ const (
 	ModeProto
 )
 
-// 字段类型
+// FieldRangeType 字段类型
 type FieldRangeType uint
 
 const (
@@ -21,5 +21,5 @@ const (
 	FieldRangeDatabase
 )
 
-// 字段类型格式对应 正则表达式
+// RegexPatternRange 字段类型格式对应 正则表达式
 const RegexPatternRange = `[01],[01],[01]`

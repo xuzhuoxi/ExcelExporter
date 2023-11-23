@@ -3,9 +3,10 @@ package setting
 import (
 	"fmt"
 	"reflect"
+	"strings"
 )
 
-// 指定数据文件的字段读写方法
+// FileAttrOperation 指定数据文件的字段读写方法
 type FileAttrOperation struct {
 	FileName string `yaml:"file_name"`     // 数据文件类型(json，bin等)
 	Get      string `yaml:"get,omitempty"` // 读取方法字符表达
@@ -16,7 +17,7 @@ func (o *FileAttrOperation) String() string {
 	return fmt.Sprintf("FileAttrOperation{Name=%s, Get=%s, Set=%s}", o.FileName, o.Get, o.Set)
 }
 
-// 字段
+// LangDataType 字段
 type LangDataType struct {
 	FieldTypeName string              `yaml:"name"`     // 字段数据类型(Excel表上填的)
 	LangTypeName  string              `yaml:"lang"`     // 编程语言对应的数据类型
@@ -50,9 +51,23 @@ func (o LangDataType) GetSetOperate(fileName string) string {
 	return ""
 }
 
-// 编程语言配置
+type LangCustom struct {
+	T      string `yaml:"T"`
+	TArray string `yaml:"TArray"`
+}
+
+func (o LangCustom) ToLangType(langType string) string {
+	return strings.ReplaceAll(o.T, "T", langType)
+}
+
+func (o LangCustom) ToLangArrayType(langType string) string {
+	return strings.ReplaceAll(o.TArray, "T", langType)
+}
+
+// LangSetting 编程语言配置
 type LangSetting struct {
 	LangName  string         `yaml:"lang_name"`  // 编程语言名称
+	Custom    LangCustom     `yaml:"custom"`     // 编程语言自定义信息
 	DataTypes []LangDataType `yaml:"data_types"` // 编程语言数据类型配置
 }
 

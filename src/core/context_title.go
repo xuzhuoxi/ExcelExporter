@@ -8,7 +8,7 @@ import (
 	"github.com/xuzhuoxi/ExcelExporter/src/setting"
 )
 
-// 表头导出上下文
+// TitleContext 表头导出上下文
 type TitleContext struct {
 	EnablePrefix  string         // 开启前缀
 	RangeName     string         // 使用的字段索引名称
@@ -39,7 +39,7 @@ func (o *TitleFieldItem) GetFileKey(fileType string) string {
 	return o.titleProxy.GetFieldFileKey(o.Index, fileType)
 }
 
-// 数据表代理
+// TempTitleProxy 数据表代理
 type TempTitleProxy struct {
 	Sheet      *excel.ExcelSheet // 当前执行的Sheet数据对象
 	Excel      *excel.ExcelProxy // 当前Excel代理，可能包含多个Excel

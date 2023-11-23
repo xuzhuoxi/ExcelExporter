@@ -1,3 +1,4 @@
+// Package setting
 // Create on 2023/5/21
 // @author xuzhuoxi
 package setting
@@ -7,6 +8,7 @@ import (
 	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
 )
 
+// TitleDataOutputInfo
 // 导出标记
 type TitleDataOutputInfo struct {
 	RangeName     string `yaml:"range_name"` // 导出范围名称[client, server, db]
@@ -21,7 +23,7 @@ func (o TitleDataOutputInfo) String() string {
 		o.RangeName, o.TitleFileAxis, o.DataFileAxis, o.ClassAxis, o.NamespaceAxis)
 }
 
-// Sql坐标信息
+// TitleDataSqlInfo Sql坐标信息
 type TitleDataSqlInfo struct {
 	TableNameAxis  string `yaml:"table"` // 表名坐标(Excel坐标)
 	FileNameAxis   string `yaml:"file"`  // 数据文件名坐标(Excel坐标)
@@ -62,13 +64,13 @@ type TitleData struct {
 	DataStartAxis string `yaml:"data_start_axis"`
 }
 
-// 数据开始行号
+// DataStartRow 数据开始行号
 func (td TitleData) DataStartRow() int {
 	_, row, _ := excel.SplitAxis(td.DataStartAxis)
 	return row
 }
 
-// 数据开始列号索引
+// DataStartColIndex 数据开始列号索引
 func (td TitleData) DataStartColIndex() int {
 	colIndex, _, _ := excel.ParseAxisIndex(td.DataStartAxis)
 	return colIndex

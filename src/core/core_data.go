@@ -94,7 +94,7 @@ func execSheetDataContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, data
 
 	targetDir := Setting.Project.Target.GetDataDir(dataCtx.RangeName)
 	if !filex.IsExist(targetDir) {
-		os.MkdirAll(targetDir, os.ModePerm)
+		_ = os.MkdirAll(targetDir, os.ModePerm)
 	}
 	extendName := dataCtx.DataFileFormat
 	filePath := filex.Combine(targetDir, fileName+"."+extendName)

@@ -15,6 +15,7 @@ var (
 	ExtXlsx = "xlsx"
 )
 
+// GetAxisName
 // 1=>A, 2=>B
 func GetAxisName(col int) string {
 	return mathx.System10To26(col)
@@ -24,11 +25,13 @@ func GetCellName(col int, row int) string {
 	return fmt.Sprintf("%s%d", mathx.System10To26(col), row)
 }
 
+// GetColNum
 // A=>1，B=>2
 func GetColNum(axis string) int {
 	return mathx.System26To10(axis)
 }
 
+// GenAxis
 // 3 => [A, B, C]
 func GenAxis(length int) []string {
 	rs := make([]string, length, length)
@@ -38,6 +41,7 @@ func GenAxis(length int) []string {
 	return rs
 }
 
+// SplitAxis
 // "A1" => "A", 1, nil
 func SplitAxis(axis string) (colName string, rowNum int, err error) {
 	Axis := strings.ToUpper(strings.TrimSpace(axis))
@@ -56,6 +60,7 @@ func SplitAxis(axis string) (colName string, rowNum int, err error) {
 	return
 }
 
+// ParseAxisIndex
 // "A1" => 0, 0, nil
 func ParseAxisIndex(axis string) (colIndex int, rowIndex int, err error) {
 	colName, rowNum, err := SplitAxis(axis)
@@ -66,6 +71,7 @@ func ParseAxisIndex(axis string) (colIndex int, rowIndex int, err error) {
 	return colNum - 1, rowNum - 1, nil
 }
 
+// LoadExcels
 // 加载路径下的Excel文件，多个路径用","分割
 // 支持文件夹路径
 func LoadExcels(path string) (excels []*excelize.File, excelPaths []string, err error) {
@@ -101,6 +107,7 @@ func LoadExcels(path string) (excels []*excelize.File, excelPaths []string, err 
 	return excels, excelPaths, nil
 }
 
+// LoadExcel
 // 加载Excel文件，过滤无Sheet情况
 func LoadExcel(filePath string) (excel *excelize.File, err error) {
 	excelFile, err := excelize.OpenFile(filePath)
@@ -113,6 +120,7 @@ func LoadExcel(filePath string) (excel *excelize.File, err error) {
 	return excelFile, nil
 }
 
+// LoadSheetsByPrefixes
 // 通过SheetPrefix作为限制加载Sheet, 使用""代表不限制
 // 指定NickRow所在行为别名,NickRow=0时，使用列号作为别名
 func LoadSheetsByPrefixes(excelPath string, excelFile *excelize.File, sheetPrefixes []string, nickRow int) (sheets []*ExcelSheet, err error) {

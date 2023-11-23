@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// 数据导出上下文
+// DataContext 数据导出上下文
 type DataContext struct {
 	EnablePrefix   string         // 开启前缀
 	RangeName      string         // 使用的字段索引名称

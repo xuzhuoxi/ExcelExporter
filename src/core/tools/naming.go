@@ -15,6 +15,7 @@ func clearUnderscore(naming string) string {
 	return naming
 }
 
+// ClearUnderscore
 // 去除下划线，并把下划线后一个字符改为大写
 func ClearUnderscore(naming string) string {
 	naming = strings.TrimSpace(naming)
@@ -26,7 +27,7 @@ func ClearUnderscore(naming string) string {
 	return reg.ReplaceAllStringFunc(naming, clearUnderscore)
 }
 
-// 转为小驼峰
+// ToLowerCamelCase 转为小驼峰
 func ToLowerCamelCase(naming string) string {
 	naming = ClearUnderscore(naming)
 	ln := len(naming)
@@ -37,7 +38,7 @@ func ToLowerCamelCase(naming string) string {
 	return strings.ToLower(n1) + n2
 }
 
-// 转为大驼峰
+// ToUpperCamelCase 转为大驼峰
 func ToUpperCamelCase(naming string) string {
 	naming = ClearUnderscore(naming)
 	ln := len(naming)

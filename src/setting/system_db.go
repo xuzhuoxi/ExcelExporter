@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// 数据库数据类型描述
+// DbFieldType 数据库数据类型描述
 type DbFieldType struct {
 	CfgType   string `yaml:"name"`   // 字段名称(标准化后，如string(5)=>string(*))
 	FieldType string `yaml:"type"`   // 对应数据的字段数据类型
@@ -29,7 +29,7 @@ func (t DbFieldType) String() string {
 	return fmt.Sprintf("DbField{%s,%s,%v}", t.CfgType, t.FieldType, t.IsNumber)
 }
 
-// 数据库配置
+// DatabaseExtend 数据库配置
 type DatabaseExtend struct {
 	DatabaseName string        `yaml:"db_name"`       // 数据库名称
 	ScaleChar    float64       `yaml:"scale_char"`    // Char字符比例

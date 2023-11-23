@@ -1,3 +1,4 @@
+// Package core
 // Create on 2023/5/21
 // @author xuzhuoxi
 package core
@@ -61,7 +62,7 @@ func execSheetProtoContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, pro
 	}
 	targetDir := filex.Combine(Setting.Project.Target.GetProtoDir(protoCtx.RangeName), sheetTitle.ExportSubDir)
 	if !filex.IsExist(targetDir) {
-		os.MkdirAll(targetDir, os.ModePerm)
+		_ = os.MkdirAll(targetDir, os.ModePerm)
 	}
 	for _, item := range items {
 		tempProtoProxy := &TempProtoProxy{ProtoItem: item, SheetProxy: tempSheetProxy}
@@ -73,7 +74,7 @@ func execSheetProtoContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, pro
 		}
 
 		filePath := filex.Combine(targetDir, item.File+"."+extendName)
-		filex.WriteFile(filePath, buff.Bytes(), os.ModePerm)
+		_ = filex.WriteFile(filePath, buff.Bytes(), os.ModePerm)
 		Logger.Infoln(fmt.Sprintf("[%s] \t file => %s", logPrefix, filePath))
 	}
 	return nil

@@ -8,13 +8,13 @@ const (
 )
 
 type IDataBuilder interface {
-	// 开始写入数据
+	// StartWriteData 开始写入数据
 	StartWriteData()
-	// 开始写入数据
+	// FinishWriteData 开始写入数据
 	FinishWriteData()
-	// 写入一行数据
+	// WriteRow 写入一行数据
 	WriteRow(ktvArr []*KTValue) error
-	// 把数据写到文件
+	// WriteDataToFile 把数据写到文件
 	WriteDataToFile(filePath string) error
 
 	// 开始新一行

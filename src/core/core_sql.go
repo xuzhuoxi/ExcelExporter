@@ -76,7 +76,7 @@ func execSheetSqlContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, sqlCt
 	}
 	targetDir := Setting.Project.Target.GetSqlDir(sqlCtx.RangeName)
 	if !filex.IsExist(targetDir) {
-		os.MkdirAll(targetDir, os.ModePerm)
+		_ = os.MkdirAll(targetDir, os.ModePerm)
 	}
 	sql := Setting.Excel.TitleData.GetSqlInfo()
 	tableName, _ := sheet.ValueAtAxis(sql.TableNameAxis)

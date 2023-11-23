@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-// Sql上下文
+// SqlContext Sql上下文
 type SqlContext struct {
 	EnablePrefix  string         // 开启前缀
 	RangeName     string         // 使用的字段索引名称
@@ -30,7 +30,7 @@ func (o SqlContext) String() string {
 		o.EnablePrefix, o.TitleOn, o.DataOn, o.SqlMerge, o.StartRowNum, o.StartColIndex)
 }
 
-// 字段定义
+// SqlFieldItem 字段定义
 type SqlFieldItem struct {
 	FieldName       string                  // 字段名称
 	FieldType       string                  // 字段类型(原始未标准化)
@@ -41,17 +41,17 @@ type SqlFieldItem struct {
 	MaxRuneSize     int                     // 最大字符数
 }
 
-// 是否为定制类型
+// IsCustomFieldType 是否为定制类型
 func (i SqlFieldItem) IsCustomFieldType() bool {
 	return "" != i.CustomFieldType
 }
 
-// 是否为数据库动态类型
+// IsDynamicDbFieldType 是否为数据库动态类型
 func (i SqlFieldItem) IsDynamicDbFieldType() bool {
 	return i.DbField.IsDynamicLen()
 }
 
-// 是否为字段固定类型
+// IsFixedFieldType 是否为字段固定类型
 func (i SqlFieldItem) IsFixedFieldType() bool {
 	return setting.RegFixedString.MatchString(i.FieldType)
 }
@@ -105,7 +105,7 @@ func (i SqlFieldItem) String() string {
 	return fmt.Sprintf("SqlFieldItem{Name=%v, Type=%v, FieldType=%v}", i.FieldName, i.FieldType, i.DbField)
 }
 
-// 单条数据项
+// SqlItem 单条数据项
 type SqlItem struct {
 	excelRow   *excel.ExcelRow // 数据行
 	selects    []int           // 数据行选择索引
@@ -143,7 +143,7 @@ func (i *SqlItem) GetSqlValue(localIndex int) string {
 	return value
 }
 
-// Sql模板代理
+// TempSqlProxy Sql模板代理
 type TempSqlProxy struct {
 	Sheet         *excel.ExcelSheet // 当前执行的Sheet数据对象
 	Excel         *excel.ExcelProxy // 当前执行的Excel数据代理对象

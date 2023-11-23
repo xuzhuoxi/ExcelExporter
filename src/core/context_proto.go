@@ -1,3 +1,4 @@
+// Package core
 // Create on 2023/5/21
 // @author xuzhuoxi
 package core
@@ -11,7 +12,7 @@ import (
 	"strings"
 )
 
-// 协议表上下文
+// ProtoContext 协议表上下文
 type ProtoContext struct {
 	EnablePrefix string         // 开启前缀
 	RangeName    string         // 使用的字段索引名称
@@ -24,7 +25,7 @@ func (o ProtoContext) String() string {
 		o.EnablePrefix, o.RangeName, o.RangeType, o.Language)
 }
 
-// 协议表关定义
+// ProtoSheetTitle 协议表关定义
 type ProtoSheetTitle struct {
 	IdDataType   string   // Id数据类型
 	RangeName    []string // 导出范围
@@ -40,18 +41,35 @@ func (o ProtoSheetTitle) MatchRange(rangeName string) bool {
 	return slicex.ContainsString(o.RangeName, rangeName)
 }
 
-// 协议属性
+// ProtoFieldItem 协议属性
 type ProtoFieldItem struct {
 	Remark         string               // 备注
 	Name           string               // 属性Key：Excel配置值
+	Lang           string               // 编程语言
 	OriginalType   string               // 属性数据类型：原始值
 	FormattedType  string               // 属性数据类型：格式化值
 	LangType       string               // 属性数据类型：编程语言值
 	LangTypeDefine setting.LangDataType // 属性数据类型：编程语言定义
 	IsCustomType   bool                 // 属性数据类型：是否为自定义类型
+	IsArrayType    bool                 // 属性数据类型：是否为自定义数组
 }
 
-// 协议项
+func (o ProtoFieldItem) TempLangType() string {
+	if !o.IsCustomType {
+		return o.LangType
+	}
+	langDefine, ok := Setting.System.FindProgramLanguage(o.Lang)
+	if !ok {
+		return o.LangType
+	}
+	custom := langDefine.Setting.Custom
+	if !o.IsArrayType {
+		return custom.ToLangType(o.LangType)
+	}
+	return custom.ToLangArrayType(o.LangType)
+}
+
+// ProtoItem 协议项
 type ProtoItem struct {
 	Id     string           // 协议Id
 	Name   string           // 协议名称
@@ -60,7 +78,7 @@ type ProtoItem struct {
 	Fields []ProtoFieldItem // 协议属性
 }
 
-// 协议表模板代理
+// TempProtoProxy 协议表模板代理
 type TempProtoProxy struct {
 	ProtoItem  ProtoItem        // 协议信息
 	SheetProxy *ProtoSheetProxy // Sheet表信息代理
@@ -107,7 +125,7 @@ type ProtoSheetProxy struct {
 	protoNames []string // 协议定义列表
 }
 
-// 取当前Sheet中对应坐标的字符数据，若数据不存在，返回空字符串
+// ValueAtAxis 取当前Sheet中对应坐标的字符数据，若数据不存在，返回空字符串
 func (o *ProtoSheetProxy) ValueAtAxis(axis string) string {
 	value, err := o.Sheet.ValueAtAxis(axis)
 	if nil != err {
@@ -121,7 +139,7 @@ func (o *ProtoSheetProxy) GetDataTypeDefine(dataType string) (define setting.Lan
 	return ls.Setting.GetDataTypeDefine(dataType)
 }
 
-// 取当前Sheet全部协议数据列表(已经过滤中间的空行)
+// GetItems 取当前Sheet全部协议数据列表(已经过滤中间的空行)
 func (o *ProtoSheetProxy) GetItems() (items []ProtoItem, err error) {
 	ps := Setting.Excel.Proto
 	rowLen := o.Sheet.RowLength
@@ -146,7 +164,7 @@ func (o *ProtoSheetProxy) GetItems() (items []ProtoItem, err error) {
 	return rs, nil
 }
 
-// 取当前Sheet指定行号数据，转换为协议项，格式非法则返回对应错误
+// GetItem 取当前Sheet指定行号数据，转换为协议项，格式非法则返回对应错误
 func (o *ProtoSheetProxy) GetItem(row int) (item ProtoItem, isItem bool, isBlank bool, err error) {
 	//fmt.Println("GetItem:", row)
 	if !o.checkInRange(row) {
@@ -183,7 +201,7 @@ func (o *ProtoSheetProxy) GetItem(row int) (item ProtoItem, isItem bool, isBlank
 		nameRemark = strings.TrimSpace(remarkRow.Cell[ps.NameColIndex()])
 	}
 	item = ProtoItem{Id: id, File: file, Name: name, Remark: nameRemark, Fields: fieldItems}
-	suc := o.appendProtoName(name)
+	suc := o.appendCustomProtoName(name)
 	if !suc {
 		err = errors.New(fmt.Sprintf("Duplicate ProtoName[%s] At Row[%d]. ", name, row))
 		isItem = true
@@ -204,16 +222,35 @@ func (o *ProtoSheetProxy) checkIsItem(id string, file string, name string) bool 
 	return true
 }
 
-func (o *ProtoSheetProxy) appendProtoName(protoName string) bool {
-	if o.checkProtoName(protoName) {
+// protoName不会是数组
+func (o *ProtoSheetProxy) appendCustomProtoName(protoName string) bool {
+	formatted, _ := o.formatCustomProtoName(protoName)
+	ok := slicex.ContainsString(o.protoNames, formatted)
+	if ok {
 		return false
 	}
-	o.protoNames = append(o.protoNames, protoName)
+	o.protoNames = append(o.protoNames, formatted)
 	return true
 }
 
-func (o *ProtoSheetProxy) checkProtoName(protoName string) bool {
-	return slicex.ContainsString(o.protoNames, protoName)
+func (o *ProtoSheetProxy) formatCustomProtoName(protoName string) (formatted string, isArray bool) {
+	prefix := "[]"
+	if strings.HasPrefix(protoName, prefix) {
+		isArray = true
+		formatted = protoName[len(prefix):]
+	} else {
+		formatted = protoName
+	}
+	return
+}
+
+func (o *ProtoSheetProxy) checkCustomProtoName(protoName string) (ok bool, formatted string, isArray bool) {
+	if len(protoName) == 0 {
+		return
+	}
+	formatted, isArray = o.formatCustomProtoName(protoName)
+	ok = slicex.ContainsString(o.protoNames, formatted)
+	return
 }
 
 func (o *ProtoSheetProxy) getFieldSize(excelRow *excel.ExcelRow, fieldStartIdx int) int {
@@ -293,14 +330,15 @@ func (o *ProtoSheetProxy) getFieldItem(loc string, fieldStr string, dataRemark s
 	fieldItem = &ProtoFieldItem{
 		Remark:        dataRemark,
 		Name:          dataName,
+		Lang:          o.ProtoCtx.Language,
 		OriginalType:  originalType,
 		FormattedType: formattedType,
 	}
 	if ok {
 		fieldItem.LangTypeDefine, fieldItem.LangType = landDataTypeDefine, landDataTypeDefine.LangTypeName
 	} else {
-		if o.checkProtoName(formattedType) {
-			fieldItem.LangType, fieldItem.IsCustomType = formattedType, true
+		if ok, formattedType2, isArr := o.checkCustomProtoName(formattedType); ok {
+			fieldItem.LangType, fieldItem.IsCustomType, fieldItem.IsArrayType = formattedType2, true, isArr
 		} else {
 			err = errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Format LangType Error!, ", loc, fieldStr))
 		}

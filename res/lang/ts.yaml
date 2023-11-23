@@ -1,4 +1,7 @@
 lang_name: ts
+custom:
+  custom: 'T'
+  array: 'T[]'
 data_types:
   - name: bool
     lang: 'boolean'

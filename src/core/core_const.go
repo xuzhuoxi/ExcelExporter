@@ -84,7 +84,7 @@ func execSheetConstContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, con
 	}
 	targetDir = filex.Combine(targetDir, strings.TrimSpace(subDir))
 	if !filex.IsExist(targetDir) {
-		os.MkdirAll(targetDir, os.ModePerm)
+		_ = os.MkdirAll(targetDir, os.ModePerm)
 	}
 	extendName := langDefine.ExtendName
 	filePath := filex.Combine(targetDir, fmt.Sprintf("%s.%s", fileName, extendName))
@@ -102,7 +102,7 @@ func execSheetConstContext(excel *excel.ExcelProxy, sheet *excel.ExcelSheet, con
 		err = errors.New(fmt.Sprintf("[%s] Execute Template error: %s ", logPrefix, err))
 		return err
 	}
-	filex.WriteFile(filePath, buff.Bytes(), os.ModePerm)
+	_ = filex.WriteFile(filePath, buff.Bytes(), os.ModePerm)
 	Logger.Infoln(fmt.Sprintf("[%s] \t file => %s", logPrefix, filePath))
 	return nil
 }

@@ -6,7 +6,7 @@ require (
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826
 	github.com/richardlehane/mscfb v1.0.4
 	github.com/spf13/viper v1.10.1
-	github.com/tidwall/gjson v1.14.4 // indirect
+	github.com/tidwall/gjson v1.2.1 // indirect
 	github.com/tidwall/sjson v1.0.4
 	github.com/xuri/efp v0.0.0-20230422071738-01f4e37c47e9
 	github.com/xuzhuoxi/infra-go v1.0.3

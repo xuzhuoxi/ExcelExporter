@@ -235,7 +235,7 @@ func (o *AppFlags) GenDataContexts(prefix string, startRowNum int, startColIndex
 	return
 }
 
-// 生成Sql导出相关
+// GenSqlContext 生成Sql导出相关
 func (o *AppFlags) GenSqlContext(prefix string, startRowNum int, startColIndex int) (context *core.SqlContext) {
 	if !o.CheckRange(core.FieldRangeDatabase) || !o.CheckDataFile(setting.FileNameSql) {
 		return nil
@@ -277,7 +277,7 @@ func (o *AppFlags) GenConstContexts(prefix string) (contexts []*core.ConstContex
 	return
 }
 
-// 生成Proto导出相关
+// GenProtoContexts 生成Proto导出相关
 func (o *AppFlags) GenProtoContexts(prefix string) (contexts []*core.ProtoContext) {
 	if !o.CheckMode(core.ModeProto) {
 		return nil

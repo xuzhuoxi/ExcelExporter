@@ -61,6 +61,7 @@ func (er *ExcelRow) Empty() bool {
 	return true
 }
 
+// ValueAtIndex
 // Open to templates
 // 通过索引号取值，索引号从0开始
 func (er *ExcelRow) ValueAtIndex(index int) (value string, err error) {
@@ -73,6 +74,7 @@ func (er *ExcelRow) ValueAtIndex(index int) (value string, err error) {
 	return er.Cell[index], nil
 }
 
+// ValueAtNick
 // Open to templates
 // 通过别名取值
 func (er *ExcelRow) ValueAtNick(nick string) (value string, err error) {
@@ -86,6 +88,7 @@ func (er *ExcelRow) ValueAtNick(nick string) (value string, err error) {
 	return er.Cell[index], nil
 }
 
+// ValueAtAxis
 // Open to templates
 // 通过列名取值
 func (er *ExcelRow) ValueAtAxis(axis string) (value string, err error) {

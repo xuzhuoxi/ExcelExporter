@@ -13,7 +13,9 @@ var (
 	tempFuncMap = template.FuncMap{}
 )
 
-// funcBody: 函数必须只有1个值或2个值，如果有两个值，第二个值必须是error类型的，当执行函数时err不为空，则执行自动停止。
+// RegisterFunc
+// funcBody: 函数必须只有1个值或2个值。
+// 如果有两个值，第二个值必须是error类型的，当执行函数时err不为空，则执行自动停止。
 func RegisterFunc(funcName string, funcBody interface{}) {
 	tempFuncMap[funcName] = funcBody
 }

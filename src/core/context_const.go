@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-// 常量表上下文
+// ConstContext 常量表上下文
 type ConstContext struct {
 	EnablePrefix string         // 开启前缀
 	RangeName    string         // 使用的字段索引名称
@@ -21,7 +21,7 @@ func (o ConstContext) String() string {
 		o.EnablePrefix, o.RangeName, o.RangeType, o.Language)
 }
 
-// 常量数据
+// ConstItem 常量数据
 type ConstItem struct {
 	Name   string // Excel表格中常量名称
 	Value  string // Excel表格中常量值, 字符串已经加双引号处理
@@ -29,7 +29,7 @@ type ConstItem struct {
 	Remark string // Excel表格中常量备注内容
 }
 
-// 常量表模板代理
+// TempConstProxy 常量表模板代理
 type TempConstProxy struct {
 	Sheet     *excel.ExcelSheet // 当前执行的Sheet数据对象
 	Excel     *excel.ExcelProxy // 当前Excel代理，可能包含多个Excel
@@ -45,7 +45,7 @@ func (o *TempConstProxy) Language() string {
 	return o.ConstCtx.Language
 }
 
-// 取当前Sheet中对应坐标的字符数据，若数据不存在，返回空字符串
+// ValueAtAxis 取当前Sheet中对应坐标的字符数据，若数据不存在，返回空字符串
 func (o *TempConstProxy) ValueAtAxis(axis string) string {
 	value, err := o.Sheet.ValueAtAxis(axis)
 	if nil != err {
@@ -54,7 +54,7 @@ func (o *TempConstProxy) ValueAtAxis(axis string) string {
 	return value
 }
 
-// 取当前Sheet全部常量数据列表(已经过滤中间的空行)
+// GetItems 取当前Sheet全部常量数据列表(已经过滤中间的空行)
 func (o *TempConstProxy) GetItems() []ConstItem {
 	capRow := o.EndRow - o.StartRow
 	if capRow <= 0 {
@@ -71,7 +71,7 @@ func (o *TempConstProxy) GetItems() []ConstItem {
 	return rs
 }
 
-// 取当前Sheet指定行号数据，转换为常量项，格式非法则返回对应错误
+// GetItem 取当前Sheet指定行号数据，转换为常量项，格式非法则返回对应错误
 func (o *TempConstProxy) GetItem(row int) (item ConstItem, err error) {
 	//fmt.Println("GetItem:", row)
 	pLang, ok := Setting.System.FindProgramLanguage(o.ConstCtx.Language)

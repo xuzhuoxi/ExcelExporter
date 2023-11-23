@@ -42,6 +42,7 @@ func (ep *ExcelProxy) GetSheet(sheetName string) (es *ExcelSheet, err error) {
 	return nil, errors.New("No Sheet is " + sheetName)
 }
 
+// ValueAtAxis
 // Open to templates
 // 通过Sheet的名称和坐标取值，坐标格式：B4
 func (ep *ExcelProxy) ValueAtAxis(sheet string, axis string) (value string, err error) {
@@ -52,6 +53,7 @@ func (ep *ExcelProxy) ValueAtAxis(sheet string, axis string) (value string, err 
 	return s.ValueAtAxis(axis)
 }
 
+// MergedRows
 // 合并全部sheet的行数据。
 // 从StartRow开始。
 // 清除空数据
@@ -68,6 +70,7 @@ func (ep *ExcelProxy) MergedRows(startRow int) (err error) {
 	}
 }
 
+// MergedRowsByFilter
 // 合并全部sheet的行数据。
 // 从StartRow开始。
 // 清除空数据
@@ -84,6 +87,7 @@ func (ep *ExcelProxy) MergedRowsByFilter(startRow int, filter func(row *ExcelRow
 	}
 }
 
+// LoadExcels
 // 加载excelPath指定的一个Excel文件。
 func (ep *ExcelProxy) LoadExcels(excelPath string, overwrite bool) error {
 	excels, paths, err := LoadExcels(excelPath)
@@ -100,6 +104,7 @@ func (ep *ExcelProxy) LoadExcels(excelPath string, overwrite bool) error {
 	return nil
 }
 
+// LoadExcel
 // 加载excelPath指定的一个或多个Excel文件。
 // excelPath支持多路径模式，用","分隔。
 // excelPath支持文件夹，不支持递归。
@@ -125,6 +130,7 @@ func (ep *ExcelProxy) LoadExcel(excelPath string, overwrite bool) error {
 	return nil
 }
 
+// LoadSheetsByPrefix
 // 从已经加载好的Excel中加载Sheets
 // sheetPrefix用于限制
 func (ep *ExcelProxy) LoadSheetsByPrefix(sheetPrefix string, colNickRow int, overwrite bool) error {

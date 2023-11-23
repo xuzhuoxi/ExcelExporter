@@ -82,6 +82,7 @@ func (es *ExcelSheet) GetRowsByFilter(startIndex int, filter func(row *ExcelRow)
 	return
 }
 
+// ValueAtAxis
 // Open to templates
 // 通过坐标取值，坐标格式：B4
 func (es *ExcelSheet) ValueAtAxis(axis string) (value string, err error) {
@@ -96,6 +97,7 @@ func (es *ExcelSheet) ValueAtAxis(axis string) (value string, err error) {
 	return row.ValueAtIndex(cellIndex)
 }
 
+// ValueAtIndex
 // Open to templates
 // 通过坐标取值，
 func (es *ExcelSheet) ValueAtIndex(colIndex int, rowIndex int) (value string, err error) {

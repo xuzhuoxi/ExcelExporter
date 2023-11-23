@@ -1,4 +1,7 @@
 lang_name: 'c++'
+custom:
+  T: 'T'
+  TArray: 'T[]'
 data_types:
   - name: bool
     lang: 'bool'

@@ -31,8 +31,8 @@ type I{{$clsName}} interface {
     {{- range $index, $value := $fields}}
 	// Get{{ToUpperCamelCase $value.Name}}
     // @remark {{$value.Remark}}
-    // @return {{$value.LangType}}
-    Get{{ToUpperCamelCase $value.Name}}() {{if $value.IsCustomType}}*{{end}}{{$value.LangType}}
+    // @return {{$value.TempLangType}}
+    Get{{ToUpperCamelCase $value.Name}}() {{$value.TempLangType}}
     {{- end}}
 }
 
@@ -43,7 +43,7 @@ type {{$clsName}} struct {
 	{{- if ne $value.Remark ""}}
     //  {{$value.Remark}}
 	{{- end}}
-    {{ToUpperCamelCase $value.Name}} {{if $value.IsCustomType}}*{{end}}{{$value.LangType}}
+    {{ToUpperCamelCase $value.Name}} {{$value.TempLangType}}
     {{- end}}
 }
 
@@ -60,8 +60,8 @@ func (o *{{$clsName}}) StructId() {{$proxy.ProtoIdDataType}} {
 {{- range $index, $value := $fields}}
 // Get{{ToUpperCamelCase $value.Name}}
 // @remark {{$value.Remark}}
-// @return {{$value.LangType}}
-func (o *{{$clsName}}) Get{{ToUpperCamelCase $value.Name}}() {{if $value.IsCustomType}}*{{end}}{{$value.LangType}} {
+// @return {{$value.TempLangType}}
+func (o *{{$clsName}}) Get{{ToUpperCamelCase $value.Name}}() {{$value.TempLangType}} {
 	return o.{{ToUpperCamelCase $value.Name}}
 }
 {{- end}}
@@ -80,7 +80,7 @@ func (o *{{$clsName}}) String() string {
 
 func (o *{{$clsName}}) SetValues(
 	{{- range $index, $value := $fields }}
-	{{- ToLowerCamelCase $value.Name}} {{if $value.IsCustomType}}*{{end}}{{$value.LangType}}{{if lt (Add $index 1) (len $fields)}}, {{end -}}
+	{{- ToLowerCamelCase $value.Name}} {{$value.TempLangType}}{{if lt (Add $index 1) (len $fields)}}, {{end -}}
 	{{- end -}}
 ) {
 	{{range $index, $value := $fields -}}
@@ -107,7 +107,7 @@ func (o *{{$clsName}}) EncodeToWriter(w io.Writer) {
 func (o *{{$clsName}}) DecodeFromReader(r io.Reader) {
     {{- range $index, $value := $fields}}
       {{- if $value.IsCustomType}}
-    o.{{ToUpperCamelCase $value.Name}} = New{{$clsName}}FromBinaryReader(r)
+    o.{{ToUpperCamelCase $value.Name}} = New{{ToUpperCamelCase $value.LangType}}FromBinaryReader(r)
       {{- else}}{{$define := $value.LangTypeDefine}}
     o.{{ToUpperCamelCase $value.Name}}, _ = binaryx.{{$define.GetGetOperate "bin"}}(r, binary.LittleEndian)
       {{- end}}
@@ -123,7 +123,7 @@ func New{{$clsName}}FromBinaryReader(reader io.Reader) *{{$clsName}} {
 // func (o *{{$clsName}}) FromBinaryOverride(proxy IBinaryReaderProxy) {
     {{- range $index, $value := $fields}}
       {{- if $value.IsCustomType}}
-//    o.{{ToLowerCamelCase $value.Name}} = New{{$clsName}}FromBinary(data.{{$value.Name}})
+//    o.{{ToLowerCamelCase $value.Name}} = New{{ToUpperCamelCase $value.LangType}}FromBinary(data.{{$value.Name}})
       {{- else}}{{$define := $value.LangTypeDefine}}
 //    o.{{ToLowerCamelCase $value.Name}} = proxy.{{$define.GetGetOperate "bin"}}()
       {{- end}}

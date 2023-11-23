@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// 输出目录
+// OutDir 输出目录
 type OutDir struct {
 	Client string `yaml:"client"` // 前端定义输出目录
 	Server string `yaml:"server"` // 后端定义输出目录
@@ -30,7 +30,7 @@ type OutSql struct {
 	Dir string `yaml:"dir"` // 输出目录
 }
 
-// 数据源配置
+// SourceCfg 数据源配置
 type SourceCfg struct {
 	Value    []string `yaml:"value"`    // 目录路径或文件路径
 	Encoding string   `yaml:"encoding"` // 编码格式(如果需要)
@@ -65,7 +65,7 @@ func (o SourceCfg) String() string {
 	return fmt.Sprintf("IO{Path=%s, Encoding=%s}", o.Value, o.Encoding)
 }
 
-// 输出配置
+// TargetCfg 输出配置
 type TargetCfg struct {
 	RootDir  string `yaml:"root"`     // 输出根目录
 	Title    OutDir `yaml:"title"`    // (定义)导出类输出配置
@@ -103,12 +103,12 @@ func (o *TargetCfg) GetProtoDir(fieldRangeName string) string {
 	return filex.Combine(o.RootDir, o.Proto.GetValue(fieldRangeName))
 }
 
-func (o TargetCfg) String() string {
+func (o *TargetCfg) String() string {
 	return fmt.Sprintf("TargetCfg{RootDir=%s, Title=%v, Data=%v, Const=%v, Proto=%v}",
 		o.RootDir, o.Title, o.Data, o.Const, o.Proto)
 }
 
-// 缓冲区定义(未使用)
+// ProjectBuff 缓冲区定义(未使用)
 type ProjectBuff struct {
 	IsBigEndian bool `yaml:"big_endian"` // 数据导出是否使用高位在前
 	TokenSize   int  `yaml:"token"`      // 每个token的最大缓冲区
@@ -121,7 +121,7 @@ func (b ProjectBuff) String() string {
 		b.IsBigEndian, b.TokenSize, b.ItemSize, b.SheetSize)
 }
 
-// 项目配置
+// ProjectSetting 项目配置
 type ProjectSetting struct {
 	// 默认处理的文件或目录,以'':''开关，或路径中包含'':''的，视为绝对路径
 	Source SourceCfg `yaml:"source"`
