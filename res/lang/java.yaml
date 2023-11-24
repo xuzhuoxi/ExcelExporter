@@ -1,7 +1,7 @@
 lang_name: java
 custom:
-  custom: 'T'
-  array: 'T[]'
+  T: 'T'
+  TArray: 'T[]'
 data_types:
   - name: bool
     lang: 'boolean'
