@@ -31,7 +31,7 @@ namespace {{$proxy.Namespace}} {
         {{- range $index, $value := $fields}}
         /**
          * @remark {{$value.Remark}}
-         * @return {{$value.LangType}}
+         * @return {{$value.TempLangType}}
          */
         get {{ToLowerCamelCase $value.Name}}(): {{$value.TempLangType}} {
             return this._{{ToLowerCamelCase $value.Name}};
@@ -78,6 +78,7 @@ namespace {{$proxy.Namespace}} {
             rs.fromJsonOverride(data);
             return rs;
         }
+
         public static arrayFromJson(data: any): {{$clsName}}[] {
             return null;
         }

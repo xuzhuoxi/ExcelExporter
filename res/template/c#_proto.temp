@@ -60,7 +60,7 @@ namespace {{$proxy.Namespace}}
 
 		public void SetValues(
 			{{- range $index, $value := $fields }}
-			{{- $value.LangType}} {{ToLowerCamelCase $value.Name}}{{if lt (Add $index 1) (len $fields)}}, {{end -}}
+			{{- $value.TempLangType}} {{ToLowerCamelCase $value.Name}}{{if lt (Add $index 1) (len $fields)}}, {{end -}}
 			{{- end -}}) 
 		{
 			{{- range $index, $value := $fields }}
@@ -96,15 +96,15 @@ namespace {{$proxy.Namespace}}
 		public void FromBinaryOverride(BinaryReaderProxy proxy)
 		{
 		    // 以下为从 二进制数据代理 中解释出字段数据
-            {{- range $index, $value := $proxy.GetFields}}
+            {{- range $index, $value := $fields}}{{$define := $value.LangTypeDefine}}
               {{- if $value.IsCustomType}}
                 {{- if $value.IsArrayType}}
-            this.m_{{ToUpperCamelCase $value.Name}} = {{$value.LangType}}.ArrayFromBinary(proxy);
+            m_{{ToUpperCamelCase $value.Name}} = {{$value.LangType}}.ArrayFromBinary(proxy);
                 {{- else}}
-            this.m_{{ToUpperCamelCase $value.Name}} = {{$value.LangType}}.FromBinary(proxy);
+            m_{{ToUpperCamelCase $value.Name}} = {{$value.LangType}}.FromBinary(proxy);
                 {{- end}}
-              {{- else}}{{$define := $value.LangTypeDefine}}
-            this.m_{{ToUpperCamelCase $value.Name}} = proxy.{{$define.GetGetOperate "bin"}}();
+              {{- else}}
+            m_{{ToUpperCamelCase $value.Name}} = proxy.{{$define.GetGetOperate "bin"}}();
               {{- end}}
             {{- end}}
 		}
