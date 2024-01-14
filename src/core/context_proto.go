@@ -9,6 +9,7 @@ import (
 	"github.com/xuzhuoxi/ExcelExporter/src/core/excel"
 	"github.com/xuzhuoxi/ExcelExporter/src/setting"
 	"github.com/xuzhuoxi/infra-go/slicex"
+	"strconv"
 	"strings"
 )
 
@@ -43,15 +44,18 @@ func (o ProtoSheetTitle) MatchRange(rangeName string) bool {
 
 // ProtoFieldItem 协议属性
 type ProtoFieldItem struct {
-	Remark         string               // 备注
-	Name           string               // 属性Key：Excel配置值
-	Lang           string               // 编程语言
-	OriginalType   string               // 属性数据类型：原始值
-	FormattedType  string               // 属性数据类型：格式化值
+	Remark        string // 备注
+	Name          string // 属性Key：Excel配置值
+	Lang          string // 编程语言
+	OriginalType  string // 属性数据类型：原始值
+	FormattedType string // 属性数据类型：格式化值
+	IsPointer     bool   // 属性数据类型：是否为指针类型
+	IsArray       bool   // 属性数据类型：是否为自定义数组
+	ArraySize     int    // 数组长度，-1 代表无固定谎称
+
 	LangType       string               // 属性数据类型：编程语言值
 	LangTypeDefine setting.LangDataType // 属性数据类型：编程语言定义
 	IsCustomType   bool                 // 属性数据类型：是否为自定义类型
-	IsArrayType    bool                 // 属性数据类型：是否为自定义数组
 }
 
 func (o ProtoFieldItem) TempLangType() string {
@@ -63,10 +67,10 @@ func (o ProtoFieldItem) TempLangType() string {
 		return o.LangType
 	}
 	custom := langDefine.Setting.Custom
-	if !o.IsArrayType {
-		return custom.ToLangType(o.LangType)
+	if !o.IsArray {
+		return custom.ToLangType(o.LangType, o.IsPointer)
 	}
-	return custom.ToLangArrayType(o.LangType)
+	return custom.ToLangArrayType(o.LangType, o.IsPointer)
 }
 
 // ProtoItem 协议项
@@ -224,32 +228,18 @@ func (o *ProtoSheetProxy) checkIsItem(id string, file string, name string) bool 
 
 // protoName不会是数组
 func (o *ProtoSheetProxy) appendCustomProtoName(protoName string) bool {
-	formatted, _ := o.formatCustomProtoName(protoName)
-	ok := slicex.ContainsString(o.protoNames, formatted)
-	if ok {
+	if o.containsCustomProtoName(protoName) {
 		return false
 	}
-	o.protoNames = append(o.protoNames, formatted)
+	o.protoNames = append(o.protoNames, protoName)
 	return true
 }
 
-func (o *ProtoSheetProxy) formatCustomProtoName(protoName string) (formatted string, isArray bool) {
-	prefix := "[]"
-	if strings.HasPrefix(protoName, prefix) {
-		isArray = true
-		formatted = protoName[len(prefix):]
-	} else {
-		formatted = protoName
-	}
-	return
-}
-
-func (o *ProtoSheetProxy) checkCustomProtoName(protoName string) (ok bool, formatted string, isArray bool) {
+func (o *ProtoSheetProxy) containsCustomProtoName(protoName string) (ok bool) {
 	if len(protoName) == 0 {
 		return
 	}
-	formatted, isArray = o.formatCustomProtoName(protoName)
-	ok = slicex.ContainsString(o.protoNames, formatted)
+	ok = slicex.ContainsString(o.protoNames, protoName)
 	return
 }
 
@@ -289,7 +279,7 @@ func (o *ProtoSheetProxy) getRemarkRow(row int) (remarkRow *excel.ExcelRow, exis
 func (o *ProtoSheetProxy) getFieldItems(rowId int, itemRow, remarkRow *excel.ExcelRow,
 	fieldSize int, remarkExist bool) (fieldItems []ProtoFieldItem, err error) {
 	ps := Setting.Excel.Proto
-	fieldItems = make([]ProtoFieldItem, fieldSize, fieldSize)
+	fieldItems = make([]ProtoFieldItem, fieldSize)
 	colIdx := ps.StartFieldColIndex()
 	idx := 0
 	for idx < fieldSize {
@@ -314,17 +304,23 @@ func (o *ProtoSheetProxy) getFieldItem(loc string, fieldStr string, dataRemark s
 	info := strings.Split(fieldStr, ":")
 	if len(info) != 2 {
 		return nil,
-			errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Format Size Error!, ",
+			errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Format Error!, ",
 				loc, fieldStr))
 	}
+	pointerCode := Setting.System.PointerCode
 	dataName := strings.TrimSpace(info[0])
 	originalType := strings.TrimSpace(info[1])
 	if len(dataName) == 0 || len(originalType) == 0 {
 		return nil,
-			errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Format Empty Error!, ",
+			errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Field Type Empty Error!, ",
 				loc, fieldStr))
 	}
-	formattedType := setting.Format2FieldType(originalType)
+	formattedType, isArr, arrSize, isPointer, err1 := o.parseFieldType(originalType, pointerCode)
+	if nil != err1 {
+		return nil,
+			errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Field Type Parse Error!, ",
+				loc, fieldStr))
+	}
 	lang, _ := Setting.System.FindProgramLanguage(o.ProtoCtx.Language)
 	landDataTypeDefine, ok := lang.Setting.GetDataTypeDefine(formattedType)
 	fieldItem = &ProtoFieldItem{
@@ -333,15 +329,40 @@ func (o *ProtoSheetProxy) getFieldItem(loc string, fieldStr string, dataRemark s
 		Lang:          o.ProtoCtx.Language,
 		OriginalType:  originalType,
 		FormattedType: formattedType,
+		IsPointer:     isPointer,
+		IsArray:       isArr,
+		ArraySize:     arrSize,
 	}
 	if ok {
 		fieldItem.LangTypeDefine, fieldItem.LangType = landDataTypeDefine, landDataTypeDefine.LangTypeName
 	} else {
-		if ok, formattedType2, isArr := o.checkCustomProtoName(formattedType); ok {
-			fieldItem.LangType, fieldItem.IsCustomType, fieldItem.IsArrayType = formattedType2, true, isArr
+		if isCustom := o.containsCustomProtoName(formattedType); isCustom {
+			fieldItem.LangType, fieldItem.IsCustomType = formattedType, true
 		} else {
 			err = errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Format LangType Error!, ", loc, fieldStr))
 		}
 	}
+	return
+}
+
+func (o *ProtoSheetProxy) parseFieldType(fieldType string, pointerCode string) (name string, isArr bool, arrSize int, isPointer bool, err error) {
+	fieldType = setting.Format2FieldType(fieldType)
+	arrStr := setting.RegArray.FindString(fieldType)
+	if len(arrStr) < 2 {
+		isArr, arrSize = false, -1
+	} else if len(arrStr) == 2 {
+		isArr, arrSize = true, -1
+	} else {
+		size, err1 := strconv.ParseInt(arrStr[1:len(arrStr)-1], 10, 32)
+		if nil != err1 {
+			err = err1
+			isArr, arrSize = true, -1
+		} else {
+			isArr, arrSize = true, int(size)
+		}
+	}
+	isPointer = strings.Contains(fieldType, pointerCode)
+	name = setting.RegArray.ReplaceAllString(fieldType, "")
+	name = strings.ReplaceAll(name, pointerCode, "")
 	return
 }

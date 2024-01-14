@@ -2,6 +2,8 @@ lang_name: 'as3'
 custom:
   T: 'T'
   TArray: 'Vector.<T>'
+  TPointer: 'T'
+  TPointerArray: 'Vector.<T>'
 data_types:
   - name: bool
     lang: 'Boolean'

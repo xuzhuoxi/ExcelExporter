@@ -493,14 +493,22 @@ ExcelExporter -mode=const,proto -range=client -lang=go
      ![image](./docs/assets/images/proto_3.jpg)  
 
    + 常用于模板的公开属性或函数  
-     + Remark : int
+     + Remark : int  
        备注  
      + Name : string  
        属性Key：Excel配置值  
+     + Lang: string  
+       当前处理中的编程语言  
      + OriginalType : string  
        属性数据类型：原始值  
      + FormattedType : string  
        属性数据类型：格式化值  
+     + IsPointer: bool  
+       是否为指针类型  
+     + IsArray: bool  
+       是否为数组类型  
+     + ArraySize: int   
+       数组长度，非数组或非固定长度时为-1  
      + LangType : string  
        属性数据类型：编程语言值  
      + LangTypeDefine : string  

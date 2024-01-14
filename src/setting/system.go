@@ -153,6 +153,8 @@ type SystemSettings struct {
 	// 浮点数最多支持6位小数，而且当数值越大，精度就越低，反之亦然
 	// 使用浮点数时，如果是负数，序列化为二进制后再读取，部分编程语言会出现抖动现象，如AS3: -2.3 => [-64,19,51,51] => -2.299999952316284
 	FieldDataTypes []string `yaml:"field_datatypes"`
+	// 指针代码
+	PointerCode string `yaml:"pointer_code"`
 	// 支持的导出数据文件格式
 	ExportDataFiles []string `yaml:"export_files"`
 }

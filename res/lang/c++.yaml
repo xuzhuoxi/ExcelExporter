@@ -2,6 +2,8 @@ lang_name: 'c++'
 custom:
   T: 'T'
   TArray: 'T[]'
+  TPointer: 'T *'
+  TPointerArray: 'T *[]'
 data_types:
   - name: bool
     lang: 'bool'

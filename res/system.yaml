@@ -111,6 +111,9 @@ field_datatypes:
   - json
   - '[]json'
 
+# 指针代码
+pointer_code: '*'
+
 # 支持的导出数据文件格式
 export_files:
   - bin

@@ -1,7 +1,9 @@
 lang_name: go
 custom:
-  T: '*T'
+  T: 'T'
   TArray: '[]T'
+  TPointer: '*T'
+  TPointerArray: '[]*T'
 data_types:
   - name: bool
     lang: 'bool'

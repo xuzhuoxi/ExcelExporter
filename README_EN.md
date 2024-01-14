@@ -497,10 +497,18 @@ Export the header information in the Excel file as a data structure or class of 
         Remark  
       + Name : string  
         Attribute Key: Excel configuration value  
+      + Lang : string  
+        The programming language in which it is currently being processed.  
       + OriginalType : string  
         Attribute Data Type: Primitive Value  
       + FormattedType : string  
         Attribute Data Type: Formatted Value  
+      + IsPointer: bool  
+        Whether it is a pointer type  
+      + IsArray: bool  
+        Whether it is an array type
+      + ArraySize: int   
+        Array length, -1 for non-array or non-fixed length  
       + LangType : string  
         Property Data Type: Programming Language Value  
       + LangTypeDefine : string  

@@ -52,16 +52,26 @@ func (o LangDataType) GetSetOperate(fileName string) string {
 }
 
 type LangCustom struct {
-	T      string `yaml:"T"`
-	TArray string `yaml:"TArray"`
+	T             string `yaml:"T"`
+	TArray        string `yaml:"TArray"`
+	TPointer      string `yaml:"TPointer"`
+	TPointerArray string `yaml:"TPointerArray"`
 }
 
-func (o LangCustom) ToLangType(langType string) string {
-	return strings.ReplaceAll(o.T, "T", langType)
+func (o LangCustom) ToLangType(langType string, usePointer bool) string {
+	if usePointer {
+		return strings.ReplaceAll(o.TPointer, "T", langType)
+	} else {
+		return strings.ReplaceAll(o.T, "T", langType)
+	}
 }
 
-func (o LangCustom) ToLangArrayType(langType string) string {
-	return strings.ReplaceAll(o.TArray, "T", langType)
+func (o LangCustom) ToLangArrayType(langType string, usePointer bool) string {
+	if usePointer {
+		return strings.ReplaceAll(o.TPointerArray, "T", langType)
+	} else {
+		return strings.ReplaceAll(o.TArray, "T", langType)
+	}
 }
 
 // LangSetting 编程语言配置

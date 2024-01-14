@@ -72,6 +72,7 @@ const (
 var (
 	RegFixedString      = regexp.MustCompile(`string\(\d+\)`)
 	RegFixedStringArray = regexp.MustCompile(`\[\]string\(\d+\)`)
+	RegArray            = regexp.MustCompile(`\[\d*\]`)
 )
 
 func Format2FieldType(fieldStr string) string {
