@@ -49,13 +49,14 @@ type ProtoFieldItem struct {
 	Lang          string // 编程语言
 	OriginalType  string // 属性数据类型：原始值
 	FormattedType string // 属性数据类型：格式化值
-	IsPointer     bool   // 属性数据类型：是否为指针类型
-	IsArray       bool   // 属性数据类型：是否为自定义数组
-	ArraySize     int    // 数组长度，-1 代表无固定谎称
 
 	LangType       string               // 属性数据类型：编程语言值
 	LangTypeDefine setting.LangDataType // 属性数据类型：编程语言定义
-	IsCustomType   bool                 // 属性数据类型：是否为自定义类型
+
+	IsCustomType bool // 属性数据类型：是否为自定义类型
+	IsPointer    bool // 属性数据类型：是否为指针类型
+	IsArray      bool // 属性数据类型：是否为自定义数组
+	ArraySize    int  // 数组长度，-1 代表无固定谎称
 }
 
 func (o ProtoFieldItem) TempLangType() string {
@@ -315,29 +316,31 @@ func (o *ProtoSheetProxy) getFieldItem(loc string, fieldStr string, dataRemark s
 			errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Field Type Empty Error!, ",
 				loc, fieldStr))
 	}
-	formattedType, isArr, arrSize, isPointer, err1 := o.parseFieldType(originalType, pointerCode)
+	formatted, singleType, isArr, arrSize, isPointer, err1 := o.parseFieldType(originalType, pointerCode)
+	//fmt.Println("777:", loc, originalType, formatted, singleType, isArr, arrSize, isPointer)
 	if nil != err1 {
 		return nil,
 			errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Field Type Parse Error!, ",
 				loc, fieldStr))
 	}
 	lang, _ := Setting.System.FindProgramLanguage(o.ProtoCtx.Language)
-	landDataTypeDefine, ok := lang.Setting.GetDataTypeDefine(formattedType)
+	landDataTypeDefine, ok := lang.Setting.GetDataTypeDefine(formatted)
 	fieldItem = &ProtoFieldItem{
 		Remark:        dataRemark,
 		Name:          dataName,
 		Lang:          o.ProtoCtx.Language,
 		OriginalType:  originalType,
-		FormattedType: formattedType,
-		IsPointer:     isPointer,
-		IsArray:       isArr,
-		ArraySize:     arrSize,
+		FormattedType: formatted,
+
+		IsPointer: isPointer,
+		IsArray:   isArr,
+		ArraySize: arrSize,
 	}
-	if ok {
-		fieldItem.LangTypeDefine, fieldItem.LangType = landDataTypeDefine, landDataTypeDefine.LangTypeName
-	} else {
-		if isCustom := o.containsCustomProtoName(formattedType); isCustom {
-			fieldItem.LangType, fieldItem.IsCustomType = formattedType, true
+	if ok { // 原生
+		fieldItem.LangType, fieldItem.LangTypeDefine = landDataTypeDefine.LangTypeName, landDataTypeDefine
+	} else { // 自定义
+		if isCustom := o.containsCustomProtoName(singleType); isCustom {
+			fieldItem.LangType, fieldItem.IsCustomType = singleType, true
 		} else {
 			err = errors.New(fmt.Sprintf("ProtoItemField[Loc=%s, Value=\"%s\"] Format LangType Error!, ", loc, fieldStr))
 		}
@@ -345,9 +348,14 @@ func (o *ProtoSheetProxy) getFieldItem(loc string, fieldStr string, dataRemark s
 	return
 }
 
-func (o *ProtoSheetProxy) parseFieldType(fieldType string, pointerCode string) (name string, isArr bool, arrSize int, isPointer bool, err error) {
-	fieldType = setting.Format2FieldType(fieldType)
-	arrStr := setting.RegArray.FindString(fieldType)
+// formatted: 去除(n)内容的定义
+// singleType: 去除数组的单独定义
+// isArr: 是数组
+// arrSize: 数组长度
+// isPointer: 是指针类型
+func (o *ProtoSheetProxy) parseFieldType(fieldType string, pointerCode string) (formatted string, singleType string, isArr bool, arrSize int, isPointer bool, err error) {
+	formatted = setting.Format2FieldType(fieldType)
+	arrStr := setting.RegArray.FindString(formatted)
 	if len(arrStr) < 2 {
 		isArr, arrSize = false, -1
 	} else if len(arrStr) == 2 {
@@ -361,8 +369,8 @@ func (o *ProtoSheetProxy) parseFieldType(fieldType string, pointerCode string) (
 			isArr, arrSize = true, int(size)
 		}
 	}
-	isPointer = strings.Contains(fieldType, pointerCode)
-	name = setting.RegArray.ReplaceAllString(fieldType, "")
-	name = strings.ReplaceAll(name, pointerCode, "")
+	isPointer = strings.Contains(formatted, pointerCode)
+	singleType = setting.RegArray.ReplaceAllString(formatted, "")
+	singleType = strings.ReplaceAll(singleType, pointerCode, "")
 	return
 }
