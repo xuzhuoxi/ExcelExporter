@@ -77,7 +77,7 @@ echo Building openbsd amd64...
 set GOOS=openbsd
 set GOARCH=amd64
 set APP_PATH=%APP_DIST%\%APP_NAME%-openbsd-amd64_%APP_VERSION%
-go build -buildvcs=true -ldflags -o %APP_PATH% %APP_SRC%
+go build -buildvcs=true -o %APP_PATH% %APP_SRC%
 
 
 echo Done.
