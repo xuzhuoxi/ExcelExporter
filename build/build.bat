@@ -44,40 +44,40 @@ echo Building freebsd amd64...
 set GOOS=freebsd
 set GOARCH=amd64
 set APP_PATH=%APP_DIST%\%APP_NAME%-freebsd-amd64_%APP_VERSION%
-go build -o %APP_PATH% %APP_SRC%
+go build -buildvcs=true -o %APP_PATH% %APP_SRC%
 
 echo Building freebsd arm64...
 set GOOS=freebsd
 set GOARCH=arm64
 set APP_PATH=%APP_DIST%\%APP_NAME%-freebsd-arm64_%APP_VERSION%
-go build -o %APP_PATH% %APP_SRC%
+go build -buildvcs=true -o %APP_PATH% %APP_SRC%
 
 REM -------- Linux --------
 echo Building Linux amd64...
 set GOOS=linux
 set GOARCH=amd64
 set APP_PATH=%APP_DIST%\%APP_NAME%-linux-amd64_%APP_VERSION%
-go build -o %APP_PATH% %APP_SRC%
+go build -buildvcs=true -o %APP_PATH% %APP_SRC%
 
 echo Building Linux arm64...
 set GOOS=linux
 set GOARCH=arm64
 set APP_PATH=%APP_DIST%\%APP_NAME%-linux-arm64_%APP_VERSION%
-go build -o %APP_PATH% %APP_SRC%
+go build -buildvcs=true -o %APP_PATH% %APP_SRC%
 
 REM -------- Windows --------
 echo Building Windows amd64...
 set GOOS=windows
 set GOARCH=amd64
 set APP_PATH=%APP_DIST%\%APP_NAME%-windows-amd64_%APP_VERSION%.exe
-go build -o %APP_PATH% %APP_SRC%
+go build -buildvcs=true -o %APP_PATH% %APP_SRC%
 
 REM -------- openbsd --------
 echo Building openbsd amd64...
 set GOOS=openbsd
 set GOARCH=amd64
 set APP_PATH=%APP_DIST%\%APP_NAME%-openbsd-amd64_%APP_VERSION%
-go build -o %APP_PATH% %APP_SRC%
+go build -buildvcs=true -ldflags -o %APP_PATH% %APP_SRC%
 
 
 echo Done.

@@ -27,28 +27,35 @@ echo "All tests passed."
 CGO_ENABLED=0
 # -------- macOS --------
 echo "Building macOS amd64..."
-GOOS=darwin GOARCH=amd64 go build -o "${APP_DIST}/${APP_NAME}-darwin-amd64_${APP_VERSION}" "$APP_SRC"
+GOOS=darwin GOARCH=amd64 \
+go build -buildvcs=true -o "${APP_DIST}/${APP_NAME}-darwin-amd64_${APP_VERSION}" "$APP_SRC"
 
 # -------- freebsd --------
 echo "Building freebsd amd64..."
-GOOS=freebsd GOARCH=amd64 go build -o "${APP_DIST}/${APP_NAME}-freebsd-amd64_${APP_VERSION}" "$APP_SRC"
+GOOS=freebsd GOARCH=amd64 \
+go build -buildvcs=true -o "${APP_DIST}/${APP_NAME}-freebsd-amd64_${APP_VERSION}" "$APP_SRC"
 
 echo "Building freebsd arm64..."
-GOOS=freebsd GOARCH=arm64 go build -o "${APP_DIST}/${APP_NAME}-freebsd-arm64_${APP_VERSION}" "$APP_SRC"
+GOOS=freebsd GOARCH=arm64 \
+go build -buildvcs=true -o "${APP_DIST}/${APP_NAME}-freebsd-arm64_${APP_VERSION}" "$APP_SRC"
 
 # -------- Linux --------
 echo "Building Linux amd64..."
-GOOS=linux GOARCH=amd64 go build -o "${APP_DIST}/${APP_NAME}-linux-amd64_${APP_VERSION}" "$APP_SRC"
+GOOS=linux GOARCH=amd64 \
+go build -buildvcs=true -o "${APP_DIST}/${APP_NAME}-linux-amd64_${APP_VERSION}" "$APP_SRC"
 
 echo "Building Linux arm64..."
-GOOS=linux GOARCH=arm64 go build -o "${APP_DIST}/${APP_NAME}-linux-arm64_${APP_VERSION}" "$APP_SRC"
+GOOS=linux GOARCH=arm64 \
+go build -buildvcs=true -o "${APP_DIST}/${APP_NAME}-linux-arm64_${APP_VERSION}" "$APP_SRC"
 
 # -------- Windows --------
 echo "Building Windows amd64..."
-GOOS=windows GOARCH=amd64 go build -o "${APP_DIST}/${APP_NAME}-windows-amd64_${APP_VERSION}.exe" "$APP_SRC"
+GOOS=windows GOARCH=amd64 \
+go build -buildvcs=true -o "${APP_DIST}/${APP_NAME}-windows-amd64_${APP_VERSION}.exe" "$APP_SRC"
 
 # -------- openbsd --------
 echo "Building openbsd amd64..."
-GOOS=openbsd GOARCH=amd64 go build -o "${APP_DIST}/${APP_NAME}-openbsd-amd64_${APP_VERSION}" "$APP_SRC"
+GOOS=openbsd GOARCH=amd64 \
+go build -buildvcs=true -o "${APP_DIST}/${APP_NAME}-openbsd-amd64_${APP_VERSION}" "$APP_SRC"
 
 echo "Done."
