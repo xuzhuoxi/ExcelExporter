@@ -27,6 +27,7 @@ IF %ERRORLEVEL% NEQ 0 (
     pause
 )
 echo All tests passed.
+echo(
 
 REM -------- 开始跨平台构建 --------
 
@@ -79,6 +80,13 @@ set GOARCH=amd64
 set APP_PATH=%APP_DIST%\%APP_NAME%-openbsd-amd64_%APP_VERSION%
 go build -buildvcs=true -o %APP_PATH% %APP_SRC%
 
+echo(
+
+REM -------- 开始打包源代码 --------
+echo Packaging source code...
+powershell -Command "Compress-Archive -Path '%APP_SRC%\*' -DestinationPath '%APP_DIST%\source_%APP_VERSION%.zip' -Force"
+echo Package source code finish[source_%APP_VERSION%.zip].
+echo(
 
 echo Done.
 endlocal

@@ -22,6 +22,7 @@ if ! go test "$APP_SRC"/...; then
     exit 1
 fi
 echo "All tests passed."
+printf '\n'
 
 # -------- 开始跨平台构建 --------
 CGO_ENABLED=0
@@ -57,5 +58,12 @@ go build -buildvcs=true -o "${APP_DIST}/${APP_NAME}-windows-amd64_${APP_VERSION}
 echo "Building openbsd amd64..."
 GOOS=openbsd GOARCH=amd64 \
 go build -buildvcs=true -o "${APP_DIST}/${APP_NAME}-openbsd-amd64_${APP_VERSION}" "$APP_SRC"
+
+printf '\n'
+
+# -------- 开始打包源代码 --------
+echo "Packaging source code..."
+tar -czf "$APP_DIST/source_$APP_VERSION.tar.gz" -C "$APP_SRC" .
+echo "Package source code finish[source_$APP_VERSION.zip]."
 
 echo "Done."
