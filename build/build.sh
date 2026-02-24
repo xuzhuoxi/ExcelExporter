@@ -64,6 +64,6 @@ printf '\n'
 # -------- 开始打包源代码 --------
 echo "Packaging source code..."
 tar -czf "$APP_DIST/source_$APP_VERSION.tar.gz" -C "$APP_SRC" .
-echo "Package source code finish[source_$APP_VERSION.zip]."
+echo "Package source code finish[source_$APP_VERSION.tar.gz]."
 
 echo "Done."
