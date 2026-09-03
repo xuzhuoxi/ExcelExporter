@@ -1,8 +1,8 @@
 module github.com/xuzhuoxi/ExcelExporter
 
-go 1.24
+go 1.24.0
 
-require github.com/xuzhuoxi/infra-go v1.4.0
+require github.com/xuzhuoxi/infra-go v1.4.1
 
 require (
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826

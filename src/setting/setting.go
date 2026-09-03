@@ -3,10 +3,11 @@ package setting
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
+
 	"github.com/xuzhuoxi/infra-go/filex"
 	"github.com/xuzhuoxi/infra-go/osxu"
 	"gopkg.in/yaml.v2"
-	"io/ioutil"
 )
 
 var (

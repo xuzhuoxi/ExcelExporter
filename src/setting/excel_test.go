@@ -1,14 +1,17 @@
+//go:build !skiptest
+
 package setting
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v2"
-	"io/ioutil"
+	"os"
 	"testing"
+
+	"gopkg.in/yaml.v2"
 )
 
 func TestExcelSetting(t *testing.T) {
-	str, err := ioutil.ReadFile(ExcelPath)
+	str, err := os.ReadFile(ExcelPath)
 	if nil != err {
 		t.Fatal(err)
 		return

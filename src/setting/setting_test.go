@@ -1,8 +1,11 @@
+//go:build !skiptest
+
 package setting
 
 import (
-	"github.com/xuzhuoxi/infra-go/filex"
 	"testing"
+
+	"github.com/xuzhuoxi/infra-go/filex"
 )
 
 var (

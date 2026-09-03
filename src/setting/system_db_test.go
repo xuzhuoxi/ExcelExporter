@@ -1,14 +1,17 @@
+//go:build !skiptest
+
 package setting
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v2"
-	"io/ioutil"
+	"os"
 	"testing"
+
+	"gopkg.in/yaml.v2"
 )
 
 func TestMysqlSetting(t *testing.T) {
-	str, err := ioutil.ReadFile(DbMysqlPath)
+	str, err := os.ReadFile(DbMysqlPath)
 	if nil != err {
 		t.Fatal(err)
 		return
