@@ -8,8 +8,9 @@
 
 1. 确认该 tag 指向的提交位于 `main`
 2. 交叉编译各平台二进制
-3. 打包并生成校验和
-4. 创建（或更新附件的）GitHub Release
+3. 打包环境配置 `env_<tag>.zip`
+4. 打包并生成校验和
+5. 创建（或更新附件的）GitHub Release
 
 不需要手动配置 `GITHUB_TOKEN`。GitHub 会为每次运行注入临时令牌；workflow 已声明 `contents: write`，用于创建 Release 和上传附件。
 
@@ -84,7 +85,7 @@ git push origin v1.0.3
 | checkout | 完整克隆，以便校验 tag 与 `main` 的祖先关系 |
 | Ensure tag is on main | `git merge-base --is-ancestor $GITHUB_SHA origin/main`，不在 `main` 则失败 |
 | setup-go | 使用 `go.mod` 中的 Go 版本 |
-| Build release binaries | 交叉编译、打包、生成 `SHA256SUMS.txt` |
+| Build release binaries | 交叉编译、打包环境配置、生成 `SHA256SUMS.txt` |
 | Create GitHub Release | 组装说明（手写文件 + 自动 notes）、创建 Release；若已存在则覆盖附件并更新正文 |
 
 `GITHUB_REF_NAME` 在本 workflow 中等于 **tag 短名**（如 `v1.0.3`），不是 `refs/tags/v1.0.3`。产物名、Release 标题、说明文件路径都使用该值。
@@ -93,12 +94,20 @@ git push origin v1.0.3
 
 平台：`linux` / `windows` / `darwin` × `amd64` / `arm64`（共 6 个）。
 
-包内包含：可执行文件、`LICENSE`、`README.md`、`README_EN.md`。
+各平台包内包含：可执行文件、`LICENSE`、`README.md`、`README_EN.md`。
+
+另附一份与平台无关的环境配置包 `env_<tag>.zip`。解压后根目录为 `evn_<tag>/`，内容来自仓库 `res/`：
+
+- 目录：`db`、`lang`、`proxy`、`source`、`template`、`target`
+- 文件：`excel.yaml`、`project.yaml`、`system.yaml`
+
+`res/target` 不存在时，包内仍会放入空的 `target` 目录。不包含 `res/test`、日志或本地可执行文件。
 
 | 平台 | 文件名示例 |
 | --- | --- |
 | Windows | `ExcelExporter_v1.0.3_windows_amd64.zip` |
 | 其它 | `ExcelExporter_v1.0.3_linux_amd64.tar.gz` |
+| 环境配置 | `env_v1.0.3.zip`（内含 `evn_v1.0.3/`） |
 | 校验和 | `SHA256SUMS.txt` |
 
 二进制 **未** 写入版本号；程序内没有独立的 `-version` 输出。

@@ -82,6 +82,20 @@ jobs:
             fi
           done
 
+          # 环境配置包：env_<tag>.zip，解压后根目录为 evn_<tag>/
+          env_name="evn_${version}"
+          env_stage="$(mktemp -d)"
+          env_dir="${env_stage}/${env_name}"
+          mkdir -p "${env_dir}"
+          cp -a res/db res/lang res/proxy res/source res/template "${env_dir}/"
+          cp -a res/excel.yaml res/project.yaml res/system.yaml "${env_dir}/"
+          if [[ -d res/target ]]; then
+            cp -a res/target "${env_dir}/"
+          else
+            mkdir -p "${env_dir}/target"
+          fi
+          (cd "${env_stage}" && zip -qr "${out_dir}/env_${version}.zip" "${env_name}")
+
           (cd "${out_dir}" && sha256sum * > SHA256SUMS.txt)
           ls -lh "${out_dir}"
 
