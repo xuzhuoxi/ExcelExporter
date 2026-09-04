@@ -101,7 +101,7 @@ git push origin v1.0.3
 - 目录：`db`、`lang`、`proxy`、`source`、`template`、`target`
 - 文件：`excel.yaml`、`project.yaml`、`system.yaml`
 
-`res/target` 不存在时，包内仍会放入空的 `target` 目录。不包含 `res/test`、日志或本地可执行文件。
+`target` 只保留空目录，即使 `res/target` 下已有文件或子目录也不会打进包。不包含 `res/test`、日志或本地可执行文件。
 
 | 平台 | 文件名示例 |
 | --- | --- |
