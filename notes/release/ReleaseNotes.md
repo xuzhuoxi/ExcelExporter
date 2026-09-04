@@ -1,21 +1,33 @@
-## Release notes
+## Release Notes
 
-### Known Issues in v1.0.1
+### Known Issues
+
+### Notable Changes
 
 ### Improvements
+
+### Breaking Changes
 
 ### API Changes
 
 ### Changes
 
+### Notable Fixes
+
 ### Fixes
 
-## Library changes in v1.0.1
+### Changelog
 
-### library updated
+### New Contributors
+
+**Full Changelog**: {RANGE_START}...{tag}
+
+## Library Changes
+
+### library Updated
 
 #### Updated
 
-#### No longer available
+#### No Longer Available
 
 #### Added

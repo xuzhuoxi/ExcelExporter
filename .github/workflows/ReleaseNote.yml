@@ -1,0 +1,64 @@
+# 仅用于手动更新已有 GitHub Release 的正文，不构建、不上传附件。用法见同目录 ReleaseNote.md。
+name: ReleaseNote
+
+# GitHub 无法把「要更新的 Release」做成 tag 动态下拉框，需在输入项中填写已有 tag 名。
+# Use workflow from 里可以切到 Tags，那是选「用哪次提交上的 workflow」，本工作流应选包含最新说明的分支。
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '已有的 tag，例如 v1.1.0（须已有对应 GitHub Release）'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  update-notes:
+    name: Update release notes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          fetch-tags: true
+
+      - name: Update GitHub Release notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ inputs.tag }}
+        # 从当前所选分支读取 notes/release/ReleaseNotes_<tag>.md，写入已有 Release 正文；不改附件。
+        # 运行时请选择包含最新说明文件的分支（一般为 main）。
+        run: |
+          set -euo pipefail
+
+          tag="${TAG#"${TAG%%[![:space:]]*}"}"
+          tag="${tag%"${tag##*[![:space:]]}"}"
+          tag="${tag#refs/tags/}"
+
+          if [[ -z "${tag}" ]]; then
+            echo "::error::tag 不能为空。"
+            exit 1
+          fi
+
+          git fetch origin --tags --force
+          if ! git show-ref --verify --quiet "refs/tags/${tag}"; then
+            echo "::error::找不到 tag ${tag}。远程已有 tag："
+            git tag -l 'v*' | sort -V
+            exit 1
+          fi
+
+          if ! gh release view "${tag}" >/dev/null 2>&1; then
+            echo "::error::找不到 GitHub Release ${tag}，请先用 Release 工作流发版。"
+            exit 1
+          fi
+
+          notes_file="notes/release/ReleaseNotes_${tag}.md"
+          if [[ ! -f "${notes_file}" ]]; then
+            echo "::error::当前分支没有 ${notes_file}。请在包含该文件的分支上运行（一般为 main）。"
+            exit 1
+          fi
+
+          gh release edit "${tag}" --notes-file "${notes_file}"
+          echo "已用 ${notes_file} 更新 Release ${tag}。"
